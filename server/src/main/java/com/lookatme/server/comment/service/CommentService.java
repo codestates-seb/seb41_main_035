@@ -4,6 +4,7 @@ import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
 import com.lookatme.server.comment.entity.Comment;
 import com.lookatme.server.comment.repository.CommentRepository;
+import com.lookatme.server.exception.comment.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class CommentService {
 
     public Comment findValidateComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow();
+                .orElseThrow(() -> new CommentNotFoundException());
     }
 
     public Comment editComment(final Long commentId,
