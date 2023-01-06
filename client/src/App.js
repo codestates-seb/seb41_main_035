@@ -1,9 +1,9 @@
 import './App.css';
-
+import LoginModal from './componets/LoginModal';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header"></header>
+    <div>
+      <LoginModal></LoginModal>
     </div>
   );
 }
