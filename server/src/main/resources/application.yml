@@ -1,0 +1,27 @@
+spring:
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PWD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  output:
+    ansi:
+      enabled: ALWAYS
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: debug
+    root: info
