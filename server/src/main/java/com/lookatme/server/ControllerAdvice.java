@@ -1,7 +1,7 @@
 package com.lookatme.server;
 
 import com.lookatme.server.exception.ErrorLogicException;
-import com.lookatme.server.exception.dto.ErrorResponseDto;
+import com.lookatme.server.common.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package com.lookatme.server.exception.dto;
+package com.lookatme.server.common.dto;
 
 import com.lookatme.server.exception.ErrorCode;
 import lombok.Getter;
