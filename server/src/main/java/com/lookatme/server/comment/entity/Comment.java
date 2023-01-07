@@ -1,5 +1,6 @@
 package com.lookatme.server.comment.entity;
 
+import com.lookatme.server.audit.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "comments")
-public class Comment{
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
