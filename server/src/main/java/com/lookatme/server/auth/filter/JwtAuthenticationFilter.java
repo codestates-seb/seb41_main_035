@@ -3,6 +3,7 @@ package com.lookatme.server.auth.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lookatme.server.auth.dto.LoginDto;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.userdetails.MemberDetails;
 import com.lookatme.server.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final RedisRepository redisRepository;
     private final JwtTokenizer jwtTokenizer;
 
     @SneakyThrows
@@ -50,8 +52,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = delegateAccessToken(member);
         String refreshToken = delegateRefreshToken(member);
 
+        // JWT 토큰을 만들어서 Response 헤더로 전달
         response.setHeader("Authorization", String.format("Bearer %s", accessToken));
         response.setHeader("Refresh", refreshToken);
+
+        // Redis 저장소에 RefreshToken을 저장
+        redisRepository.saveRefreshToken(refreshToken, member.getUniqueKey());
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
@@ -65,7 +71,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("oauthPlatform", member.getOauthPlatform());
         claims.put("roles", member.getRoles());
 
-        String subject = member.getEmail();
+        // subject = 사용자를 고유하게 구분할 수 있는 값으로 (이메일+소셜 플랫폼)
+        String subject = member.getUniqueKey();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
@@ -74,7 +81,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     private String delegateRefreshToken(Member member) {
-        String subject = member.getEmail();
+        String subject = member.getUniqueKey();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);

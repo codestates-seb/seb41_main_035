@@ -6,6 +6,7 @@ import com.lookatme.server.auth.handler.MemberAccessDeniedHandler;
 import com.lookatme.server.auth.handler.MemberAuthenticationEntryPoint;
 import com.lookatme.server.auth.handler.MemberAuthenticationFailureHandler;
 import com.lookatme.server.auth.handler.MemberAuthenticationSuccessHandler;
+import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthorityUtils authorityUtils;
+    private final RedisRepository redisRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -78,12 +80,12 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisRepository, jwtTokenizer);
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
             jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(redisRepository, jwtTokenizer, authorityUtils);
 
             builder.addFilter(jwtAuthenticationFilter)
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);

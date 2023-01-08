@@ -1,12 +1,14 @@
 package com.lookatme.server.auth.filter;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
+import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
 
+    private final RedisRepository redisRepository;
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthorityUtils authorityUtils;
 
@@ -45,13 +48,18 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     @Override // Authorization 헤더가 없거나 Bearer로 시작하지 않으면 필터를 실행하지 않음
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");
-
         return authorization == null || !authorization.startsWith("Bearer ");
     }
 
     // Access 토큰 검증 - 예외가 발생하지 않으면 토큰 검증 통과한 것 (Key가 맞지 않으면 claims를 얻어올 수 없으므로..)
     private Map<String, Object> verifyJws(HttpServletRequest request) {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
+        
+        // AccessToken이 블랙리스트에 등록되어있는 경우 예외 발생
+        if (redisRepository.hasAccessTokenInBlacklist(jws)) {
+            throw new AccessDeniedException("로그아웃된 토큰입니다");
+        }
+        
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
         return jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();

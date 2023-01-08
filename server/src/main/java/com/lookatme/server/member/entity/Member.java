@@ -74,6 +74,10 @@ public class Member {
         this.memberStatus = MemberStatus.MEMBER_ACTIVE;
         this.oauthPlatform = oauthPlatform == null ? OauthPlatform.NONE : oauthPlatform; // null이면 NONE으로 저장
     }
+    
+    public String getUniqueKey() { // 사용자를 고유하게 식별할 수 있는 문자열
+        return String.format("%s/%s", email, oauthPlatform.name());
+    }
 
     public void updateMemberProfile(Member member) {
         this.nickname = member.getNickname();

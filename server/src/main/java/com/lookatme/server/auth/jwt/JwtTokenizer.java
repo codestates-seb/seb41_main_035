@@ -87,9 +87,23 @@ public class JwtTokenizer {
         return calendar.getTime();
     }
 
+    // 현재 토큰 남은 시간이 얼마나 되는지
+    public long calculateRemainExpiration(String token) {
+        Jws<Claims> claims = getClaims(token, encodeBase64SecretKey(secretKey));
+        long expireDatetime = claims.getBody().getExpiration().getTime();
+        long currentDatetime = Calendar.getInstance().getTimeInMillis();
+
+        long remainDatetime = expireDatetime - currentDatetime;
+        return remainDatetime < 0 ? 0 : remainDatetime;
+    }
+
     private Key getKeyFromBase64EncodedKey(String base64EncodedSecretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String getTokenSubject(String jws) {
+        Jws<Claims> claims = getClaims(jws, encodeBase64SecretKey(secretKey));
+        return claims.getBody().getSubject();
+    }
 }
