@@ -64,12 +64,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // Access token 생성 ** 꼭 필요한 정보만 담는 것이 좋음 **
     private String delegateAccessToken(Member member) {
-        Map<String, Object> claims = new HashMap<>();
 
-        claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
-        claims.put("oauthPlatform", member.getOauthPlatform());
-        claims.put("roles", member.getRoles());
+        Map<String, Object> claims = jwtTokenizer.generateClaims(member);
 
         // subject = 사용자를 고유하게 구분할 수 있는 값으로 (이메일+소셜 플랫폼)
         String subject = member.getUniqueKey();

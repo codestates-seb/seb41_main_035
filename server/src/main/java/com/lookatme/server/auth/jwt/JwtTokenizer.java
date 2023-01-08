@@ -1,5 +1,6 @@
 package com.lookatme.server.auth.jwt;
 
+import com.lookatme.server.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Component
@@ -61,20 +60,23 @@ public class JwtTokenizer {
                 .compact();
     }
 
+    // Member 엔티티를 통해 Claims 생성
+    public Map<String, Object> generateClaims(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("memberId", member.getMemberId());
+        claims.put("email", member.getEmail());
+        claims.put("oauthPlatform", member.getOauthPlatform());
+        claims.put("memberUniqueKey", member.getUniqueKey());
+        claims.put("roles", member.getRoles());
+
+        return claims;
+    }
+
     public Jws<Claims> getClaims(String jws, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
         return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jws);
-    }
-
-    //
-    public void verifySignature(String jws, String base64EncodedSecretKey) {
-        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
-
-        Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jws);

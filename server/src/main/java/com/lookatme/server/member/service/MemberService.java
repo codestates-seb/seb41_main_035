@@ -1,7 +1,5 @@
 package com.lookatme.server.member.service;
 
-import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
@@ -20,11 +18,9 @@ import java.util.List;
 @Service
 public class MemberService {
 
-    private final RedisRepository redisRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthorityUtils authorityUtils;
-    private final JwtTokenizer jwtTokenizer;
 
     public Member findMember(long memberId) {
         return memberRepository.findById(memberId)
@@ -76,12 +72,6 @@ public class MemberService {
         if (memberRepository.findByNickname(nickname).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
         }
-    }
-
-    // TODO: 적절한 위치로 리팩토링 고려하기
-    public void logout(String accessToken, String memberUniqueKey) {
-        redisRepository.expireRefreshToken(memberUniqueKey);
-        redisRepository.addAccessTokenToBlacklist(accessToken);
     }
 
 
