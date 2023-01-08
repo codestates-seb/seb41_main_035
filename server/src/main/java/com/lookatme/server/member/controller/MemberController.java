@@ -50,7 +50,7 @@ public class MemberController {
     @PostMapping("/logout")
     public String logout(@AuthenticationPrincipal MemberPrincipal memberPrincipal, HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
-        memberService.logout(accessToken, memberPrincipal.getMemberId());
+        memberService.logout(accessToken, String.format("%s/%s", memberPrincipal.getEmail(), memberPrincipal.getOauthPlatform().name()));
         return "로그아웃";
     }
 
@@ -72,4 +72,37 @@ public class MemberController {
         return memberPrincipal.toString();
     }
 
+    // TODO: ******************** 리팩토링 필수 ********************
+    private final RedisRepository redisRepository;
+    private final JwtTokenizer jwtTokenizer;
+
+    @PostMapping("/reissue")
+    public String reissue(@RequestHeader("Refresh") String refreshToken,
+                          HttpServletResponse response) {
+
+        // 1. 유효한 RTK인지? (redis에 저장되어 있는지?)
+        String tokenSubject = jwtTokenizer.getTokenSubject(refreshToken);
+
+        if (!redisRepository.hasRefreshToken(refreshToken, tokenSubject)) {
+            throw new AccessDeniedException("사용할 수 없는 Refresh 토큰입니다");
+        }
+
+        String[] split = tokenSubject.split("/");
+        Member member = memberService.findMember(split[0], Member.OauthPlatform.valueOf(split[1]));
+
+        // 2. ATK 재발급 --> 중복 요소
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("memberId", member.getMemberId());
+        claims.put("email", member.getEmail());
+        claims.put("oauthPlatform", member.getOauthPlatform());
+        claims.put("roles", member.getRoles());
+
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+        String accessToken = jwtTokenizer.generateAccessToken(claims, tokenSubject, expiration, base64EncodedSecretKey);
+
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        return accessToken;
+    }
 }

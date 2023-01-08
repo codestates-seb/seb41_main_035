@@ -38,8 +38,8 @@ public class RedisRepository {
     }
 
     // 로그아웃 하게되면 RefreshToken은 더이상 저장해둘 필요 없으므로 삭제
-    public void expireRefreshToken(long memberId) {
-        redisTemplate.delete(Long.toString(memberId));
+    public void expireRefreshToken(String memberUniqueKey) {
+        redisTemplate.delete(memberUniqueKey);
     }
 
     // 블랙리스트 안에 AccessToken이 있는지?
@@ -48,8 +48,14 @@ public class RedisRepository {
     }
 
     public boolean hasRefreshToken(String memberUniqueKey, String refreshToken) {
-        ValueOperations<String, Object> map = redisTemplate.opsForValue();
-        String savedRefreshToken = map.get(memberUniqueKey).toString();
-        return savedRefreshToken.equals(refreshToken);
+        // 해당 회원에 대한 키값이 존재하는 경우에만
+        if(Boolean.TRUE.equals(redisTemplate.hasKey(memberUniqueKey))) {
+            ValueOperations<String, Object> map = redisTemplate.opsForValue();
+            // 전달받은 RTK 토큰과 저장된 토큰값이 같은지 비교
+            String savedRefreshToken = map.get(memberUniqueKey).toString();
+            return savedRefreshToken.equals(refreshToken);
+        } else {
+            return false;
+        }
     }
 }

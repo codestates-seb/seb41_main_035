@@ -79,8 +79,8 @@ public class MemberService {
     }
 
     // TODO: 적절한 위치로 리팩토링 고려하기
-    public void logout(String accessToken, long memberId) {
-        redisRepository.expireRefreshToken(memberId);
+    public void logout(String accessToken, String memberUniqueKey) {
+        redisRepository.expireRefreshToken(memberUniqueKey);
         redisRepository.addAccessTokenToBlacklist(accessToken);
     }
 
