@@ -80,7 +80,7 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                         @RequestHeader("Authorization") String authHeader) {
+                                    @RequestHeader("Authorization") String authHeader) {
         String accessToken = authHeader.replace("Bearer ", "");
         authService.logout(accessToken, memberPrincipal.getMemberUniqueKey());
         return new ResponseEntity<>("로그아웃 되었습니다", HttpStatus.OK);
@@ -92,8 +92,10 @@ public class MemberController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(@RequestHeader("Refresh") String refreshToken,
-                          HttpServletResponse response) {
+    public ResponseEntity<?> reissue(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestHeader("Refresh") String refreshToken,
+            HttpServletResponse response) {
 
         // 1. Refresh 토큰에서 회원 식별값 꺼내옴 -> 회원 조회
         String memberUniqueKey = authService.getMemberUniqueKeyAtToken(refreshToken);
@@ -101,9 +103,10 @@ public class MemberController {
         Member member = memberService.findMember(split[0], Member.OauthPlatform.valueOf(split[1]));
 
         // 2. DB에서 찾아온 회원 정보를 통해 Access 토큰 재발급
-        String accessToken = authService.reissueAccessToken(refreshToken, member);
+        String newAccessToken = authService.reissueAccessToken(refreshToken, member);
+        authService.addAccessTokenToBlacklist(accessToken); // 기존에 사용하던 액세스 토큰은 사용할 수 없도록 블랙리스트 등록
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        return new ResponseEntity<>(accessToken, HttpStatus.CREATED);
+        response.setHeader("Authorization", "Bearer " + newAccessToken);
+        return new ResponseEntity<>(newAccessToken, HttpStatus.CREATED);
     }
 }

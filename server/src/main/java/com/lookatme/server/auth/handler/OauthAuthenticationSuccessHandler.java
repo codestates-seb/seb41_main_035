@@ -57,18 +57,9 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return savedMember;
     }
 
-    // TODO: 중복 요소 제거 (JwtAuthenticationFilter, 여기, Reissue 3군데)
     // Access token 생성 ** 꼭 필요한 정보만 담는 것이 좋음 **
     private String delegateAccessToken(Member member) {
-
-        Map<String, Object> claims = jwtTokenizer.generateClaims(member);
-
-        // subject = 사용자를 고유하게 구분할 수 있는 값으로 (이메일+소셜 플랫폼)
-        String subject = member.getUniqueKey();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
-
+        String accessToken = jwtTokenizer.delegateAccessToken(member);
         return accessToken;
     }
 
@@ -81,6 +72,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return refreshToken;
     }
 
+    // TODO: 추후 프론트엔드랑 맞춰야함
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);

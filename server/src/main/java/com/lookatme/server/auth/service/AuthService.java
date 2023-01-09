@@ -26,6 +26,14 @@ public class AuthService {
         redisRepository.addAccessTokenToBlacklist(accessToken); // 2. 액세스 토큰을 블랙리스트에 추가해 해당 토큰 사용 못하도록 차단
     }
 
+    // 단순 전달용 메서드
+    public void addAccessTokenToBlacklist(String accessToken) {
+        if(accessToken.startsWith("Bearer")) {
+            accessToken = accessToken.replace("Bearer ", "");
+        }
+        redisRepository.addAccessTokenToBlacklist(accessToken);
+    }
+
     public void encodePassword(Member member) {
         member.encodePassword(passwordEncoder);
     }
@@ -38,17 +46,11 @@ public class AuthService {
         // 1. 유효한 RTK인지? (redis에 저장되어 있는지?)
         String tokenSubject = jwtTokenizer.getTokenSubject(refreshToken);
 
-        if (!redisRepository.hasRefreshToken(refreshToken, tokenSubject)) {
+        if (!redisRepository.hasRefreshToken(tokenSubject, refreshToken)) {
             throw new ErrorLogicException(ErrorCode.TOKEN_INVALID);
         }
-
         // 2. ATK 재발급
-        Map<String, Object> claims = jwtTokenizer.generateClaims(member);
-
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, tokenSubject, expiration, base64EncodedSecretKey);
-
+        String accessToken = jwtTokenizer.delegateAccessToken(member);
         return accessToken;
     }
 }

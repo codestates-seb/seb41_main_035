@@ -37,7 +37,7 @@ server:
     encoding:
       charset: UTF-8
 jwt:
-  secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
+  secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 360
 logging:
