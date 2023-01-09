@@ -1,19 +1,23 @@
 package com.lookatme.server.member.entity;
 
+import com.lookatme.server.audit.BaseTimeEntity;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +49,14 @@ public class Member {
     @Column(updatable = false)
     @Enumerated(EnumType.STRING)
     public OauthPlatform oauthPlatform; // email + oauthPlatform 세트가 유니크 해야함 (email 자체는 겹칠 수 있음)
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),

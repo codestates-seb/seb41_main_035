@@ -5,6 +5,8 @@ import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +34,9 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
+    public Page<Member> findMembers(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return memberRepository.findAll(pageRequest);
     }
 
     public Member registerMember(Member member) {
