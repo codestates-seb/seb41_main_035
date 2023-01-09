@@ -7,12 +7,14 @@ import com.lookatme.server.comment.repository.CommentRepository;
 import com.lookatme.server.exception.comment.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
 
@@ -24,6 +26,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    @Transactional(readOnly = true)
     public Comment findValidateComment(final Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException());
@@ -38,6 +41,7 @@ public class CommentService {
         return commentRepository.save(findComment);
     }
 
+    @Transactional(readOnly = true)
     public Comment findComment(final Long commentId) {
         return findValidateComment(commentId);
     }
