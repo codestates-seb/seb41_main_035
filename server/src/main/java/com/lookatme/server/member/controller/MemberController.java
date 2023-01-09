@@ -67,7 +67,11 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerMember(@Valid @RequestBody MemberDto.Post postDto) {
+        // 1. DTO -> Member 변환
         Member member = mapper.memberPostDtoToMember(postDto);
+        // 2. 비밀번호 암호화
+        authService.encodePassword(member);
+        // 3. 회원 등록
         return new ResponseEntity<>(
                 mapper.memberToMemberResponse(memberService.registerMember(member)),
                 HttpStatus.CREATED

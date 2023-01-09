@@ -7,6 +7,7 @@ import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,10 +19,15 @@ public class AuthService {
 
     private final RedisRepository redisRepository;
     private final JwtTokenizer jwtTokenizer;
+    private final PasswordEncoder passwordEncoder;
 
     public void logout(String accessToken, String memberUniqueKey) {
         redisRepository.expireRefreshToken(memberUniqueKey); // 1. redis에 저장된 Refresh 토큰 삭제 (액세스 토큰 재발급 방지)
         redisRepository.addAccessTokenToBlacklist(accessToken); // 2. 액세스 토큰을 블랙리스트에 추가해 해당 토큰 사용 못하도록 차단
+    }
+
+    public void encodePassword(Member member) {
+        member.encodePassword(passwordEncoder);
     }
 
     public String getMemberUniqueKeyAtToken(String token) {

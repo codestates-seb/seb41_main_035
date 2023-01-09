@@ -76,7 +76,7 @@ public class Member extends BaseTimeEntity {
     }
 
     @Builder
-    public Member(long memberId, String email, String password, String nickname, int height, int weight, OauthPlatform oauthPlatform) {
+    public Member(long memberId, String email, String password, String nickname, int height, int weight, String profileImageUrl, OauthPlatform oauthPlatform) {
         this.memberId = memberId;
         this.email = email; // 필수
         this.password = password; // 필수
@@ -84,6 +84,7 @@ public class Member extends BaseTimeEntity {
         this.height = height; // 선택값
         this.weight = weight; // 선택값
         this.memberStatus = MemberStatus.MEMBER_ACTIVE;
+        this.profileImageUrl = profileImageUrl;
         this.oauthPlatform = oauthPlatform == null ? OauthPlatform.NONE : oauthPlatform; // null이면 NONE으로 저장
     }
     

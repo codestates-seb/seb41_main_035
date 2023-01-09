@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final MemberAuthorityUtils authorityUtils;
 
     public Member findMember(long memberId) {
@@ -43,8 +42,7 @@ public class MemberService {
         verifyUniqueMember(member.getEmail(), member.getOauthPlatform());
         verifyUniqueNickname(member.getNickname());
         
-        // 2. 비밀번호 암호화 및 권한 설정
-        member.encodePassword(passwordEncoder);
+        // 2. 권한 설정
         member.setRoles(authorityUtils);
 
         return memberRepository.save(member);
