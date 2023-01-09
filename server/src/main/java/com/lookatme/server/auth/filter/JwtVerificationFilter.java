@@ -4,6 +4,8 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +38,14 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
         } catch (SignatureException se) {
-            request.setAttribute("exception", se); // 토큰 서명 검증 실패
+            request.setAttribute("exception", ErrorCode.TOKEN_INVALID); // 토큰 서명 검증 실패
         } catch (ExpiredJwtException ee) {
-            request.setAttribute("exception", ee); // 토큰 만료
+            request.setAttribute("exception", ErrorCode.TOKEN_EXPIRE); // 토큰 만료
+        } catch (ErrorLogicException ele) {
+            request.setAttribute("exception", ele.getErrorCode()); // 로직 에러
         } catch (Exception e) {
-            request.setAttribute("exception", e); // 기타
+            e.printStackTrace();
+            request.setAttribute("exception", ErrorCode.EXCEPTION); // 기타
         }
         filterChain.doFilter(request, response);
     }
@@ -57,7 +62,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         
         // AccessToken이 블랙리스트에 등록되어있는 경우 예외 발생
         if (redisRepository.hasAccessTokenInBlacklist(jws)) {
-            throw new AccessDeniedException("로그아웃된 토큰입니다");
+            throw new ErrorLogicException(ErrorCode.TOKEN_LOGOUT);
         }
         
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());

@@ -1,6 +1,8 @@
 package com.lookatme.server.member.service;
 
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,12 +25,12 @@ public class MemberService {
 
     public Member findMember(long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     public Member findMember(String email, Member.OauthPlatform oauthPlatform) {
         return memberRepository.findByEmailAndOauthPlatform(email, oauthPlatform)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     public Page<Member> findMembers(int page, int size) {
@@ -67,15 +66,14 @@ public class MemberService {
 
     private void verifyUniqueMember(String email, Member.OauthPlatform oauthPlatform) {
         if (memberRepository.findByEmailAndOauthPlatform(email, oauthPlatform).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 회원입니다");
+            throw new ErrorLogicException(ErrorCode.MEMBER_EXISTS);
         }
     }
 
     private void verifyUniqueNickname(String nickname) {
         if (memberRepository.findByNickname(nickname).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
+            throw new ErrorLogicException(ErrorCode.MEMBER_NICKNAME_EXISTS);
         }
     }
-
 
 }

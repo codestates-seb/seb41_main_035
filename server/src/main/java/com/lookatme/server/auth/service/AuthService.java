@@ -2,6 +2,8 @@ package com.lookatme.server.auth.service;
 
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,7 +33,7 @@ public class AuthService {
         String tokenSubject = jwtTokenizer.getTokenSubject(refreshToken);
 
         if (!redisRepository.hasRefreshToken(refreshToken, tokenSubject)) {
-            throw new AccessDeniedException("사용할 수 없는 Refresh 토큰입니다");
+            throw new ErrorLogicException(ErrorCode.TOKEN_INVALID);
         }
 
         // 2. ATK 재발급

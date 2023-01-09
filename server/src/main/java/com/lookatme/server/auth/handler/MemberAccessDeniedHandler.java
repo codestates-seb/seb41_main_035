@@ -1,8 +1,8 @@
 package com.lookatme.server.auth.handler;
 
 import com.lookatme.server.auth.utils.ErrorResponder;
+import com.lookatme.server.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class MemberAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ErrorResponder.sendErrorResponse(response, HttpStatus.FORBIDDEN);
+        ErrorResponder.sendErrorResponse(response, ErrorCode.UNAUTHORIZED);
         log.error(">> Forbidden error 발생: {}", accessDeniedException.getMessage());
     }
 }

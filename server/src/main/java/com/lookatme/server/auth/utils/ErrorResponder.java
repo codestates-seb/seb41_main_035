@@ -1,7 +1,8 @@
 package com.lookatme.server.auth.utils;
 
 import com.google.gson.Gson;
-import org.springframework.http.HttpStatus;
+import com.lookatme.server.common.dto.ErrorResponseDto;
+import com.lookatme.server.exception.ErrorCode;
 import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -9,10 +10,12 @@ import java.io.IOException;
 
 public class ErrorResponder {
 
-    public static void sendErrorResponse(HttpServletResponse response, HttpStatus status) throws IOException {
+    public static void sendErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         Gson gson = new Gson();
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setStatus(status.value());
-        response.getWriter().write("Error Happened :P");
+        ErrorResponseDto errorResponse = new ErrorResponseDto(errorCode);
+        response.setCharacterEncoding("utf-8"); // * 필수 * (없으면 한글이 ?? 으로 보임)
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(errorCode.getStatus().value());
+        response.getWriter().write(gson.toJson(errorResponse, ErrorResponseDto.class));
     }
 }

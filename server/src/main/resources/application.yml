@@ -1,28 +1,29 @@
 spring:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
+  h2:
+    console:
+      enabled: true
+      path: /h2
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PWD}
+    url: jdbc:h2:mem:test
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
     show-sql: true
   output:
     ansi:
-      enabled: ALWAYS
+      enabled: always
   redis:
     host: localhost
     port: 6379
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
 jwt:
-  secret-key: ${JWT_SECRET_KEY}
+  secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 360
 logging:
