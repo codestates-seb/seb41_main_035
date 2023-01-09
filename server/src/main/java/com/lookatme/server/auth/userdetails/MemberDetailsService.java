@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
-
 @RequiredArgsConstructor
 @Component
 public class MemberDetailsService implements UserDetailsService {

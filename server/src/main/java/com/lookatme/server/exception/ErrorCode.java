@@ -17,7 +17,8 @@ public enum ErrorCode {
     TOKEN_INVALID("사용할 수 없는 토큰입니다.", HttpStatus.UNAUTHORIZED), // Unauthorized = 비인증 상태
     TOKEN_EXPIRE("만료된 토큰입니다.", HttpStatus.FORBIDDEN),
     UNAUTHORIZED("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
-    EXCEPTION("알 수 없는 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    EXCEPTION("알 수 없는 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    LOGIN_FAILED("이메일 혹은 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
 
     private final String value;
     private final HttpStatus status;
