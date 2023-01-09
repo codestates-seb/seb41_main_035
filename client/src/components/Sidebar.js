@@ -5,16 +5,16 @@ const Sidebar = () => {
     <SWrapper>
       <SidebarBox>
         <div>
-          <p className="font_size_mid">카테고리</p>
+          <p className="title">카테고리</p>
         </div>
         <ItemList>
           <div>
-            <p className="font_size_small"> 아우터</p>
-            <p className="font_size_small"> 상의</p>
-            <p className="font_size_small"> 하의</p>
-            <p className="font_size_small"> 원피스</p>
-            <p className="font_size_small"> 모자</p>
-            <p className="font_size_small"> 신발</p>
+            <p className="items"> 아우터</p>
+            <p className="items"> 상의</p>
+            <p className="items"> 하의</p>
+            <p className="items"> 원피스</p>
+            <p className="items"> 모자</p>
+            <p className="items"> 신발</p>
           </div>
         </ItemList>
       </SidebarBox>
@@ -25,28 +25,30 @@ const Sidebar = () => {
 //전체부분
 const SWrapper = styled.div`
   /* position: fixed;
-  top: 0;
-  overflow: hidden; */
-
-  width: 160px;
-  height: 100vh;
+  top: 0;*/
+  position: sticky;
   display: flex;
   justify-content: center;
   /* text-align: center; */
-  background-color: #faf4c5;
-  margin-right: auto;
 `;
 
 const SidebarBox = styled.div`
-  .font_size_mid {
-    font-size: 18px;
+  width: 9vw;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #faf4c5;
+  margin-right: auto;
+  .title {
+    font-size: 17px;
     font-weight: 700;
     color: #4e4e4e;
-    padding: 40px 0px 20px 0px;
+    padding: 40px 0px 20px 20px;
   }
 `;
 const ItemList = styled.div`
-  .font_size_small {
+  .items {
     font-size: 14px;
     cursor: pointer;
     padding: 10px 0px;
