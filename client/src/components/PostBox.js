@@ -29,13 +29,14 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 const PostBoxOne = styled.div`
-  width: 33%;
+  width: 30%;
   height: 400px;
   background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-wrap: wrap;
+  margin: 30px 15px;
 
   .user-info {
     display: flex;
