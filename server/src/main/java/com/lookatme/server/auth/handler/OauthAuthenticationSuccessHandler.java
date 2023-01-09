@@ -1,7 +1,6 @@
 package com.lookatme.server.auth.handler;
 
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +39,9 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-
     private Member saveMember(Map<String, Object> attributes) {
         String email = attributes.get("email").toString();
-        String nickname = attributes.get("name").toString(); // TODO: 중복 닉네임 검증 처리 필요
+        String nickname = checkValidNickname(attributes.get("name").toString());
         String profileImgLink = attributes.get("picture").toString();
 
         Member member = Member.builder()
@@ -70,6 +68,15 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;
+    }
+
+    // 최소한의 닉네임 중복 방지
+    private String checkValidNickname(String nickname) {
+        int idx = 1;
+        while(memberService.hasNickname(nickname)) {
+            nickname = String.format("%s-%d", nickname, idx++);
+        }
+        return nickname;
     }
 
     // TODO: 추후 프론트엔드랑 맞춰야함
