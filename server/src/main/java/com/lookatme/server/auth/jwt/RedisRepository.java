@@ -1,6 +1,5 @@
 package com.lookatme.server.auth.jwt;
 
-import com.lookatme.server.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

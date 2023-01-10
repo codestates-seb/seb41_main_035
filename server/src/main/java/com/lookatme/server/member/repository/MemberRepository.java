@@ -10,4 +10,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndOauthPlatform(String email, Member.OauthPlatform oauthPlatform);
 
     Optional<Member> findByNickname(String nickname);
+
+    boolean existsByNickname(String nickname);
 }

@@ -20,11 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final MemberAuthorityUtils authorityUtils;
 
+    // ** 메서드 오버로딩 **
     public Member findMember(long memberId) {
         return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    // memberUniqueKey = "Email/OauthPlatform"
+    public Member findMember(String memberUniqueKey) {
+        String[] split = memberUniqueKey.split("/");
+        return memberRepository.findByEmailAndOauthPlatform(split[0], Member.OauthPlatform.valueOf(split[1]))
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
@@ -43,8 +50,7 @@ public class MemberService {
         verifyUniqueMember(member.getEmail(), member.getOauthPlatform());
         verifyUniqueNickname(member.getNickname());
         
-        // 2. 비밀번호 암호화 및 권한 설정
-        member.encodePassword(passwordEncoder);
+        // 2. 권한 설정
         member.setRoles(authorityUtils);
 
         return memberRepository.save(member);
@@ -76,4 +82,7 @@ public class MemberService {
         }
     }
 
+    public boolean hasNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }

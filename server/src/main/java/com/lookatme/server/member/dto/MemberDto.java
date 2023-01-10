@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class MemberDto {
 
@@ -50,11 +51,13 @@ public class MemberDto {
     public static class Response {
         private String email;
         private String nickname;
-        private String profileImageSrc;
+        private String profileImageUrl;
         private int height;
         private int weight;
         private int followerCnt;
         private int followingCnt;
+        private LocalDateTime createdDate;
+        private LocalDateTime updatedDate;
     }
 
 }
