@@ -1,17 +1,23 @@
 package com.lookatme.server.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.auth.jwt.RedisRepository;
+import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.comment.controller.CommentController;
 import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
 import com.lookatme.server.comment.entity.Comment;
 import com.lookatme.server.comment.service.CommentService;
+import com.lookatme.server.config.SecurityConfiguration;
+import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
@@ -31,6 +37,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import({
+        SecurityConfiguration.class,
+        MemberAuthorityUtils.class,
+        JwtTokenizer.class
+})
 @WebMvcTest(CommentController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
@@ -40,6 +51,12 @@ public class CommentControllerTest {
 
     @MockBean
     private CommentService commentService;
+
+    @MockBean
+    private RedisRepository redisRepository;
+
+    @MockBean
+    private MemberService memberService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
