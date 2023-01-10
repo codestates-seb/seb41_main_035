@@ -4,13 +4,13 @@
 function find_idle_profile() {
 
     # 현재 애플리케이션이 몇번 포트로 실행되고 있는지 확인
-    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com:8080/profile)
+    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com/profile)
 
     if [ "${RESPONSE_CODE}" -ge 400 ] || [ "${RESPONSE_CODE}" -eq 000 ] # 400보다 크거나, 000(TimeOut)이면 -> Error 발생
     then
       CURRENT_PROFILE=real1 # 에러 발생 시 real1 포트로 보내도록 세팅
     else # 정상 상태(200) 이라면
-      CURRENT_PROFILE=$(curl -s http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com:8080/profile) # 사이트에서 현재 사용중인 포트를 응답해줌(real1/real2)
+      CURRENT_PROFILE=$(curl -s http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com/profile) # 사이트에서 현재 사용중인 포트를 응답해줌(real1/real2)
     fi
 
     if [ "${CURRENT_PROFILE}" == real1 ]
