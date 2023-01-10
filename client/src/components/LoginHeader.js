@@ -1,5 +1,14 @@
 import styled from 'styled-components';
+import { useState } from 'react';
+import LoginModal from './LoginModal/LoginModal';
+
 const LoginHeader = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onClickButton = () => {
+    setIsOpen(true);
+  };
+
   return (
     <>
       <SWrapper>
@@ -12,8 +21,18 @@ const LoginHeader = () => {
               placeholder="브랜드명, 상품명으로 검색"
             ></input>
           </form>
-          <button className="login button">로그인</button>
+          <button className="login button" onClick={onClickButton}>
+            로그인
+          </button>
         </SHeader>
+        {isOpen && (
+          <LoginModal
+            open={isOpen}
+            onClose={() => {
+              setIsOpen(false);
+            }}
+          />
+        )}
       </SWrapper>
     </>
   );

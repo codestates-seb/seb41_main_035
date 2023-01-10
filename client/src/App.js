@@ -1,11 +1,17 @@
 import './App.css';
-import LoginModal from './componets/LoginModal';
+import LoginHeader from './components/LoginHeader';
+import styled from 'styled-components';
+
 function App() {
   return (
-    <div>
-      <LoginModal></LoginModal>
-    </div>
+    <AppWrap>
+      <LoginHeader />
+    </AppWrap>
   );
 }
 
+const AppWrap = styled.div`
+  text-align: center;
+  margin: 50px auto;
+`;
 export default App;
