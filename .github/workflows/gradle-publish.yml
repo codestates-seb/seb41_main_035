@@ -39,8 +39,13 @@ jobs: # Groups together all the jobs
           ./gradlew clean build
 
       - name: Make build file to zip file
-        run: zip -r ./lookatme-server.zip .
-        shell: bash
+        run: |
+          mkdir -p before-deploy
+          cp build/libs/*.jar before-deploy/
+          cp scripts/*.sh before-deploy/
+          cp appspec.yml before-deploy/
+          cd before-deploy && zip -r lookatme-server.zip *
+          mv ./lookatme-server.zip ../
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
