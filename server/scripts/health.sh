@@ -9,12 +9,12 @@ IDLE_PORT=$(find_idle_port)
 
 echo "> Health Check Start!"
 echo "> IDLE_PORT: $IDLE_PORT"
-echo "> curl -k -s https://localhost:$IDLE_PORT/profile"
+echo "> curl -k -s http://localhost:$IDLE_PORT/profile"
 sleep 10
 
 for RETRY_COUNT in {1..10}
 do
-  RESPONSE=$(curl -k -s https://localhost:${IDLE_PORT}/profile)
+  RESPONSE=$(curl -k -s http://localhost:${IDLE_PORT}/profile)
   UP_COUNT=$(echo ${RESPONSE} | grep 'real' | wc -l)
 
   if [ ${UP_COUNT} -ge 1 ] # real 문자열이 있는지 검증
