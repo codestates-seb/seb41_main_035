@@ -1,29 +1,33 @@
 #!/bin/bash
 
-BUILD_JAR=$(ls /home/ubuntu/action/build/libs/*.jar)
-JAR_NAME=$(basename $BUILD_JAR)
+REPOSITORY=/home/ec2-user/lookatme/server
+PROJECT_NAME=server
 
-echo "> 현재 시간: $(date)" >> /home/ubuntu/action/deploy.log
+echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-echo "> build 파일명: $JAR_NAME" >> /home/ubuntu/action/deploy.log
+CURRENT_PID=$(pgrep -fl server | grep jar | awk '{pring $1}')
 
-echo "> build 파일 복사" >> /home/ubuntu/action/deploy.log
-DEPLOY_PATH=/home/ubuntu/action/
-cp $BUILD_JAR $DEPLOY_PATH
+echo "현재 구동중인 애플리케이션 pid: $CURRENT_PID"
 
-echo "> 현재 실행중인 애플리케이션 pid 확인" >> /home/ubuntu/action/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
-
-if [ -z $CURRENT_PID ]
-then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다." >> /home/ubuntu/action/deploy.log
+if [ -z "$CURRENT_PID" ]; then
+  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다"
 else
-  echo "> kill -9 $CURRENT_PID" >> /home/ubuntu/action/deploy.log
-  sudo kill -9 $CURRENT_PID
-  sleep 5
+        echo "> kill -15 $CURRENT_PID"
+        kill -15 $CURRENT_PID
+        sleep 5
 fi
 
+echo "> 새 애플리케이션 배포"
 
-DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
-sudo nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &
+JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+
+echo "> JAR Name: $JAR_NAME"
+
+echo "> $JAR_NAME 에 실행 권한 추가"
+
+chmod +x $JAR_NAME
+
+echo "> $JAR_NAME 실행"
+
+java -jar \
+        $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
