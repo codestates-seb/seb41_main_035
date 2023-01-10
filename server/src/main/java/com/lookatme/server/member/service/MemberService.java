@@ -22,8 +22,16 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberAuthorityUtils authorityUtils;
 
+    // ** 메서드 오버로딩 **
     public Member findMember(long memberId) {
         return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    // memberUniqueKey = "Email/OauthPlatform"
+    public Member findMember(String memberUniqueKey) {
+        String[] split = memberUniqueKey.split("/");
+        return memberRepository.findByEmailAndOauthPlatform(split[0], Member.OauthPlatform.valueOf(split[1]))
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 

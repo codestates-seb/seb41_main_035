@@ -75,6 +75,7 @@ public class Member extends BaseTimeEntity {
         NONE, GOOGLE
     }
 
+
     @Builder
     public Member(long memberId, String email, String password, String nickname, int height, int weight, String profileImageUrl, OauthPlatform oauthPlatform) {
         this.memberId = memberId;
@@ -86,6 +87,8 @@ public class Member extends BaseTimeEntity {
         this.memberStatus = MemberStatus.MEMBER_ACTIVE;
         this.profileImageUrl = profileImageUrl;
         this.oauthPlatform = oauthPlatform == null ? OauthPlatform.NONE : oauthPlatform; // null이면 NONE으로 저장
+        this.createdDate = LocalDateTime.now();
+        this.updatedDate = LocalDateTime.now();
     }
     
     public String getUniqueKey() { // 사용자를 고유하게 식별할 수 있는 문자열

@@ -99,8 +99,7 @@ public class MemberController {
 
         // 1. Refresh 토큰에서 회원 식별값 꺼내옴 -> 회원 조회
         String memberUniqueKey = authService.getMemberUniqueKeyAtToken(refreshToken);
-        String[] split = memberUniqueKey.split("/");
-        Member member = memberService.findMember(split[0], Member.OauthPlatform.valueOf(split[1]));
+        Member member = memberService.findMember(memberUniqueKey);
 
         // 2. DB에서 찾아온 회원 정보를 통해 Access 토큰 재발급
         String newAccessToken = authService.reissueAccessToken(refreshToken, member);
