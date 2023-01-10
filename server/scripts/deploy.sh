@@ -19,7 +19,7 @@ fi
 
 echo "> 새 애플리케이션 배포"
 
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+JAR_NAME=$(ls -tr $REPOSITORY/build/libs/*.jar | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
@@ -30,4 +30,6 @@ chmod +x $JAR_NAME
 echo "> $JAR_NAME 실행"
 
 java -jar \
+        -Dspring.profiles.active=dev \
+        -Dspring.config.location=/home/ec2-user/lookatme/server/application-dev.yml \
         $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
