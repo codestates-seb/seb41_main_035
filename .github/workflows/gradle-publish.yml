@@ -16,7 +16,9 @@ jobs: # Groups together all the jobs
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
+    defaults:
+      run: cd ./server # 백엔드 디렉토리에서만 작업하도록 경로 이동
+      
     # 수행할 작업 단계의 목록
     steps:
       # 작업 단계의 일부로 실행할 작업
@@ -31,7 +33,6 @@ jobs: # Groups together all the jobs
 
       - name: Add permission to gradlew & Build
         run: | 
-          cd ./server
           chmod +x ./gradlew
           ./gradlew clean build
 
