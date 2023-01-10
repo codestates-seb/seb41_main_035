@@ -1,0 +1,76 @@
+= Look At Me
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+Main-project_35조
+
+v1.0.0, 2023.01.09
+
+***
+== CommentController
+=== 댓글 등록
+.curl-request
+include::{snippets}/create-comment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/create-comment/http-request.adoc[]
+
+.request-fields
+include::{snippets}/create-comment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/create-comment/http-response.adoc[]
+
+.response-fields
+include::{snippets}/create-comment/response-fields.adoc[]
+
+=== 댓글 내용 수정
+.curl-request
+include::{snippets}/patch-comment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patch-comment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-comment/path-parameters.adoc[]
+
+.request-fields
+include::{snippets}/patch-comment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patch-comment/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patch-comment/response-fields.adoc[]
+
+=== 특정 댓글 조회
+.curl-request
+include::{snippets}/get-comment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-comment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/get-comment/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/get-comment/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-comment/response-fields.adoc[]
+
+=== 댓글 삭제
+.curl-request
+include::{snippets}/delete-comment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/delete-comment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-comment/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/delete-comment/http-response.adoc[]
