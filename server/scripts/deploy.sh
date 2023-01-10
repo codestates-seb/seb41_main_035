@@ -5,7 +5,7 @@ PROJECT_NAME=server
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-CURRENT_PID=$(pgrep -fl server | grep jar | awk '{pring $1}')
+CURRENT_PID=$(lsof -ti tcp:8080)
 
 echo "현재 구동중인 애플리케이션 pid: $CURRENT_PID"
 
