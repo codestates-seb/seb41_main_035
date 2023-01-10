@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-
 import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
-
-
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
+// import { useNavigate } from 'react-router-dom';
+import SearchBox from './SearchBox';
 
 const LoginHeader = () => {
+  // const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const onClickButton = () => {
@@ -18,22 +18,22 @@ const LoginHeader = () => {
     <>
       <SWrapper>
         <SHeader>
-          <p className="title">Look at me</p>
-          <form>
-            <input
-              className="header-bottom-search"
-              type="search"
-              placeholder="브랜드명, 상품명으로 검색"
-            ></input>
-          </form>
-
+          <p
+            className="title"
+            // role="presentation"
+            // onClick={() => navigate('/')}
+          >
+            Look at me
+          </p>
+          <SearchBox />
           <div className="right zone">
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
-            <button className="login button" onClick={onClickButton}>로그인</button>
+            <button className="login button" onClick={onClickButton}>
+              로그인
+            </button>
           </div>
-
         </SHeader>
         {isOpen && (
           <LoginModal
@@ -70,14 +70,7 @@ const SHeader = styled.div`
     flex-grow: 1;
     font-size: 60px;
   }
-  input {
-    width: 30vw;
-    height: 5vh;
-    border: 2px solid black;
-    margin-top: 15px;
-    background: transparent;
-    flex-grow: 1;
-  }
+
   .right {
     flex-grow: 1;
     display: flex;
