@@ -3,8 +3,8 @@ name: Look At Me Application CI
 on:
   push:
     branches:
-      - 'main'
-      - 'feat/be/cloud'
+      - main
+      - feat/be/cloud
 
 env:
   S3_BUCKET_NAME: my-springboot-build
@@ -32,7 +32,9 @@ jobs: # Groups together all the jobs
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Add permission to gradlew
-        run: chmod +x ./gradlew
+        run: | 
+          cd ./server
+          chmod +x ./gradlew
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
