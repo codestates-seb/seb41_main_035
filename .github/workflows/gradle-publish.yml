@@ -17,6 +17,7 @@ jobs: # Groups together all the jobs
     permissions:
       contents: read
     defaults:
+      shell: bash
       run: cd ./server # 백엔드 디렉토리에서만 작업하도록 경로 이동
       
     # 수행할 작업 단계의 목록
