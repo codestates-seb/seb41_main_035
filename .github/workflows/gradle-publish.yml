@@ -41,6 +41,7 @@ jobs: # Groups together all the jobs
       - name: Make build file to zip file
         run: |
           mkdir -p before-deploy
+          mkdir -p before-deploy/scripts
           cp build/libs/*.jar before-deploy/
           cp scripts/*.sh before-deploy/scripts
           cp appspec.yml before-deploy/
