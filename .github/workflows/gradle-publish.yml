@@ -1,10 +1,11 @@
 name: Look At Me Application CI
 
-on:
+on: # 트리거 발생 조건 (1. dev 브랜치에 push / 2. server 디렉토리 내에서 발생한 변경일 것)
   push:
     branches:
-      - main
-      - feat/be/cloud
+      - dev
+    paths:
+      - server/**
 
 env:
   S3_BUCKET_NAME: my-springboot-build
@@ -19,7 +20,7 @@ jobs: # Groups together all the jobs
     defaults:
       run:
         shell: bash
-        working-directory: ./server
+        working-directory: ./server # 작업 디렉토리 지정
       
     # 수행할 작업 단계의 목록
     steps:
