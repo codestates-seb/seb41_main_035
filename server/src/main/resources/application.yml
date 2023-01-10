@@ -48,3 +48,19 @@ logging:
         orm:
           jpa: debug
     root: info
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: real1
+server.port: 8081
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: real1
+server.port: 8082
