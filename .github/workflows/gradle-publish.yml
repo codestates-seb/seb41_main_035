@@ -17,8 +17,9 @@ jobs: # Groups together all the jobs
     permissions:
       contents: read
     defaults:
-      shell: bash
-      working-directory: ./server
+      run:
+        shell: bash
+        working-directory: ./server
       
     # 수행할 작업 단계의 목록
     steps:
