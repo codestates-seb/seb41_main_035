@@ -29,7 +29,6 @@ configurations {
 
 dependencies {
 
-	// 왜 안바뀌지
 	// Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
