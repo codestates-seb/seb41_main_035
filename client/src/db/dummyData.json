@@ -1,0 +1,102 @@
+{
+  "posts": [
+   
+    {
+      "id": 1,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "tutu",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+      
+    }, {
+      "id": 2,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kfjdkfs",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+   
+    },{
+      "id": 3,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "sdfsf",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+     
+    },{
+      "id": 4,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kasa",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+   
+    },{
+      "id": 5,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+      
+    },{
+      "id": 1,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+
+    },{
+      "id": 6,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza.",
+      "company":"ockam"
+    },{
+      "id": 7,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+   
+    },{
+      "id": 8,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+   
+    },{
+      "id": 9,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+      
+    },{
+      "id": 10,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+   
+    },{
+      "id": 11,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "kathi",
+      "picture":"https://avatars.githubusercontent.com/u/111413253?v=4",
+      "content":"I like pizza."
+  
+    }
+  ]
+}

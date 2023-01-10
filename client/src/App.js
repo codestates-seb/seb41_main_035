@@ -1,14 +1,17 @@
 // import React from 'react';
 import './App.css';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
+
+import Home from './pages/Home';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
-      <Sidebar />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+
   );
 }
 
