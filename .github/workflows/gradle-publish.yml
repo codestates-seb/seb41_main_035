@@ -3,6 +3,7 @@ name: Look At Me Application CI
 on:
   push:
     branches:
+      - 'main'
       - 'feat/be/cloud'
 
 env:
