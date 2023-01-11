@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
-
-
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 
@@ -31,7 +29,9 @@ const LoginHeader = () => {
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
-            <button className="login button" onClick={onClickButton}>로그인</button>
+            <button className="login button" onClick={onClickButton}>
+              로그인
+            </button>
           </div>
 
         </SHeader>
