@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +37,10 @@ public class MemberService {
     public Member findMember(String email, Member.OauthPlatform oauthPlatform) {
         return memberRepository.findByEmailAndOauthPlatform(email, oauthPlatform)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public boolean hasMember(String email, Member.OauthPlatform oauthPlatform) {
+        return memberRepository.existsByEmailAndOauthPlatform(email, oauthPlatform);
     }
 
     public Page<Member> findMembers(int page, int size) {
