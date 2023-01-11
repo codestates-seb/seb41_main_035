@@ -3,11 +3,11 @@ import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 
 const LoginHeader = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const onClickButton = () => {
@@ -20,8 +20,8 @@ const LoginHeader = () => {
         <SHeader>
           <p
             className="title"
-            // role="presentation"
-            // onClick={() => navigate('/')}
+            role="presentation"
+            onClick={() => navigate(`/`)}
           >
             Look at me
           </p>
@@ -69,6 +69,7 @@ const SHeader = styled.div`
     text-align: center;
     flex-grow: 1;
     font-size: 60px;
+    cursor: pointer;
   }
 
   .right {
@@ -82,6 +83,7 @@ const SHeader = styled.div`
       margin-top: 15px;
       background-color: #f67b7b;
       color: white;
+      cursor: pointer;
     }
     svg {
       margin-top: 15px;
