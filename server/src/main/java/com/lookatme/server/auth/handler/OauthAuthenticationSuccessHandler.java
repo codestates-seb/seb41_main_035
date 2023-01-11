@@ -88,8 +88,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
-                .port(8080)
+                .host("ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com")
                 .path("/")
                 .queryParams(queryParams)
                 .build()
