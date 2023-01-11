@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
-
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 
@@ -34,6 +33,7 @@ const LoginHeader = () => {
               로그인
             </button>
           </div>
+
         </SHeader>
         {isOpen && (
           <LoginModal

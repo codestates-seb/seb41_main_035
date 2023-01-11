@@ -2,13 +2,11 @@ package com.lookatme.server.config;
 
 import com.lookatme.server.auth.filter.JwtAuthenticationFilter;
 import com.lookatme.server.auth.filter.JwtVerificationFilter;
-import com.lookatme.server.auth.handler.MemberAccessDeniedHandler;
-import com.lookatme.server.auth.handler.MemberAuthenticationEntryPoint;
-import com.lookatme.server.auth.handler.MemberAuthenticationFailureHandler;
-import com.lookatme.server.auth.handler.MemberAuthenticationSuccessHandler;
+import com.lookatme.server.auth.handler.*;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -35,6 +34,7 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthorityUtils authorityUtils;
     private final RedisRepository redisRepository;
+    private final MemberService memberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,8 +54,11 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/members/jwt-test").authenticated()
+                        .antMatchers(HttpMethod.GET, "/auth/jwt-test").authenticated()
                         .anyRequest().permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(new OauthAuthenticationSuccessHandler(jwtTokenizer, memberService))
                 );
 
         return http.build();
@@ -83,12 +86,14 @@ public class SecurityConfiguration {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisRepository, jwtTokenizer);
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
-            jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(redisRepository, jwtTokenizer, authorityUtils);
 
+            builder.addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class); // Oauth필터 뒤에 JwtVerifiaction 필터 배치
             builder.addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
 

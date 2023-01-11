@@ -4,6 +4,7 @@ import com.lookatme.server.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -32,6 +33,17 @@ public class JwtTokenizer {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    // Member 정보를 가지고 Access Token 생성
+    public String delegateAccessToken(Member member) {
+        Map<String, Object> claims = generateClaims(member);
+        String subject = member.getUniqueKey(); // subject = 사용자를 고유하게 구분할 수 있는 값으로 (이메일+소셜 플랫폼)
+        Date expiration = getTokenExpiration(accessTokenExpirationMinutes);
+        String base64EncodedSecretKey = encodeBase64SecretKey(secretKey);
+        String accessToken = generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+
+        return accessToken;
+    }
+
     // Access Token 생성
     public String generateAccessToken(Map<String, Object> claims,
                                       String subject,
@@ -44,7 +56,7 @@ public class JwtTokenizer {
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -56,7 +68,7 @@ public class JwtTokenizer {
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
