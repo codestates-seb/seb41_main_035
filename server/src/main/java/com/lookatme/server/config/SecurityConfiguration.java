@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                         .antMatchers(HttpMethod.POST,"/auth/**").authenticated()
                         .antMatchers(HttpMethod.GET, "/auth/profile").permitAll()
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()

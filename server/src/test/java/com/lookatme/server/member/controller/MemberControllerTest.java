@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -94,6 +95,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void updateMemberTest() throws Exception {
         // Given
         MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", 150, 50);
@@ -122,6 +124,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @WithMockUser()
     void deleteMemberTest() throws Exception {
         // Given
         long memberId = 1L;
