@@ -4,6 +4,7 @@ on: # 트리거 발생 조건 (1. dev 브랜치에 push / 2. server 디렉토리
   push:
     branches:
       - dev
+      - feat/be/cloud
     paths:
       - server/**
 
