@@ -1,6 +1,7 @@
 package com.lookatme.server.member.controller;
 
 import com.google.gson.Gson;
+import com.lookatme.server.auth.controller.AuthController;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.service.AuthService;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         MemberMapperImpl.class
 })
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(MemberController.class)
+@WebMvcTest({MemberController.class, AuthController.class})
 class MemberControllerTest {
 
     @Autowired
@@ -50,7 +51,7 @@ class MemberControllerTest {
     @Autowired
     private Gson gson;
 
-    @Test
+    @Test // TODO: AuthControllerTest로 분리 필요
     void registerMemberTest() throws Exception {
         // Given
         MemberDto.Post postDto = new MemberDto.Post(
@@ -66,7 +67,7 @@ class MemberControllerTest {
 
         // When
         ResultActions actions = mockMvc.perform(
-                post("/members/signup")
+                post("/auth/signup")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
