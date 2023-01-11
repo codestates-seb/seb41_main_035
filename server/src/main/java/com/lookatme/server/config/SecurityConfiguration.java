@@ -54,7 +54,10 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/auth/jwt-test").authenticated()
+                        .antMatchers(HttpMethod.POST,"/auth/**").authenticated()
+                        .antMatchers(HttpMethod.GET, "/auth/profile").permitAll()
+                        .antMatchers(HttpMethod.GET, "/members/**").permitAll()
+                        .antMatchers("/members/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
