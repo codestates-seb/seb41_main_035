@@ -81,30 +81,28 @@ const Sidebar = () => {
 //전체부분
 const SWrapper = styled.div`
   /* position: fixed;
-  top: 0;*/
-  position: sticky;
+  top: 0;
+  overflow: hidden; */
+
+  width: 160px;
+  height: 100vh;
   display: flex;
   justify-content: center;
   /* text-align: center; */
+  background-color: #faf4c5;
+  margin-right: auto;
 `;
 
 const SidebarBox = styled.div`
-  width: 9vw;
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #faf4c5;
-  margin-right: auto;
-  .title {
-    font-size: 17px;
+  .font_size_mid {
+    font-size: 18px;
     font-weight: 700;
     color: #4e4e4e;
-    padding: 40px 0px 20px 20px;
+    padding: 40px 0px 20px 0px;
   }
 `;
 const ItemList = styled.div`
-  .items {
+  .font_size_small {
     font-size: 14px;
     cursor: pointer;
     padding: 10px 0px;
