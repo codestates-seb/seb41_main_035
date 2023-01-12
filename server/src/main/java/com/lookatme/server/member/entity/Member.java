@@ -33,7 +33,7 @@ public class Member extends BaseTimeEntity {
     private String profileImageUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles;
+    private List<String> roles = List.of("USER");
 
     private int height;
 
@@ -87,8 +87,6 @@ public class Member extends BaseTimeEntity {
         this.memberStatus = MemberStatus.MEMBER_ACTIVE;
         this.profileImageUrl = profileImageUrl;
         this.oauthPlatform = oauthPlatform == null ? OauthPlatform.NONE : oauthPlatform; // null이면 NONE으로 저장
-        this.createdDate = LocalDateTime.now();
-        this.updatedDate = LocalDateTime.now();
     }
     
     public String getUniqueKey() { // 사용자를 고유하게 식별할 수 있는 문자열
@@ -97,7 +95,9 @@ public class Member extends BaseTimeEntity {
 
     public void updateMemberProfile(Member member) {
         this.nickname = member.getNickname();
-        this.profileImageUrl = member.getProfileImageUrl();
+        if(member.getProfileImageUrl() != null) {
+            this.profileImageUrl = member.getProfileImageUrl();
+        }
         this.height = member.getHeight();
         this.weight = member.getWeight();
     }
