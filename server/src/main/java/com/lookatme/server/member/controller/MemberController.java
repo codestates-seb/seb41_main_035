@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Validated
@@ -39,8 +40,18 @@ public class MemberController {
     // 회원 목록 조회
     @GetMapping
     public ResponseEntity<?> getMembers(@Positive @RequestParam(defaultValue = "1") int page,
-                                        @Positive @RequestParam(defaultValue = "10") int size) {
-        Page<Member> pageMembers = memberService.findMembers(page - 1, size);
+                                        @Positive @RequestParam(defaultValue = "10") int size,
+                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                        @RequestParam(required = false) String tab) {
+        Page<Member> pageMembers;
+        if(tab != null) {
+            if(memberPrincipal == null) {
+                throw new ErrorLogicException(ErrorCode.AUTHENTICATION_FAILED);
+            }
+            pageMembers = memberService.findFollowers(memberPrincipal.getMemberUniqueKey(), tab, page - 1, size);
+        } else {
+            pageMembers = memberService.findMembers(page - 1, size);
+        }
         return new ResponseEntity<>(
                 new MultiResponseDto<>(
                         mapper.memberListToMemberResponseList(pageMembers.getContent()),
@@ -72,5 +83,30 @@ public class MemberController {
         }
         memberService.deleteMember(memberId);
         return new ResponseEntity<>("회원탈퇴 되었습니다", HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<?> follow(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                    @RequestParam String type,
+                                    @RequestParam String nickname) {
+
+        switch (type) {
+            case "up":
+                memberService.followMember(memberPrincipal.getMemberUniqueKey(), nickname);
+                break;
+            case "down":
+                memberService.unfollowMember(memberPrincipal.getMemberUniqueKey(), nickname);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return ResponseEntity.ok("OK");
+//        Page<Member> pageMembers = memberService.findFollowers(memberPrincipal.getMemberUniqueKey(), "followee", 0, 50);
+//        return new ResponseEntity<>(
+//                new MultiResponseDto<>(
+//                        mapper.memberListToMemberResponseList(pageMembers.getContent()),
+//                        pageMembers),
+//                HttpStatus.OK
+//        );
     }
 }

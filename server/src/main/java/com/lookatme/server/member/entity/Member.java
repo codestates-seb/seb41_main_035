@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,9 +41,11 @@ public class Member extends BaseTimeEntity {
 
     private int weight;
 
-    private int followerCnt;
+    @OneToMany(mappedBy = "from")
+    List<Follow> followees = new ArrayList<>(); // 내가 팔로우 한 사람
 
-    private int followingCnt;
+    @OneToMany(mappedBy = "to")
+    List<Follow> followers = new ArrayList<>(); // 나를 팔로우하는 사람
 
     @Enumerated(EnumType.STRING)
     public MemberStatus memberStatus;
@@ -108,5 +112,26 @@ public class Member extends BaseTimeEntity {
 
     public void setRoles(MemberAuthorityUtils authorityUtils) {
         this.roles = authorityUtils.createRoles(email);
+    }
+
+    public int getFollowerCnt() {
+        return followers.size();
+    }
+
+    public int getFolloweeCnt() {
+        return followees.size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return memberId == member.memberId && email.equals(member.email) && oauthPlatform == member.oauthPlatform;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(memberId, email, oauthPlatform);
     }
 }

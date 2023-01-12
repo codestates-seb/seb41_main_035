@@ -110,7 +110,7 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followingCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
                                 )
                         )
                 ));
@@ -167,7 +167,7 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followingCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
                                 )
                         )
                 ));
