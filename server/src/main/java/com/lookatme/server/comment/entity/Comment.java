@@ -1,6 +1,7 @@
 package com.lookatme.server.comment.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
+import com.lookatme.server.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,9 +30,9 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "post_id")
@@ -49,5 +50,9 @@ public class Comment extends BaseTimeEntity {
 
     public void changeContent(final String content) {
         this.content = content;
+    }
+
+    public void addMember(final Member member) {
+        this.member = member;
     }
 }
