@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Dropdown from '../components/Dropdown';
 
 const PostUploadBar = () => {
   //   const [selectedDropValue, setSelectedDropValue] = useState([
@@ -9,7 +10,9 @@ const PostUploadBar = () => {
       <SWapper>
         <div className="Qb-contianer">
           <button className="image-upload">제품 이미지 업로드</button>
-          <span className="category">카테고리칸</span>
+          <span className="category">
+            <Dropdown />
+          </span>
           <SMidle>
             <div className="itemname">
               제품명
@@ -50,7 +53,7 @@ const SWapper = styled.div`
   justify-content: center;
 
   .Qb-contianer {
-    width: 40%;
+    width: 55%;
     height: 14vh;
     background-color: #d9d9d9;
     /* flex-direction: row; */
@@ -66,8 +69,8 @@ const SWapper = styled.div`
     margin: 10px;
   }
   .category {
-    margin: 25px;
-    font-size: 14px;
+    margin: 20px;
+    font-size: 12px;
   }
 `;
 const SMidle = styled.div`
