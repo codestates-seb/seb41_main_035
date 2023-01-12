@@ -11,7 +11,7 @@ const ChatWindow = () => {
       <div className="chat-container">
         <div className="top">
           <div className="user-info">
-            <Avatar />
+            <Avatar size="45px" />
             <span className="user-name">yuuuuu</span>
           </div>
           <MdNavigateBefore onClick={() => navigate(`/chattinglist`)} />

@@ -14,9 +14,9 @@ const ChattingList = () => {
             <div
               className="chat-box"
               role="presentation"
-              onClick={() => navigate(`/chat`)}
+              onClick={() => navigate(`/chat/${chat.id}`)}
             >
-              <Avatar />
+              <Avatar size="45px" image={chat.avatar} />
               <div className="right content">
                 <div className="user-name">{chat.userNickname}</div>
                 <div className="content_and_time">
