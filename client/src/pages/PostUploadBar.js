@@ -91,8 +91,6 @@ const SMid = styled.div`
   .size {
     margin: 20px 0px;
   }
-  .title {
-  }
 `;
 
 const SRentalcheck = styled.div`
