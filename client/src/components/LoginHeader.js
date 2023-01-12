@@ -29,7 +29,10 @@ const LoginHeader = () => {
           <div className="right zone">
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
-            <AiOutlineMessage size="30" />
+            <AiOutlineMessage
+              size="30"
+              onClick={() => navigate(`/chattinglist`)}
+            />
             <button className="login button" onClick={onClickButton}>
               로그인
             </button>
@@ -76,6 +79,9 @@ const SHeader = styled.div`
     flex-grow: 1;
     display: flex;
     justify-content: center;
+    svg {
+      cursor: pointer;
+    }
 
     button {
       width: 5vw;

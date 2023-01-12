@@ -2,7 +2,6 @@
 import './App.css';
 import PostUpload from './pages/PostUpload';
 import PostView from './pages/PostView';
-
 import LoginHeader from './components/LoginHeader';
 import Outer from './pages/Outer';
 import Top from './pages/Top';
@@ -12,6 +11,7 @@ import Hat from './pages/Hat';
 import Shoes from './pages/Shoes';
 import Home from './pages/Home';
 import Footer from './components/Footer';
+import ChattingList from './pages/ChattingList';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -27,6 +27,7 @@ function App() {
           <Route path="/onepiece" element={<Onepiece />} />
           <Route path="/hat" element={<Hat />} />
           <Route path="/shoes" element={<Shoes />} />
+          <Route path="/chattinglist" element={<ChattingList />} />
         </Routes>
         <Footer />
       </BrowserRouter>
