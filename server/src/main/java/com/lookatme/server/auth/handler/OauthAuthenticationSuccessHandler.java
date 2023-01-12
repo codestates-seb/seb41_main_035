@@ -31,7 +31,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        Member member = saveMember(oAuth2User.getAttributes());
+        Member member = getOrRegisterMember(oAuth2User.getAttributes());
         String accessToken = delegateAccessToken(member);
         String refreshToken = delegateRefreshToken(member);
 
@@ -39,19 +39,24 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private Member saveMember(Map<String, Object> attributes) {
+    private Member getOrRegisterMember(Map<String, Object> attributes) {
         String email = attributes.get("email").toString();
         String nickname = checkValidNickname(attributes.get("name").toString());
         String profileImgLink = attributes.get("picture").toString();
 
-        Member member = Member.builder()
-                .email(email)
-                .nickname(nickname)
-                .profileImageUrl(profileImgLink)
-                .oauthPlatform(Member.OauthPlatform.GOOGLE).build();
+        Member savedMember;
+        if (memberService.hasMember(email, Member.OauthPlatform.GOOGLE)) { // 이미 가입되어있는 회원이라면
+            savedMember = memberService.findMember(email, Member.OauthPlatform.GOOGLE);
+        } else { // 신규 가입
+            Member member = Member.builder()
+                    .email(email)
+                    .nickname(nickname)
+                    .profileImageUrl(profileImgLink)
+                    .oauthPlatform(Member.OauthPlatform.GOOGLE).build();
 
-        Member savedMember = memberService.registerMember(member);
-        log.info(">> 소셜 회원가입 완료: {}", savedMember.getUniqueKey());
+            savedMember = memberService.registerMember(member);
+            log.info(">> 소셜 회원가입 완료: {}", savedMember.getUniqueKey());
+        }
         return savedMember;
     }
 
@@ -73,7 +78,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
     // 최소한의 닉네임 중복 방지
     private String checkValidNickname(String nickname) {
         int idx = 1;
-        while(memberService.hasNickname(nickname)) {
+        while (memberService.hasNickname(nickname)) {
             nickname = String.format("%s-%d", nickname, idx++);
         }
         return nickname;
@@ -88,8 +93,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
-                .port(8080)
+                .host("ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com")
                 .path("/")
                 .queryParams(queryParams)
                 .build()
