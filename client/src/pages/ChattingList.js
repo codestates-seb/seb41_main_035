@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
+import { useNavigate } from 'react-router-dom';
 const ChattingList = () => {
+  const navigate = useNavigate();
   const data = dummyData.posts;
   return (
     <SWrapper>
@@ -9,7 +11,11 @@ const ChattingList = () => {
         <p>채팅내역</p>
         {data.map((chat) => (
           <SChatList key={chat.id}>
-            <div className="chat-box">
+            <div
+              className="chat-box"
+              role="presentation"
+              onClick={() => navigate(`/chat`)}
+            >
               <Avatar />
               <div className="right content">
                 <div className="user-name">{chat.userNickname}</div>
@@ -48,6 +54,7 @@ const SChatList = styled.div`
   display: flex;
   justify-content: center;
   .chat-box {
+    cursor: pointer;
     width: 85%;
     height: 10vh;
     background-color: skyblue;
