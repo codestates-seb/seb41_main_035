@@ -13,10 +13,6 @@ const ImageInput = () => {
     ]);
   };
 
-  const onRemoveToAdd = (deleteUrl) => {
-    setImgFile(imgFile.filter((photo) => photo.url != deleteUrl));
-  };
-
   return (
     <SWrapper>
       <input
