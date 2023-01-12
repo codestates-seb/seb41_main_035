@@ -18,11 +18,10 @@ const Footer = () => {
       </div>
       <div className="FooterBox">
         <a href="https://github.com/yspark14">
-          {/* 아이콘삽입 */}
           <BsGithub className="github" />
           <span>
             Frontend
-            {/* 한줄 아래로 */}
+
             <br />
             박영선
           </span>
@@ -30,11 +29,9 @@ const Footer = () => {
       </div>
       <div className="FooterBox">
         <a href="https://github.com/01055986186">
-          {/* 아이콘삽입 */}
           <BsGithub className="github" />
           <span>
             Frontend
-            {/* 한줄 아래로 */}
             <br />
             이승준
           </span>
@@ -42,11 +39,9 @@ const Footer = () => {
       </div>
       <div className="FooterBox">
         <a href="https://github.com/eheh12321">
-          {/* 아이콘삽입 */}
           <BsGithub className="github" />
           <span>
             Backend
-            {/* 한줄 아래로 */}
             <br />
             이도형
           </span>
@@ -54,11 +49,9 @@ const Footer = () => {
       </div>
       <div className="FooterBox">
         <a href="https://github.com/Seongbaem">
-          {/* 아이콘삽입 */}
           <BsGithub className="github" />
           <span>
             Backend
-            {/* 한줄 아래로 */}
             <br />
             오성범
           </span>
@@ -66,11 +59,9 @@ const Footer = () => {
       </div>
       <div className="FooterBox">
         <a href="https://github.com/hyejuc">
-          {/* 아이콘삽입 */}
           <BsGithub className="github" />
           <span>
             Backend
-            {/* 한줄 아래로 */}
             <br />
             조혜주
           </span>
@@ -92,9 +83,9 @@ const FWrapper = styled.div`
   display: flex;
   text-align: center;
   justify-content: space-evenly;
-  padding: 50px;
   background-color: #d9d9d9;
   width: 100%;
+  padding: 50px;
   /* 중앙정렬 */
   margin: 0 auto;
   .FooterBox {
