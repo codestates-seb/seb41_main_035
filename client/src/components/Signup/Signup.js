@@ -33,12 +33,130 @@ function Signup(props) {
           onClick={closeButton}
         />
         <Contents>
-          <h1>회원가입</h1>
-          <input className="id" onChange={onChangeId}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
+          <h1
+            style={{
+              'margin-bottom': '5%',
+              display: 'flex',
+              'justify-content': 'space-evenly',
+              fontSize: '30px',
+              position: 'relative',
+              top: '-30px',
+            }}
+          >
+            Look at me
+          </h1>
+          <h2 style={{ fontSize: '20px', position: 'relative', top: '-30px' }}>
+            회원가입
+          </h2>
+          <input
+            className="id"
+            placeholder="아이디"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '-30px',
+              height: '5px',
+            }}
+            onChange={onChangeId}
+          ></input>
+          <input
+            className="pw"
+            placeholder="비밀번호"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '-23px',
+              height: '5px',
+            }}
+            onChange={onChangePassword}
+          ></input>
+          <input
+            className="vfpw"
+            placeholder="비밀번호확인"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '-18px',
+              height: '5px',
+            }}
+            onChange={onChangePassword}
+          ></input>
+          <input
+            className="na"
+            placeholder="닉네임"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '-11px',
+              height: '5px',
+            }}
+            onChange={onChangePassword}
+          ></input>
+          <input
+            className="ta"
+            placeholder="키"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '-6px',
+              height: '5px',
+            }}
+            onChange={onChangePassword}
+          ></input>
+          <input
+            className="wg"
+            placeholder="몸무게"
+            style={{
+              'font-size': '14px',
+              padding: '12px 12px',
+              'background-color': 'gary',
+              'border-radius': '0px',
+              width: '250px',
+              color: 'black',
+              'font-weight': '200',
+              'margin-top': '-30px',
+              position: 'relative',
+              top: '1px',
+              height: '5px',
+            }}
+            onChange={onChangePassword}
+          ></input>
           <SigninButton onClick={SignIn}>회원가입</SigninButton>
         </Contents>
       </ModalWrap>
@@ -56,6 +174,7 @@ const Overlay = styled.div`
   right: 0;
   background: rgba(0, 0, 0, 0.2);
   z-index: 9999;
+  text-align: center;
 `;
 
 const ModalWrap = styled.div`
@@ -95,6 +214,7 @@ const SigninButton = styled.button`
   &:hover {
     background-color: #898989;
   }
+  text-align: center;
 `;
 
 export default Signup;

@@ -58,13 +58,14 @@ function LoginModal(props) {
           </h2>
           <input
             className="id"
+            placeholder="아이디"
             style={{
               'font-size': '14px',
-              padding: '12px 63px',
+              padding: '12px 12px',
               'background-color': 'gary',
               'border-radius': '0px',
+              width: '250px',
               color: 'black',
-              'font-style': 'italic',
               'font-weight': '200',
               'margin-top': '-30px',
               position: 'relative',
@@ -74,13 +75,14 @@ function LoginModal(props) {
           ></input>
           <input
             className="pw"
+            placeholder="비밀번호"
             style={{
               'font-size': '14px',
-              padding: '12px 63px',
+              padding: '12px 12px',
+              width: '250px',
               'background-color': 'gary',
               'border-radius': '0px',
-              color: 'white',
-              'font-style': 'italic',
+              color: 'black',
               'font-weight': '200',
               'margin-top': '-30px',
               position: 'relative',
@@ -126,6 +128,7 @@ const Overlay = styled.div`
   right: 0;
   background: rgba(0, 0, 0, 0.2);
   z-index: 9999;
+  text-align: center;
 `;
 
 const ModalWrap = styled.div`

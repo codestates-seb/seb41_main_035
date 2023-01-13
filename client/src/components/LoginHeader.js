@@ -27,7 +27,7 @@ const LoginHeader = () => {
           </p>
           <SearchBox />
           <div className="right zone">
-            <BsPersonCircle size="30" />
+            <BsPersonCircle onClick={() => navigate(`/myinfo`)} size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
             <button className="login button" onClick={onClickButton}>
