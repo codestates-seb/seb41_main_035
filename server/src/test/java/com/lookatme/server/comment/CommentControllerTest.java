@@ -72,14 +72,24 @@ public class CommentControllerTest {
                 .content("댓글 내용")
                 .build();
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .email("email@com")
+                .nickname("댓글 작성자 닉네임")
+                .profileImageUrl("댓글 작성자 프로필 사진 URL")
+                .height(180)
+                .weight(70)
+                .build();
+
         String content = objectMapper.writeValueAsString(commentPostDto);
 
         Comment comment = Comment.builder()
                 .commentId(1L)
                 .content(commentPostDto.getContent())
+                .member(member)
                 .build();
 
-        given(commentService.createComment(Mockito.any(CommentPostDto.class), Mockito.any(MemberPrincipal.class))).willReturn(comment);
+        given(commentService.createComment(Mockito.any(CommentPostDto.class), Mockito.any())).willReturn(comment);
 
         //when
         ResultActions actions =
@@ -134,15 +144,15 @@ public class CommentControllerTest {
         Member member = Member.builder()
                 .memberId(1L)
                 .email("email@com")
-                .nickname("닉네임")
-                .profileImageUrl("http://프사링크")
+                .nickname("댓글 작성자 닉네임")
+                .profileImageUrl("댓글 작성자 프로필 사진 URL")
                 .height(180)
                 .weight(70)
                 .build();
 
         comment.addMember(member);
 
-        given(commentService.editComment(Mockito.anyLong(),Mockito.any(CommentPatchDto.class), Mockito.any(MemberPrincipal.class))).willReturn(comment);
+        given(commentService.editComment(Mockito.anyLong(),Mockito.any(CommentPatchDto.class), Mockito.any())).willReturn(comment);
 
         //when
         Long commentId = comment.getCommentId();
