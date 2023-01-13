@@ -2,11 +2,13 @@ package com.lookatme.server.member.controller;
 
 import com.google.gson.Gson;
 import com.lookatme.server.auth.controller.AuthController;
+import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.mapper.MemberMapperImpl;
 import com.lookatme.server.member.service.MemberService;
@@ -18,6 +20,9 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
@@ -27,7 +32,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -194,6 +201,108 @@ class MemberControllerTest {
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         pathParameters(
                                 parameterWithName("memberId").description("회원 번호")
+                        )
+                ));
+    }
+
+    @DisplayName("팔로우 테스트")
+    @Test
+    void followTest() throws Exception {
+        // Given
+        willDoNothing().given(memberService).followMember(anyString(), anyString());
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                post("/members/follow")
+                        .header("Authorization", accessToken)
+                        .param("type", "up")
+                        .param("nickname", "opponent_nickname")
+        );
+
+        // Then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document(
+                                "post-member-follow",
+                                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                                requestParameters(
+                                        parameterWithName("type").description("팔로우 기능 구분(up/down)"),
+                                        parameterWithName("nickname").description("상대방 닉네임")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("회원 목록 조회 테스트")
+    @Test
+    void getMembersTest() throws Exception {
+        // Given
+        MemberPrincipal memberPrincipal = new MemberPrincipal(
+                1L,
+                "email@com",
+                Member.OauthPlatform.NONE,
+                "email@com/NONE");
+        int page = 1;
+        int size = 10;
+        String tab = "followee";
+
+        List<Member> memberList = List.of(savedMember);
+        savedMember.getFollowers().add(new Follow(null, null));
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), memberList.size());
+        Page<Member> memberPage = new PageImpl<>(memberList.subList(start, end), pageRequest, memberList.size());
+
+        given(
+                memberService.findFollowers(
+                        memberPrincipal.getMemberUniqueKey(),
+                        tab,
+                        page - 1,
+                        size)
+        ).willReturn(memberPage);
+
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                get("/members")
+                        .param("page", Integer.toString(page))
+                        .param("size", Integer.toString(size))
+                        .param("tab", tab
+                        )
+                        .header("Authorization", accessToken)
+        );
+
+        // Then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "get-members",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestParameters(
+                                List.of(
+                                        parameterWithName("page").description("페이지"),
+                                        parameterWithName("size").description("페이지 당 데이터 개수"),
+                                        parameterWithName("tab").description("필터 기준(followee/follower)")
+                                )
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("data[].email").type(STRING).description("이메일"),
+                                        fieldWithPath("data[].nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("data[].profileImageUrl").type(STRING).description("프로필 사진 주소"),
+                                        fieldWithPath("data[].height").type(NUMBER).description("키"),
+                                        fieldWithPath("data[].weight").type(NUMBER).description("몸무게"),
+                                        fieldWithPath("data[].followerCnt").type(NUMBER).description("팔로워 수"),
+                                        fieldWithPath("data[].followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("pageInfoDto.page").type(NUMBER).description("페이지"),
+                                        fieldWithPath("pageInfoDto.size").type(NUMBER).description("페이지 당 데이터 개수"),
+                                        fieldWithPath("pageInfoDto.totalElements").type(NUMBER).description("전체 데이터 개수"),
+                                        fieldWithPath("pageInfoDto.totalPages").type(NUMBER).description("전체 페이지")
+
+                                )
                         )
                 ));
     }

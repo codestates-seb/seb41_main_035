@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Validated
@@ -101,12 +100,5 @@ public class MemberController {
                 throw new IllegalArgumentException();
         }
         return ResponseEntity.ok("OK");
-//        Page<Member> pageMembers = memberService.findFollowers(memberPrincipal.getMemberUniqueKey(), "followee", 0, 50);
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(
-//                        mapper.memberListToMemberResponseList(pageMembers.getContent()),
-//                        pageMembers),
-//                HttpStatus.OK
-//        );
     }
 }
