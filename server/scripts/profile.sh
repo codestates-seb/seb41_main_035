@@ -10,7 +10,7 @@ function find_idle_profile() {
 
     if [ "${RESPONSE_CODE}" -ge 400 ] || [ "${RESPONSE_CODE}" -eq 000 ] # 400보다 크거나, 000(TimeOut)이면 -> Error 발생
     then
-      CURRENT_PROFILE=real1 # 에러 발생 시 real1 포트로 보내도록 세팅
+      CURRENT_PROFILE=real2 # 에러 발생 시 real1 포트로 보내도록 세팅
     else # 정상 상태(200) 이라면
       CURRENT_PROFILE=$(curl -s $DOMAIN) # 사이트에서 현재 사용중인 포트를 응답해줌(real1/real2)
     fi
@@ -34,5 +34,17 @@ function find_idle_port() {
     echo "8081"
   else
     echo "8082"
+  fi
+}
+
+# 현재 운영중인 포트
+function find_current_port() {
+  IDLE_PROFILE=$(find_idle_profile) # SubShell 호출
+
+  if [ "${IDLE_PROFILE}" == real1 ]
+  then
+    echo "8082"
+  else
+    echo "8081"
   fi
 }

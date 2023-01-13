@@ -21,6 +21,7 @@ const Footer = () => {
           <BsGithub className="github" />
           <span>
             Frontend
+
             <br />
             박영선
           </span>
@@ -89,6 +90,7 @@ const FWrapper = styled.div`
   margin: 0 auto;
   .FooterBox {
     cursor: pointer;
+
     /* :hover {
       color: #ffff;
     }
