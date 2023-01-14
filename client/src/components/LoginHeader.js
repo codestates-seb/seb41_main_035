@@ -5,10 +5,12 @@ import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
+import userStore from '../store/userStore';
 
 const LoginHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const userId = userStore((state) => state.userId);
 
   const onClickButton = () => {
     setIsOpen(true);
@@ -27,7 +29,10 @@ const LoginHeader = () => {
           </p>
           <SearchBox />
           <div className="right zone">
-            <BsPersonCircle onClick={() => navigate(`/profile`)} size="30" />
+            <BsPersonCircle
+              onClick={() => navigate(`/profile/${userId}`)}
+              size="30"
+            />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
             <button className="login button" onClick={onClickButton}>

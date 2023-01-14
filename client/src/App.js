@@ -21,7 +21,7 @@ function App() {
         <LoginHeader />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:userId" element={<Profile />} />
           <Route path="/outer" element={<Outer />} />
           <Route path="/top" element={<Top />} />
           <Route path="/bottom" element={<Bottom />} />
