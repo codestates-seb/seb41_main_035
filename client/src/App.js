@@ -10,7 +10,7 @@ import Onepiece from './pages/Onepiece';
 import Hat from './pages/Hat';
 import Shoes from './pages/Shoes';
 import Home from './pages/Home';
-import MyInfo from './pages/MyInfo';
+import Profile from './pages/Profile';
 import Footer from './components/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function App() {
         <LoginHeader />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/myinfo" element={<MyInfo />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/outer" element={<Outer />} />
           <Route path="/top" element={<Top />} />
           <Route path="/bottom" element={<Bottom />} />

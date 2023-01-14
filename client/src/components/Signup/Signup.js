@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+import axios from 'axios';
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+
+const backendUrl = 'http://13.125.30.88/';
 
 function Signup(props) {
   const [id, setId] = useState('');
@@ -19,9 +22,19 @@ function Signup(props) {
     setPassword(e);
   };
 
-  const SignIn = () => {
-    console.log(id);
-    console.log(password);
+  const SignUpUser = async () => {
+    const res = await axios.post(
+      `${backendUrl}auth/signup`,
+      {
+        nickname: 'test',
+        email: 'test@test.com',
+        password: 'test123',
+        height: 180,
+        weight: 70,
+      },
+      { withCredentials: true }
+    );
+    console.log(res.data);
     // axios sign in
   };
 
@@ -157,7 +170,7 @@ function Signup(props) {
             }}
             onChange={onChangePassword}
           ></input>
-          <SigninButton onClick={SignIn}>회원가입</SigninButton>
+          <SigninButton onClick={SignUpUser}>회원가입</SigninButton>
         </Contents>
       </ModalWrap>
     </Overlay>

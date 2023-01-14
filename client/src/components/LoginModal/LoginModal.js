@@ -1,9 +1,15 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import userStore from '../../store/userStore';
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import Signup from '../Signup/Signup';
 
+const backendUrl = 'http://13.125.30.88/';
+
 function LoginModal(props) {
+  const setUserId = userStore((state) => state.setUserId);
+
   const [signUp, setSignUp] = useState(false);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -22,9 +28,17 @@ function LoginModal(props) {
     setPassword(e);
   };
 
-  const SignIn = () => {
-    console.log(id);
-    console.log(password);
+  const SignIn = async () => {
+    // const res = await axios.get(
+    //   `${backendUrl}auth/login`,
+    //   {
+    //     email: id,
+    //     password: password,
+    //   },
+    //   { withCredentials: true }
+    // );
+    const user_id = 5;
+    setUserId(user_id);
     // axios sign in
   };
 
