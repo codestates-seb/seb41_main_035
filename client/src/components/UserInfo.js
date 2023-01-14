@@ -225,7 +225,6 @@ const SNickVs = styled.div`
 
 
 const SWeightIn = styled.input`
-
   margin: 5px;
 `;
 
