@@ -21,7 +21,6 @@ const Footer = () => {
           <BsGithub className="github" />
           <span>
             Frontend
-
             <br />
             박영선
           </span>

@@ -2,15 +2,23 @@ import styled from 'styled-components';
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 import SearchBox from './SearchBox';
+import { useNavigate } from 'react-router-dom';
 const LogoutHeader = () => {
+  const navigate = useNavigate();
   return (
     <>
       <SWrapper>
         <SHeader>
-          <p className="title">Look at me</p>
+          <p
+            className="title"
+            role="presentation"
+            onClick={() => navigate(`/`)}
+          >
+            Look at me
+          </p>
           <SearchBox />
           <div className="right zone">
-            <BsPersonCircle size="30" />
+            <BsPersonCircle onClick={() => navigate(`/myinfo`)} size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
             <button className="login button">로그아웃</button>
