@@ -38,11 +38,6 @@ function Signup(props) {
   };
 
   const SignUpUser = async () => {
-    console.log(nickname);
-    console.log(height);
-    console.log(weight);
-    console.log(id);
-    console.log(password);
     const res = await axios.post(
       `${backendUrl}auth/signup`,
       {
@@ -161,20 +156,6 @@ const SigninButton = styled.button`
     background-color: #898989;
   }
   text-align: center;
-  margin-top: 20px;
-`;
-const SInput = styled.input`
-  font-size: 14px;
-  padding: 12px 12px;
-  background-color: gary;
-  border-radius: 0px;
-  width: 250px;
-  color: black;
-  font-weight: 200;
-  margin-top: -30px;
-  position: relative;
-  height: 5px;
-  margin-bottom: 10px;
 `;
 
 export default Signup;
