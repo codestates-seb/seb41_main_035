@@ -8,6 +8,9 @@ const backendUrl = 'http://13.125.30.88/';
 function Signup(props) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
 
   const closeButton = () => {
     // eslint-disable-next-line react/prop-types
@@ -15,14 +18,31 @@ function Signup(props) {
   };
 
   const onChangeId = (e) => {
-    setId(e);
+    setId(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    setPassword(e);
+    setPassword(e.target.value);
+  };
+
+  const onChangeNickname = (e) => {
+    setNickname(e.target.value);
+  };
+
+  const onChangeHeight = (e) => {
+    setHeight(e.target.value);
+  };
+
+  const onChangeWeight = (e) => {
+    setWeight(e.target.value);
   };
 
   const SignUpUser = async () => {
+    console.log(nickname);
+    console.log(height);
+    console.log(weight);
+    console.log(id);
+    console.log(password);
     const res = await axios.post(
       `${backendUrl}auth/signup`,
       {
@@ -53,123 +73,37 @@ function Signup(props) {
               'justify-content': 'space-evenly',
               fontSize: '30px',
               position: 'relative',
-              top: '-30px',
             }}
           >
             Look at me
           </h1>
-          <h2 style={{ fontSize: '20px', position: 'relative', top: '-30px' }}>
-            회원가입
-          </h2>
-          <input
+          <h2 style={{ fontSize: '20px', position: 'relative' }}>회원가입</h2>
+          <SInput
             className="id"
             placeholder="아이디"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '-30px',
-              height: '5px',
-            }}
             onChange={onChangeId}
-          ></input>
-          <input
+          ></SInput>
+          <SInput
             className="pw"
             placeholder="비밀번호"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
+            onChange={onChangePassword}
+          ></SInput>
 
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '-23px',
-              height: '5px',
-            }}
-            onChange={onChangePassword}
-          ></input>
-          <input
-            className="vfpw"
-            placeholder="비밀번호확인"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '-18px',
-              height: '5px',
-            }}
-            onChange={onChangePassword}
-          ></input>
-          <input
+          <SInput
             className="na"
             placeholder="닉네임"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '-11px',
-              height: '5px',
-            }}
-            onChange={onChangePassword}
-          ></input>
-          <input
+            onChange={onChangeNickname}
+          ></SInput>
+          <SInput
             className="ta"
             placeholder="키"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '-6px',
-              height: '5px',
-            }}
-            onChange={onChangePassword}
-          ></input>
-          <input
+            onChange={onChangeHeight}
+          ></SInput>
+          <SInput
             className="wg"
             placeholder="몸무게"
-            style={{
-              'font-size': '14px',
-              padding: '12px 12px',
-              'background-color': 'gary',
-              'border-radius': '0px',
-              width: '250px',
-              color: 'black',
-              'font-weight': '200',
-              'margin-top': '-30px',
-              position: 'relative',
-              top: '1px',
-              height: '5px',
-            }}
-            onChange={onChangePassword}
-          ></input>
+            onChange={onChangeWeight}
+          ></SInput>
           <SigninButton onClick={SignUpUser}>회원가입</SigninButton>
         </Contents>
       </ModalWrap>
@@ -222,12 +156,25 @@ const SigninButton = styled.button`
   color: white;
   font-style: italic;
   font-weight: 200;
-  margin-top: 10px;
   cursor: pointer;
   &:hover {
     background-color: #898989;
   }
   text-align: center;
+  margin-top: 20px;
+`;
+const SInput = styled.input`
+  font-size: 14px;
+  padding: 12px 12px;
+  background-color: gary;
+  border-radius: 0px;
+  width: 250px;
+  color: black;
+  font-weight: 200;
+  margin-top: -30px;
+  position: relative;
+  height: 5px;
+  margin-bottom: 10px;
 `;
 
 export default Signup;

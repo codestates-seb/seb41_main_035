@@ -3,20 +3,31 @@ import styled from 'styled-components';
 import PostBox from '../components/PostBox';
 import Sidebar from '../components/Sidebar';
 import UserInfo from '../components/UserInfo';
+import userStore from '../store/userStore';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
+  const params = useParams();
+  const userId = params.userId;
+  const userStoreId = userStore((state) => state.userId);
+
   return (
     <>
       <SWrapper>
         <Sidebar />
         <div className="main post">
           <UserInfo />
-          <Filter>
-            <SCodi>
-              <SMyCodi>My Codi</SMyCodi>
-              <SLikeCodi>Like Codi</SLikeCodi>
-            </SCodi>
-          </Filter>
+          <Sline></Sline>
+          {userId == userStoreId ? (
+            <Filter>
+              <SCodi>
+                <SMyCodi>My Codi</SMyCodi>
+                <SLikeCodi>Like Codi</SLikeCodi>
+              </SCodi>
+            </Filter>
+          ) : (
+            ''
+          )}
           <PostBox />
         </div>
       </SWrapper>
@@ -62,6 +73,11 @@ const SLikeCodi = styled.button`
 `;
 
 const SCodi = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Sline = styled.hr`
   display: flex;
   justify-content: center;
 `;
