@@ -11,8 +11,6 @@ import Hat from './pages/Hat';
 import Shoes from './pages/Shoes';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-import ChattingList from './pages/ChattingList';
-import ChatWindow from './pages/ChatWindow';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -28,8 +26,6 @@ function App() {
           <Route path="/onepiece" element={<Onepiece />} />
           <Route path="/hat" element={<Hat />} />
           <Route path="/shoes" element={<Shoes />} />
-          <Route path="/chattinglist" element={<ChattingList />} />
-          <Route path="/chat" element={<ChatWindow />} />
         </Routes>
         <Footer />
       </BrowserRouter>

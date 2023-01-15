@@ -5,19 +5,29 @@ import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
+import Avatar from './Avatar';
+import ChattingList from './ChattingList';
 
 const LoginHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const onClickButton = () => {
     setIsOpen(true);
+  };
+  const onChatOpen = () => {
+    setIsChatOpen((prev) => !prev);
   };
 
   return (
     <>
       <SWrapper>
         <SHeader>
+          {/* <Avatar
+            image="스크린샷 2023-01-13 오후 4.47.01 1.png"
+            size="54px"
+          /> */}
           <p
             className="title"
             role="presentation"
@@ -29,12 +39,9 @@ const LoginHeader = () => {
           <div className="right zone">
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
-            <AiOutlineMessage
-              size="30"
-              onClick={() => navigate(`/chattinglist`)}
-            />
+            <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button" onClick={onClickButton}>
-              로그인
+              LOG IN
             </button>
           </div>
         </SHeader>
@@ -46,6 +53,7 @@ const LoginHeader = () => {
             }}
           />
         )}
+        {isChatOpen && <ChattingList onChatOpen={onChatOpen} />}
       </SWrapper>
     </>
   );
@@ -58,42 +66,44 @@ const SWrapper = styled.div`
   display: flex;
 `;
 const SHeader = styled.div`
-  background-color: #d9d9d9;
   width: 100%;
-  height: 15vh;
+  height: 13vh;
   display: flex;
   align-items: center;
-  border: 1px solid gray;
+  border: 3px solid #196ba5;
+  justify-content: space-between;
   border-top: 0;
   border-left: 0;
   border-right: 0;
 
   .title {
-    text-align: center;
+    /* text-align: center; */
     flex-grow: 1;
     font-size: 60px;
     cursor: pointer;
+    margin-left: 20px;
+    margin-top: 80px;
+    color: #196ba5;
   }
 
   .right {
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-right: 20px;
+    margin-top: 40px;
     svg {
       cursor: pointer;
+      color: #565656;
+      padding: 0 20px;
     }
-
     button {
       width: 5vw;
       height: 30px;
-      margin-top: 15px;
-      background-color: #f67b7b;
-      color: white;
+      font-size: 17px;
+      border: none;
+      color: darkgray;
       cursor: pointer;
-    }
-    svg {
-      margin-top: 15px;
-      padding: 0 20px;
     }
   }
 `;
