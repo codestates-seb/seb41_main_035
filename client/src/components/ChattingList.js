@@ -82,7 +82,6 @@ const SWrapper = styled.div`
     overflow: auto;
     &::-webkit-scrollbar {
       width: 7px;
-      /* height: 5px; */
       background-color: #cadde5;
     }
     &::-webkit-scrollbar-thumb {
@@ -90,9 +89,6 @@ const SWrapper = styled.div`
       border-radius: 5px;
     }
   }
-  /* .chat-container ::-webkit-scrollbar {
-    background: #cadde5;
-  } */
 `;
 const SChatList = styled.div`
   display: flex;
