@@ -74,7 +74,7 @@ public class MessageControllerTest {
                 .receiverNickname("받는 사람 닉네임")
                 .build();
 
-        Member receiver = Member.builder()료
+        Member receiver = Member.builder()
                 .memberId(1L)
                 .email("email@com")
                 .nickname("메시지 발신자 닉네임")
