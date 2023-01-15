@@ -35,15 +35,25 @@ const LoginHeader = () => {
           >
             Look at me
           </p>
+          {/* className={isLogin ? 'Loginsearch' : 'LogoutSearch'} */}
           <SearchBox />
+          {/* {isLogin ? ( */}
           <div className="right zone">
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
-            <button className="login button" onClick={onClickButton}>
-              LOG IN
-            </button>
+            <button className="login button">Log out</button>
           </div>
+          {/* ) : ( */}
+          {/* <div className="right zone">
+            <BsPersonCircle size="30" />
+            <BsPencilSquare size="30" />
+            <AiOutlineMessage size="30" onClick={onChatOpen} />
+            <button className="login button" onClick={onClickButton}>
+              Log in
+            </button>
+          </div> */}
+          {/* )} */}
         </SHeader>
         {isOpen && (
           <LoginModal
@@ -85,7 +95,9 @@ const SHeader = styled.div`
     margin-top: 80px;
     color: #196ba5;
   }
-
+  .autocomplete-wrapper {
+    /* position: absolute; */
+  }
   .right {
     flex-grow: 1;
     display: flex;
@@ -98,7 +110,7 @@ const SHeader = styled.div`
       padding: 0 20px;
     }
     button {
-      width: 5vw;
+      width: 6vw;
       height: 30px;
       font-size: 17px;
       border: none;
