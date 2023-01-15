@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
+import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
 
 const SearchBox = () => {
   const [hasText, setHasText] = useState(false);
@@ -49,6 +50,7 @@ const SearchBox = () => {
   return (
     <div className="autocomplete-wrapper">
       <SInputContainer>
+        <AiOutlineSearch />
         <input
           className="header-bottom-search"
           type="text"
@@ -56,13 +58,13 @@ const SearchBox = () => {
           value={inputValue}
           onChange={onInputChange}
         ></input>
-        <div
-          className="delete-button"
-          role="presentation"
-          onClick={onDeleteButtonClick}
-        >
-          &times;
-        </div>
+        {hasText ? (
+          <AiOutlineClose
+            className="delete-button"
+            role="presentation"
+            onClick={onDeleteButtonClick}
+          />
+        ) : null}
       </SInputContainer>
       {hasText ? <DropDown options={options} onComboBox={onComboBox} /> : null}
     </div>
@@ -75,12 +77,16 @@ const DropDown = ({ options, onComboBox }) => {
 const SInputContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 10px;
-  border: 2px solid black;
+  margin-top: 20px;
+  border: 2px solid #565656;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
   position: releative;
   input {
-    width: 30vw;
+    width: 28vw;
     height: 5vh;
+
     border: none;
     background: transparent;
     flex-grow: 1;
