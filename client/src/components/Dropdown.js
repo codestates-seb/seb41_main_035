@@ -25,4 +25,5 @@ const SDropdown = styled.div`
     background-color: #eee6ca;
   }
 `;
+
 export default Dropdown;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import ItemImageInput from '../components/ItemImageInput';
 
-const PostUploadBar = (props) => {
+const PostUploadBar = () => {
   //   const [selectedDropValue, setSelectedDropValue] = useState([
   //     '카테고리를 선택하세요.',
   //   ]);

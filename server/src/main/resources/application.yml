@@ -1,0 +1,89 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:mem:test
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  output:
+    ansi:
+      enabled: always
+  redis:
+    host: localhost
+    port: 6379
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: secret
+            client-secret: secret
+            scope:
+              - email
+              - profile
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+jwt:
+  secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 360
+  
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: debug
+    root: info
+
+---
+# 무중단 배포를 위한 설정 (8081 포트 설정)
+spring:
+  config:
+    activate:
+      on-profile: real1
+server:
+  port: 8081
+
+---
+# 무중단 배포를 위한 설정 (8082 포트 설정)
+spring:
+  config:
+    activate:
+      on-profile: real2
+server:
+  port: 8082
+
+---
+# 환경변수 없어도 일단 돌아가게 만들도록 하기 위해 별도로 분리
+spring:
+  config:
+    activate:
+      on-profile: local-dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PWD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_ID}
+            client-secret: ${OAUTH_GOOGLE_SECRET}
+            scope:
+              - email
+              - profile

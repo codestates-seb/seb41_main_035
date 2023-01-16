@@ -1,20 +1,77 @@
 // import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 const Sidebar = () => {
+  const usenavigate = useNavigate();
+
   return (
     <SWrapper>
       <SidebarBox>
         <div>
-          <p className="font_size_mid">카테고리</p>
+          <p className="title">카테고리</p>
         </div>
         <ItemList>
           <div>
-            <p className="font_size_small"> 아우터</p>
-            <p className="font_size_small"> 상의</p>
-            <p className="font_size_small"> 하의</p>
-            <p className="font_size_small"> 원피스</p>
-            <p className="font_size_small"> 모자</p>
-            <p className="font_size_small"> 신발</p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/outer`);
+              }}
+            >
+              {' '}
+              아우터
+            </p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/top`);
+              }}
+            >
+              {' '}
+              상의
+            </p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/bottom`);
+              }}
+            >
+              {' '}
+              하의
+            </p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/onepiece`);
+              }}
+            >
+              {' '}
+              원피스
+            </p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/hat`);
+              }}
+            >
+              {' '}
+              모자
+            </p>
+            <p
+              className="items"
+              role="presentation"
+              onClick={() => {
+                usenavigate(`/shoes`);
+              }}
+            >
+              {' '}
+              신발
+            </p>
           </div>
         </ItemList>
       </SidebarBox>
