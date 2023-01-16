@@ -63,27 +63,3 @@ spring:
 server:
   port: 8082
 
----
-# 환경변수 없어도 일단 돌아가게 만들도록 하기 위해 별도로 분리
-spring:
-  config:
-    activate:
-      on-profile: local-dev
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PWD}
-  jpa:
-    hibernate:
-      ddl-auto: update
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${OAUTH_GOOGLE_ID}
-            client-secret: ${OAUTH_GOOGLE_SECRET}
-            scope:
-              - email
-              - profile
