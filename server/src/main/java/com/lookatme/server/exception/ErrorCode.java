@@ -7,6 +7,10 @@ public enum ErrorCode {
     // COMMENT
     COMMENT_NOT_FOUND("해당 댓글은 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
+    // MESSAGE
+    MESSAGE_NOT_FOUND("해당 메시지는 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    MESSAGE_NOT_SEND_TO_SELF("자기 자신에게는 메시지를 보낼 수 없습니다.", HttpStatus.BAD_REQUEST),
+
     // MEMBER
     MEMBER_NOT_FOUND("회원이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     MEMBER_EXISTS("이미 존재하는 회원입니다.", HttpStatus.BAD_REQUEST),
