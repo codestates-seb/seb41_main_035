@@ -8,8 +8,11 @@ import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.OauthPlatform;
+import com.lookatme.server.member.mapper.MemberMapper;
 import com.lookatme.server.member.mapper.MemberMapperImpl;
 import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +34,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -71,20 +73,27 @@ class MemberControllerTest {
     @Autowired
     private JwtTokenizer jwtTokenizer;
 
+    @Autowired
+    private MemberMapper mapper;
+
     private String accessToken;
 
     private Member savedMember;
+
+    private MemberDto.Response savedMemberResponse;
 
     @BeforeEach
     void createAccessToken() {
         savedMember = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname("nickname")
                 .profileImageUrl("http://프사링크")
                 .height(180)
                 .weight(70)
                 .build();
+
+        savedMemberResponse = mapper.memberToMemberResponse(savedMember);
         accessToken = jwtTokenizer.delegateAccessToken(savedMember);
     }
 
@@ -92,7 +101,7 @@ class MemberControllerTest {
     @Test
     void getMemberTest() throws Exception {
         // Given
-        given(memberService.findMember(savedMember.getMemberId())).willReturn(savedMember);
+        given(memberService.findMember(savedMember.getMemberId())).willReturn(savedMemberResponse);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -111,8 +120,10 @@ class MemberControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("memberId").type(NUMBER).description("회원 번호"),
                                         fieldWithPath("email").type(STRING).description("이메일"),
                                         fieldWithPath("nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
                                         fieldWithPath("profileImageUrl").type(STRING).description("프로필 사진 주소"),
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
@@ -121,6 +132,31 @@ class MemberControllerTest {
                                 )
                         )
                 ));
+    }
+
+    @DisplayName("회원 가입")
+    @Test
+    void registerMemberTest() throws Exception {
+        // Given
+        MemberDto.Post postDto = new MemberDto.Post(
+                "email@com",
+                "{noop}pwd123!@#",
+                "닉네임",
+                180, 70);
+
+        String content = gson.toJson(postDto);
+        given(memberService.registerMember(any(MemberDto.Post.class))).willReturn(savedMemberResponse);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                post("/members/signup")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+
+        // Then
+        actions.andExpect(status().isCreated());
     }
 
     @DisplayName("회원 수정")
@@ -132,13 +168,14 @@ class MemberControllerTest {
 
         Member updatedMember = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname(patchDto.getNickname())
                 .profileImageUrl(patchDto.getProfileImageUrl())
                 .height(patchDto.getHeight())
                 .weight(patchDto.getWeight())
                 .build();
-        given(memberService.updateMember(any())).willReturn(updatedMember);
+        MemberDto.Response updatedMemberResponse = mapper.memberToMemberResponse(updatedMember);
+        given(memberService.updateMember(any(MemberDto.Patch.class), eq(1L))).willReturn(updatedMemberResponse);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -168,8 +205,10 @@ class MemberControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("memberId").type(NUMBER).description("회원 번호"),
                                         fieldWithPath("email").type(STRING).description("이메일"),
                                         fieldWithPath("nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
                                         fieldWithPath("profileImageUrl").type(STRING).description("프로필 사진 주소"),
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
@@ -238,11 +277,12 @@ class MemberControllerTest {
     @Test
     void getMembersTest() throws Exception {
         // Given
+        Account account = new Account("email@com", OauthPlatform.NONE);
         MemberPrincipal memberPrincipal = new MemberPrincipal(
                 1L,
-                "email@com",
-                Member.OauthPlatform.NONE,
-                "email@com/NONE");
+                account,
+                List.of("USER")
+        );
         int page = 1;
         int size = 10;
         String tab = "followee";
@@ -250,10 +290,12 @@ class MemberControllerTest {
         List<Member> memberList = List.of(savedMember);
         savedMember.getFollowers().add(new Follow(null, null));
 
+        List<MemberDto.Response> responseList = mapper.memberListToMemberResponseList(memberList);
+
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), memberList.size());
-        Page<Member> memberPage = new PageImpl<>(memberList.subList(start, end), pageRequest, memberList.size());
+        Page<MemberDto.Response> memberPage = new PageImpl<>(responseList.subList(start, end), pageRequest, responseList.size());
 
         given(
                 memberService.findFollowers(
@@ -290,8 +332,10 @@ class MemberControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("data[].memberId").type(NUMBER).description("회원 번호"),
                                         fieldWithPath("data[].email").type(STRING).description("이메일"),
                                         fieldWithPath("data[].nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("data[].oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
                                         fieldWithPath("data[].profileImageUrl").type(STRING).description("프로필 사진 주소"),
                                         fieldWithPath("data[].height").type(NUMBER).description("키"),
                                         fieldWithPath("data[].weight").type(NUMBER).description("몸무게"),

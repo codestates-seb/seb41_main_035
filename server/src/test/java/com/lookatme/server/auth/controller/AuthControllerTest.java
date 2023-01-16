@@ -6,8 +6,9 @@ import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
-import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.OauthPlatform;
 import com.lookatme.server.member.mapper.MemberMapperImpl;
 import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,39 +73,13 @@ class AuthControllerTest {
     void createAccessToken() {
         savedMember = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname("nickname")
                 .profileImageUrl("http://프사링크")
-                .oauthPlatform(Member.OauthPlatform.NONE)
                 .height(180)
                 .weight(70)
                 .build();
         accessToken = jwtTokenizer.delegateAccessToken(savedMember);
-    }
-
-    @DisplayName("회원 가입")
-    @Test
-    void registerMemberTest() throws Exception {
-        // Given
-        MemberDto.Post postDto = new MemberDto.Post(
-                "email@com",
-                "{noop}pwd123!@#",
-                "닉네임",
-                Member.OauthPlatform.NONE,
-                180, 70);
-        String content = gson.toJson(postDto);
-        given(memberService.registerMember(any())).willReturn(savedMember);
-
-        // When
-        ResultActions actions = mockMvc.perform(
-                post("/auth/signup")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content)
-        );
-
-        // Then
-        actions.andExpect(status().isCreated());
     }
 
     @DisplayName("로그인")
