@@ -40,7 +40,7 @@ const LoginHeader = () => {
           {/* className={isLogin ? 'Loginsearch' : 'LogoutSearch'} */}
           <SearchBox />
           {/* {isLogin ? ( */}
-          <div className="right zone">
+          {/* <div className="right zone">
             <BsPersonCircle
               onClick={() => navigate(`/profile/${userId}`)}
               size="30"
@@ -48,16 +48,16 @@ const LoginHeader = () => {
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button">Log out</button>
-          </div>
+          </div> */}
           {/* ) : ( */}
-          {/* <div className="right zone">
+          <div className="right zone">
             <BsPersonCircle size="30" />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button" onClick={onClickButton}>
               Log in
             </button>
-          </div> */}
+          </div>
           {/* )} */}
         </SHeader>
         {isOpen && (
@@ -82,7 +82,7 @@ const SWrapper = styled.div`
 `;
 const SHeader = styled.div`
   width: 100%;
-  height: 13vh;
+  height: 12vh;
   display: flex;
   align-items: center;
   border: 3px solid #196ba5;
