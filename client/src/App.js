@@ -1,7 +1,5 @@
 // import React from 'react';
 import './App.css';
-import PostUpload from './pages/PostUpload';
-import PostView from './pages/PostView';
 import LoginHeader from './components/LoginHeader';
 import Outer from './pages/Outer';
 import Top from './pages/Top';
