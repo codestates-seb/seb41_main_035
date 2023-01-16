@@ -80,17 +80,16 @@ const Sidebar = () => {
 
 //전체부분
 const SWrapper = styled.div`
-  /* position: fixed;
-  top: 0;
-  overflow: hidden; */
-
+  /* position: fixed; */
+  /* top: 0; */
+  /* overflow: hidden; */
   width: 160px;
   height: 100vh;
   display: flex;
   justify-content: center;
   /* text-align: center; */
   background-color: #faf4c5;
-  margin-right: auto;
+  /* margin-right: auto; */
 `;
 
 const SidebarBox = styled.div`

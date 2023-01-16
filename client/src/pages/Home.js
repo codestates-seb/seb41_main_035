@@ -1,20 +1,19 @@
 import styled from 'styled-components';
-// import LoginHeader from '../components/LoginHeader';
-// import LogoutHeader from '../components/LogoutHeader';
 import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 const Home = () => {
   return (
     <>
-      {/* <LoginHeader /> */}
-      {/* <LogoutHeader /> */}
       <SWrapper>
         <Sidebar />
         <div className="main post">
           <Filter>
             <button className="filter button">Hot</button>
+            <p>/</p>
             <button className="filter button">New</button>
-            <button className="filter button">렌탈</button>
+            <p>/</p>
+            <button className="filter button">대여 가능</button>
+            <p>/</p>
             <button className="filter button">Follow</button>
           </Filter>
           <PostBox />
@@ -25,16 +24,30 @@ const Home = () => {
 };
 const SWrapper = styled.div`
   display: flex;
+  .post {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 const Filter = styled.div`
   display: flex;
   justify-content: center;
-  height: 150px;
+  align-items: center;
+  height: 110px;
   button {
-    margin: 30px;
+    margin: 25px 5px;
     font-size: 30px;
     width: 130px;
     height: 50px;
+    border: none;
+    color: #196ba5;
+    cursor: pointer;
+  }
+  p {
+    margin: 30px;
   }
 `;
 
