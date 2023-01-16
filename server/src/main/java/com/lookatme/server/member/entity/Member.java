@@ -35,6 +35,10 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
+    private int loginTryCnt;
+
+    private LocalDateTime lastLoginTime; // 최근 로그인 시간
+
     private String nickname; // Unique
 
     private int height;
@@ -92,15 +96,31 @@ public class Member extends BaseTimeEntity {
     }
 
     public void setRoles(MemberAuthorityUtils authorityUtils) {
-        this.roles = authorityUtils.createRoles(account.getEmail());
+        this.roles = authorityUtils.createRoles(account.email);
+    }
+
+    public int loginFailed() {
+        if(++loginTryCnt >= 5) {
+            memberStatus = MemberStatus.MEMBER_LOCKED; // 로그인 5회 이상 실패 시 계정 잠김 상태로 변환
+        }
+        return loginTryCnt;
+    }
+
+    public void loginSuccess() {
+        lastLoginTime = LocalDateTime.now();
+        loginTryCnt = 0;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
-        return account.getEmail();
+        return account.email;
     }
 
     public OauthPlatform getOauthPlatform() {
-        return account.getOauthPlatform();
+        return account.oauthPlatform;
     }
 
     public int getFollowerCnt() {

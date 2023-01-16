@@ -35,6 +35,7 @@ public class SecurityConfiguration {
     private final MemberAuthorityUtils authorityUtils;
     private final RedisRepository redisRepository;
     private final MemberRepository memberRepository;
+    private final LoginTransactionalListener loginTransactionalListener;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -90,8 +91,8 @@ public class SecurityConfiguration {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisRepository, jwtTokenizer);
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(loginTransactionalListener));
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler(loginTransactionalListener));
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(redisRepository, jwtTokenizer, authorityUtils);

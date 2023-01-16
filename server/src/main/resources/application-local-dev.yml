@@ -10,7 +10,7 @@ spring:
     password: ${DB_PWD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   security:
     oauth2:
       client:

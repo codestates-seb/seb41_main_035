@@ -24,10 +24,14 @@ public enum ErrorCode {
     TOKEN_INVALID("사용할 수 없는 토큰입니다.", HttpStatus.UNAUTHORIZED), // Unauthorized = 비인증 상태
     TOKEN_EXPIRE("만료된 토큰입니다.", HttpStatus.FORBIDDEN),
     AUTHENTICATION_FAILED("검증에 실패했습니다.(액세스 토큰을 보냈는지 확인해주세요)", HttpStatus.FORBIDDEN),
+    LOGIN_ACCOUNT_FAILED("계정이 존재하지 않습니다", HttpStatus.BAD_REQUEST),
+    LOGIN_PASSWORD_FAILED("비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST),
+    LOGIN_ACCOUNT_LOCKED("계정이 잠겼습니다", HttpStatus.BAD_REQUEST),
+
+    // 공통
     UNAUTHORIZED("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
     EXCEPTION("알 수 없는 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-    BAD_REQUEST("잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
-    LOGIN_FAILED("이메일 혹은 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
+    BAD_REQUEST("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
 
     private final String value;
     private final HttpStatus status;

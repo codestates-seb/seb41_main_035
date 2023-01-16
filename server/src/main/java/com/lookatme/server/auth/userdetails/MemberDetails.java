@@ -2,6 +2,7 @@ package com.lookatme.server.auth.userdetails;
 
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.MemberStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,8 @@ import java.util.Collection;
 public class MemberDetails implements UserDetails {
 
     private final MemberAuthorityUtils authorityUtils;
-    @Getter private Member member;
+    @Getter
+    private Member member;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -39,7 +41,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !member.getMemberStatus().equals(MemberStatus.MEMBER_LOCKED);
     }
 
     @Override

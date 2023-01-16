@@ -1,5 +1,6 @@
 package com.lookatme.server.config;
 
+import com.lookatme.server.auth.handler.LoginTransactionalListener;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.userdetails.MemberDetails;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
@@ -29,6 +30,9 @@ public class CustomTestConfiguration {
 
     @MockBean
     private MemberRepository memberRepository;
+
+    @MockBean
+    private LoginTransactionalListener loginTransactionalListener;
 
     @Bean
     public UserDetailsService userDetailsService() {

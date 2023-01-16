@@ -2,10 +2,7 @@ package com.lookatme.server.member.entity;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Embeddable
@@ -13,11 +10,11 @@ import java.util.Objects;
 public class Account {
 
     @Column(updatable = false)
-    private String email;
+    protected String email;
 
     @Column(updatable = false)
     @Enumerated(EnumType.STRING)
-    private OauthPlatform oauthPlatform;
+    protected OauthPlatform oauthPlatform;
 
     protected Account() {
     }
