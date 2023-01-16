@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 public class MemberDto {
 
@@ -19,16 +18,11 @@ public class MemberDto {
         @Email
         @NotBlank
         private String email;
-
         @Password
         private String password;
-
         private String nickname;
-
         private Member.OauthPlatform oauthPlatform; // 필수 X (없으면 NONE으로 저장)
-
         private int height;
-
         private int weight;
     }
 
@@ -36,14 +30,11 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Patch {
-
         @NotBlank
         private String nickname;
-
+        private String profileImageUrl;
         private int height;
-
         private int weight;
-
     }
 
     @Getter
@@ -55,9 +46,7 @@ public class MemberDto {
         private int height;
         private int weight;
         private int followerCnt;
-        private int followingCnt;
-        private LocalDateTime createdDate;
-        private LocalDateTime updatedDate;
+        private int followeeCnt;
     }
 
 }

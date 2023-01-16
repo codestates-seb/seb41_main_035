@@ -61,7 +61,7 @@ public class AuthController {
         return new ResponseEntity<>("로그아웃 되었습니다", HttpStatus.OK);
     }
 
-    @GetMapping("/jwt-test") // Access 토큰 유효성 테스트용
+    @PostMapping("/jwt-test") // Access 토큰 유효성 테스트용
     public String test(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         return memberPrincipal.toString();
     }
@@ -80,7 +80,7 @@ public class AuthController {
         String newAccessToken = authService.reissueAccessToken(refreshToken, member);
         authService.addAccessTokenToBlacklist(accessToken); // 기존에 사용하던 액세스 토큰은 사용할 수 없도록 블랙리스트 등록
 
-        response.setHeader("Authorization", "Bearer " + newAccessToken);
+        response.setHeader("Authorization", newAccessToken);
         return new ResponseEntity<>(newAccessToken, HttpStatus.CREATED);
     }
 }

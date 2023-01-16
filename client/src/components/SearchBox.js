@@ -77,7 +77,7 @@ const SInputContainer = styled.div`
   align-items: center;
   margin-top: 10px;
   border: 2px solid black;
-
+  position: releative;
   input {
     width: 30vw;
     height: 5vh;
@@ -90,10 +90,12 @@ const SInputContainer = styled.div`
   }
   .delete-button {
     margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
 const SAutoComplete = styled.div`
+  position: absolute;
   width: 32vw;
   list-style-type: none;
   border-radius: 0 0 1rem 1rem;

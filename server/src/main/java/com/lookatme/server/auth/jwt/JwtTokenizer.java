@@ -41,7 +41,7 @@ public class JwtTokenizer {
         String base64EncodedSecretKey = encodeBase64SecretKey(secretKey);
         String accessToken = generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
-        return accessToken;
+        return String.format("Bearer %s", accessToken);
     }
 
     // Access Token 생성

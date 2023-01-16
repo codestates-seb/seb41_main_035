@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = delegateRefreshToken(member);
 
         // JWT 토큰을 만들어서 Response 헤더로 전달
-        response.setHeader("Authorization", String.format("Bearer %s", accessToken));
+        response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);
 
         // Redis 저장소에 RefreshToken을 저장

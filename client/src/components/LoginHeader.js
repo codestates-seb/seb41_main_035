@@ -3,12 +3,14 @@ import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
+import userStore from '../store/userStore';
 
 const LoginHeader = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const userId = userStore((state) => state.userId);
 
   const onClickButton = () => {
     setIsOpen(true);
@@ -20,14 +22,17 @@ const LoginHeader = () => {
         <SHeader>
           <p
             className="title"
-            // role="presentation"
-            // onClick={() => navigate('/')}
+            role="presentation"
+            onClick={() => navigate(`/`)}
           >
             Look at me
           </p>
           <SearchBox />
           <div className="right zone">
-            <BsPersonCircle size="30" />
+            <BsPersonCircle
+              onClick={() => navigate(`/profile/${userId}`)}
+              size="30"
+            />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" />
             <button className="login button" onClick={onClickButton}>
@@ -69,6 +74,7 @@ const SHeader = styled.div`
     text-align: center;
     flex-grow: 1;
     font-size: 60px;
+    cursor: pointer;
   }
 
   .right {
@@ -82,6 +88,7 @@ const SHeader = styled.div`
       margin-top: 15px;
       background-color: #f67b7b;
       color: white;
+      cursor: pointer;
     }
     svg {
       margin-top: 15px;

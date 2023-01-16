@@ -89,6 +89,7 @@ const FWrapper = styled.div`
   margin: 0 auto;
   .FooterBox {
     cursor: pointer;
+
     /* :hover {
       color: #ffff;
     }
