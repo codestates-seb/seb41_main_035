@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import styled from 'styled-components';
 
 const categorylist = [
   { label: '아우터', value: '아우터' },
@@ -11,10 +12,17 @@ const categorylist = [
 ];
 const Dropdown = () => {
   return (
-    <div className="container">
-      <Select options={categorylist} placeholder="선택" />
-    </div>
+    <SDropdown>
+      <div className="container">
+        <Select options={categorylist} placeholder="선택" />
+      </div>
+    </SDropdown>
   );
 };
 
+const SDropdown = styled.div`
+  .container {
+    background-color: #eee6ca;
+  }
+`;
 export default Dropdown;

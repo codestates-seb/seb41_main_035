@@ -1,43 +1,34 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
-const ImageInput = () => {
-  // const [imgFile, setImgFile] = useState([]); // 이미지 배열
-  // const upload = useRef();
-
-  // const imgUpload = () => {
-  //   console.log(upload.current.files);
-  //   setImgFile((prev) => [
-  //     ...prev,
-  //     URL.createObjectURL(upload.current.files[0]),
-  //   ]);
-  // };
-  const [imgFile, setImgFile] = useState([]); // 이미지 배열
+const ItemImageInput = () => {
+  const [iamgeFile, setIamgeFile] = useState([]); // 이미지 배열
   // const upload = useRef();
 
   const onChangeImg = (e) => {
     const imageLists = e.target.files;
-    let imageUrlLists = [...imgFile];
+    let imageUrlLists = [...iamgeFile];
 
     for (let i = 0; i < imageLists.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
       imageUrlLists.push(currentImageUrl);
     }
-    if (imageUrlLists.length > 2) {
-      imageUrlLists = imageUrlLists.slice(0, 2);
+    //1개만 업로드 가능
+    if (imageUrlLists.length > 1) {
+      imageUrlLists = imageUrlLists.slice(0, 1);
     }
-    setImgFile(imageUrlLists);
+    setIamgeFile(imageUrlLists);
   };
 
   return (
     <SWrapper>
       <div className="image-upload ">
-        <label htmlFor="input-file">
-          <div className="btn-upload">업로드</div>
+        <label htmlFor="input-imgfile">
+          <div className="btn-upload">제품업로드</div>
         </label>
         <input
           type="file"
-          id="input-file"
+          id="input-imgfile"
           // ref={upload} //참조
           onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
           multiple // 파일 여러개 선택 가능
@@ -47,11 +38,11 @@ const ImageInput = () => {
 
       <SImagefiles>
         {/* <div style={{ display: 'flex' }}> */}
-        <div className="imageadd">
+        <div className="image-add">
           {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
-          {imgFile?.map((img, idx) => (
+          {iamgeFile?.map((img, idx) => (
             // <div key={idx} style={{ margin: '20px' }}>
-            <div key={idx}>
+            <div className="image-info" key={idx}>
               <img src={img} alt="img" />
             </div>
           ))}
@@ -62,7 +53,7 @@ const ImageInput = () => {
 };
 
 const SWrapper = styled.div`
-  width: 15vw;
+  background-color: #eee6ca;
   .image-upload {
   }
   .image-upload > input {
@@ -84,13 +75,18 @@ const SWrapper = styled.div`
   }
 `;
 const SImagefiles = styled.div`
-  .imageadd {
+  background-color: #eee6ca;
+  .image-info {
+    background-color: #eee6ca;
+  }
+  .image-add {
     display: flex;
+    background-color: #eee6ca;
   }
   img {
-    width: 7vw;
-    height: 16vh;
-    margin: 20px 3px;
+    width: 4vw;
+    height: 8vh;
+    margin-left: 14px;
   }
 `;
-export default ImageInput;
+export default ItemImageInput;

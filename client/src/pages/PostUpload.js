@@ -8,20 +8,13 @@ const PostUpload = () => {
       <Scontainer>
         <QHeader>
           <div className="image_upload">
-            {/* <button>이미지업로드</button> */}
-            {/* <input
-              type="file"
-              // multiple={true}
-              // id="fileUpload"
-              accept="image/png, image/jpeg"
-            /> */}
             <button type="submit">완료</button>
           </div>
         </QHeader>
 
         <SMid>
+          <ImageInput />
           <div className="input_box">
-            <ImageInput />
             <textarea
               placeholder="게시글을 작성하세요."
               // value={content}
@@ -62,9 +55,9 @@ const QHeader = styled.div`
     width: 3vw;
     height: 3vh;
     margin: 15px;
-    background-color: #519d9e;
-    color: #d3fefe;
-    /* border: none; */
+    background-color: #d9d4a6;
+    color: #ffffff;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
   }
@@ -76,18 +69,20 @@ const SMid = styled.div`
   /* border: 1px solid pink; */
   /* width: 30vw; */
   .input_box {
-    width: 38vw;
+    /* width: 34vw; */
     margin-bottom: 10px;
-    background-color: #b3b3b3;
+    display: flex;
+    justify-content: end;
+    /* background-color: #b3b3b3; */
   }
   textarea {
     font-size: 14px;
     box-sizing: border-box;
     min-height: 25vh;
-    width: 38vw;
+    width: 23vw;
     border: none;
-    border-radius: 3px;
-    background-color: #ececec;
+    border-radius: 5px;
+    background-color: #ffffff;
     resize: none; /* 사용자가 텍스트사이즈 임의 변경 불가 */
   }
 `;

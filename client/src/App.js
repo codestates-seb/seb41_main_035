@@ -2,9 +2,7 @@
 import './App.css';
 import PostUpload from './pages/PostUpload';
 import PostView from './pages/PostView';
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 function App() {
   return (
     <>
@@ -15,8 +13,10 @@ function App() {
           <Route path="/postview" element={<PostView />} />
         </Routes>
         <PostUpload />
+
         <br />
         <PostView />
+
         <br />
       </BrowserRouter>
     </>
