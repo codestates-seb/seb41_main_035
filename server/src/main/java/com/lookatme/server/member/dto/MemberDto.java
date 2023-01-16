@@ -46,7 +46,7 @@ public class MemberDto {
         private int height;
         private int weight;
         private int followerCnt;
-        private int followingCnt;
+        private int followeeCnt;
     }
 
 }

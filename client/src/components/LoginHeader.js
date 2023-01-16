@@ -7,11 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 import Avatar from './Avatar';
 import ChattingList from './ChattingList';
+import userStore from '../store/userStore';
 
 const LoginHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const userId = userStore((state) => state.userId);
 
   const onClickButton = () => {
     setIsOpen(true);
@@ -39,7 +41,10 @@ const LoginHeader = () => {
           <SearchBox />
           {/* {isLogin ? ( */}
           <div className="right zone">
-            <BsPersonCircle size="30" />
+            <BsPersonCircle
+              onClick={() => navigate(`/profile/${userId}`)}
+              size="30"
+            />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button">Log out</button>

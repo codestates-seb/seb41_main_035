@@ -1,10 +1,16 @@
 import styled from 'styled-components';
+import axios from 'axios';
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+
+const backendUrl = 'http://13.125.30.88/';
 
 function Signup(props) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
 
   const closeButton = () => {
     // eslint-disable-next-line react/prop-types
@@ -12,16 +18,38 @@ function Signup(props) {
   };
 
   const onChangeId = (e) => {
-    setId(e);
+    setId(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    setPassword(e);
+    setPassword(e.target.value);
   };
 
-  const SignIn = () => {
-    console.log(id);
-    console.log(password);
+  const onChangeNickname = (e) => {
+    setNickname(e.target.value);
+  };
+
+  const onChangeHeight = (e) => {
+    setHeight(e.target.value);
+  };
+
+  const onChangeWeight = (e) => {
+    setWeight(e.target.value);
+  };
+
+  const SignUpUser = async () => {
+    const res = await axios.post(
+      `${backendUrl}auth/signup`,
+      {
+        nickname: 'test',
+        email: 'test@test.com',
+        password: 'test123',
+        height: 180,
+        weight: 70,
+      },
+      { withCredentials: true }
+    );
+    console.log(res.data);
     // axios sign in
   };
 
@@ -33,13 +61,45 @@ function Signup(props) {
           onClick={closeButton}
         />
         <Contents>
-          <h1>회원가입</h1>
-          <input className="id" onChange={onChangeId}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <input className="pw" onChange={onChangePassword}></input>
-          <SigninButton onClick={SignIn}>회원가입</SigninButton>
+          <h1
+            style={{
+              'margin-bottom': '5%',
+              display: 'flex',
+              'justify-content': 'space-evenly',
+              fontSize: '30px',
+              position: 'relative',
+            }}
+          >
+            Look at me
+          </h1>
+          <h2 style={{ fontSize: '20px', position: 'relative' }}>회원가입</h2>
+          <SInput
+            className="id"
+            placeholder="아이디"
+            onChange={onChangeId}
+          ></SInput>
+          <SInput
+            className="pw"
+            placeholder="비밀번호"
+            onChange={onChangePassword}
+          ></SInput>
+
+          <SInput
+            className="na"
+            placeholder="닉네임"
+            onChange={onChangeNickname}
+          ></SInput>
+          <SInput
+            className="ta"
+            placeholder="키"
+            onChange={onChangeHeight}
+          ></SInput>
+          <SInput
+            className="wg"
+            placeholder="몸무게"
+            onChange={onChangeWeight}
+          ></SInput>
+          <SigninButton onClick={SignUpUser}>회원가입</SigninButton>
         </Contents>
       </ModalWrap>
     </Overlay>
@@ -56,6 +116,7 @@ const Overlay = styled.div`
   right: 0;
   background: rgba(0, 0, 0, 0.2);
   z-index: 9999;
+  text-align: center;
 `;
 
 const ModalWrap = styled.div`
@@ -90,11 +151,25 @@ const SigninButton = styled.button`
   color: white;
   font-style: italic;
   font-weight: 200;
-  margin-top: 10px;
   cursor: pointer;
   &:hover {
     background-color: #898989;
   }
+  text-align: center;
+  margin-top: 20px;
+`;
+const SInput = styled.input`
+  font-size: 14px;
+  padding: 12px 12px;
+  background-color: gary;
+  border-radius: 0px;
+  width: 250px;
+  color: black;
+  font-weight: 200;
+  margin-top: -30px;
+  position: relative;
+  height: 5px;
+  margin-bottom: 10px;
 `;
 
 export default Signup;
