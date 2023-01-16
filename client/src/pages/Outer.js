@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
-import { AiFillCaretDown } from 'react-icons/ai';
+import { BiCaretDownCircle } from 'react-icons/bi';
 const Outer = () => {
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
@@ -24,8 +24,8 @@ const Outer = () => {
             </div>
             <div className="dropdown">
               <button className="dropdown_button" onClick={onDpMenu}>
-                <AiFillCaretDown />
-                정렬 순서
+                <BiCaretDownCircle />
+                <p>정렬 순서</p>
               </button>
               <div id="drop-content">
                 <button>가격 낮은순</button>
@@ -43,8 +43,11 @@ const Outer = () => {
 const SWrapper = styled.div`
   display: flex;
   .post {
+    width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .category-name {
     text-align: center;
@@ -54,10 +57,11 @@ const SWrapper = styled.div`
 `;
 const Filter = styled.div`
   display: flex;
-  justify-content: space-around;
+  width: 69%;
+  justify-content: space-between;
   .availability {
-    margin-top: 60px;
-    margin-left: -50px;
+    margin-top: 50px;
+    margin-bottom: 20px;
   }
   .dropdown_button {
     margin-top: 40px;
@@ -65,6 +69,10 @@ const Filter = styled.div`
     width: 120px;
     height: 35px;
     position: releative;
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }
   #drop-content {
     display: flex;
@@ -74,9 +82,10 @@ const Filter = styled.div`
     position: absolute;
     z-index: 999;
     button {
-      background-color: white;
+      height: 30px;
       border: 0.1px solid gray;
       cursor: pointer;
+      background-color: #eee5ca;
     }
   }
 `;

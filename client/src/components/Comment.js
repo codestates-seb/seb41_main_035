@@ -5,6 +5,9 @@ const Comment = () => {
     <SWrapper>
       <form className="commentWrap">
         <input type="text" placeholder="댓글달기..." />
+
+        <input type="text" placeholder="댓글달기..." />
+
         <button className="commetBtn">게시</button>
       </form>
     </SWrapper>
