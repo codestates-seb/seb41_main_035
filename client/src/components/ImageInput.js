@@ -2,16 +2,6 @@ import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const ImageInput = () => {
-  // const [imgFile, setImgFile] = useState([]); // 이미지 배열
-  // const upload = useRef();
-
-  // const imgUpload = () => {
-  //   console.log(upload.current.files);
-  //   setImgFile((prev) => [
-  //     ...prev,
-  //     URL.createObjectURL(upload.current.files[0]),
-  //   ]);
-  // };
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
   // const upload = useRef();
 
@@ -23,8 +13,8 @@ const ImageInput = () => {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
       imageUrlLists.push(currentImageUrl);
     }
-    if (imageUrlLists.length > 2) {
-      imageUrlLists = imageUrlLists.slice(0, 2);
+    if (imageUrlLists.length > 1) {
+      imageUrlLists = imageUrlLists.slice(0, 1);
     }
     setImgFile(imageUrlLists);
   };
@@ -88,8 +78,8 @@ const SImagefiles = styled.div`
     display: flex;
   }
   img {
-    width: 7vw;
-    height: 16vh;
+    width: 12vw;
+    height: 26vh;
     margin: 20px 3px;
   }
 `;
