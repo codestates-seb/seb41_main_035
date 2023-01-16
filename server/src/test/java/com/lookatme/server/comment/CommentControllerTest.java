@@ -10,7 +10,9 @@ import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
 import com.lookatme.server.comment.entity.Comment;
 import com.lookatme.server.comment.service.CommentService;
-import com.lookatme.server.config.SecurityConfiguration;
+import com.lookatme.server.config.CustomTestConfiguration;
+import com.lookatme.server.config.WithAuthMember;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import({
-        SecurityConfiguration.class,
+        CustomTestConfiguration.class,
         MemberAuthorityUtils.class,
         JwtTokenizer.class
 })
@@ -66,6 +68,7 @@ public class CommentControllerTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @WithAuthMember
     public void postCommentTest() throws Exception {
         //given
         CommentPostDto commentPostDto = CommentPostDto.builder()
@@ -74,7 +77,7 @@ public class CommentControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com"))
                 .nickname("댓글 작성자 닉네임")
                 .profileImageUrl("댓글 작성자 프로필 사진 URL")
                 .height(180)
@@ -128,6 +131,7 @@ public class CommentControllerTest {
     }
 
     @Test
+    @WithAuthMember
     public void patchCommentTest() throws Exception {
         //given
         CommentPatchDto commentPatchDto = CommentPatchDto.builder()
@@ -143,7 +147,7 @@ public class CommentControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com"))
                 .nickname("댓글 작성자 닉네임")
                 .profileImageUrl("댓글 작성자 프로필 사진 URL")
                 .height(180)
@@ -205,7 +209,7 @@ public class CommentControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com"))
                 .nickname("닉네임")
                 .profileImageUrl("http://프사링크")
                 .height(180)
@@ -250,6 +254,7 @@ public class CommentControllerTest {
     }
 
     @Test
+    @WithAuthMember
     public void deleteCommentTest() throws Exception {
         //given
         Long commentId = 1L;

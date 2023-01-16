@@ -75,25 +75,20 @@ include::{snippets}/delete-comment/path-parameters.adoc[]
 .http-response
 include::{snippets}/delete-comment/http-response.adoc[]
 
-== AuthController
+== MemberController
 === 회원 가입
 .http-request
-include::{snippets}/auth-login/http-request.adoc[]
+include::{snippets}/post-member/http-request.adoc[]
 
 .request-fields
-include::{snippets}/auth-login/request-fields.adoc[]
+include::{snippets}/post-member/request-fields.adoc[]
 
 .http-response
-include::{snippets}/auth-login/http-response.adoc[]
+include::{snippets}/post-member/http-response.adoc[]
 
-=== 액세스 토큰 상태 조회
-.http-request
-include::{snippets}/auth-jwt-test/http-request.adoc[]
+.response-fields
+include::{snippets}/post-member/response-fields.adoc[]
 
-.http-response
-include::{snippets}/auth-jwt-test/http-response.adoc[]
-
-== MemberController
 === 회원 조회
 .http-request
 include::{snippets}/get-member/http-request.adoc[]
@@ -154,7 +149,7 @@ include::{snippets}/delete-member/path-parameters.adoc[]
 include::{snippets}/delete-member/http-response.adoc[]
 
 == AuthController
-=== 회원 가입
+=== 로그인
 .http-request
 include::{snippets}/auth-login/http-request.adoc[]
 
@@ -170,47 +165,6 @@ include::{snippets}/auth-jwt-test/http-request.adoc[]
 
 .http-response
 include::{snippets}/auth-jwt-test/http-response.adoc[]
-
-== MemberController
-=== 회원 조회
-.http-request
-include::{snippets}/get-member/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/get-member/path-parameters.adoc[]
-
-.http-response
-include::{snippets}/get-member/http-response.adoc[]
-
-.response-fields
-include::{snippets}/get-member/response-fields.adoc[]
-
-=== 회원 수정
-.http-request
-include::{snippets}/patch-member/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/patch-member/path-parameters.adoc[]
-
-.request-fields
-include::{snippets}/patch-member/request-fields.adoc[]
-
-.http-response
-include::{snippets}/patch-member/http-response.adoc[]
-
-.response-fields
-include::{snippets}/patch-member/response-fields.adoc[]
-
-=== 회원 삭제
-.http-request
-include::{snippets}/delete-member/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/delete-member/path-parameters.adoc[]
-
-.http-response
-include::{snippets}/delete-member/http-response.adoc[]
-
 
 == MessageController
 === 메시지 전송

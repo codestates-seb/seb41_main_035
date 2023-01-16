@@ -42,7 +42,7 @@ public class MemberController {
             if (memberPrincipal == null) {
                 throw new ErrorLogicException(ErrorCode.AUTHENTICATION_FAILED);
             }
-            pageMembers = memberService.findFollowers(memberPrincipal.getAccount().toString(), tab, page - 1, size);
+            pageMembers = memberService.findFollowers(memberPrincipal.getAccount(), tab, page - 1, size);
         } else {
             pageMembers = memberService.findMembers(page - 1, size);
         }
@@ -88,10 +88,10 @@ public class MemberController {
                                     @RequestParam String nickname) {
         switch (type) {
             case "up":
-                memberService.followMember(memberPrincipal.getMemberUniqueKey(), nickname);
+                memberService.followMember(memberPrincipal.getAccount(), nickname);
                 break;
             case "down":
-                memberService.unfollowMember(memberPrincipal.getMemberUniqueKey(), nickname);
+                memberService.unfollowMember(memberPrincipal.getAccount(), nickname);
                 break;
             default:
                 throw new IllegalArgumentException();

@@ -8,7 +8,6 @@ import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.entity.OauthPlatform;
 import com.lookatme.server.member.mapper.MemberMapper;
 import com.lookatme.server.member.repository.FollowRepository;
 import com.lookatme.server.member.repository.MemberRepository;
@@ -30,12 +29,12 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
-    private final AuthService authService;
-    private final MemberMapper mapper;
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
+
     private final MemberAuthorityUtils authorityUtils;
     private final PasswordEncoder passwordEncoder;
+    private final MemberMapper mapper;
 
     // ** 메서드 오버로딩 **
     public MemberDto.Response findMember(long memberId) {
@@ -78,8 +77,8 @@ public class MemberService {
     }
 
     // 로그인 되어있는 사용자가 / nickname 회원을 / followers list에 추가한다
-    public void followMember(String memberUniqueKey, String nickname) {
-        Member member = getMember(memberUniqueKey);
+    public void followMember(Account account, String nickname) {
+        Member member = getMember(account);
         Member opponent = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
 
@@ -93,9 +92,8 @@ public class MemberService {
         followRepository.save(follow);
     }
 
-
-    public void unfollowMember(String memberUniqueKey, String nickname) {
-        Member member = getMember(memberUniqueKey);
+    public void unfollowMember(Account account, String nickname) {
+        Member member = getMember(account);
         Member opponent = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
 
@@ -107,8 +105,8 @@ public class MemberService {
         followRepository.delete(follow);
     }
 
-    public Page<MemberDto.Response> findFollowers(String memberUniqueKey, String tab, int page, int size) {
-        Member member = getMember(memberUniqueKey);
+    public Page<MemberDto.Response> findFollowers(Account account, String tab, int page, int size) {
+        Member member = getMember(account);
 
         List<Member> memberList;
         switch (tab) {
@@ -156,14 +154,13 @@ public class MemberService {
         }
     }
 
-    private Member getMember(long memberId) {
-        return memberRepository.findById(memberId)
+    private Member getMember(Account account) {
+        return memberRepository.findByAccount(account)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private Member getMember(String memberUniqueKey) {
-        Account account = Member.uniqueKeyToAccount(memberUniqueKey);
-        return memberRepository.findByAccount(account)
+    private Member getMember(long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }

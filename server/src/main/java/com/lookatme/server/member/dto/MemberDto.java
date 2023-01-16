@@ -39,14 +39,6 @@ public class MemberDto {
             return new Account(email, oauthPlatform);
         }
 
-        public OauthPlatform getOauthPlatform() {
-            if (oauthPlatform == null) {
-                return OauthPlatform.NONE;
-            } else {
-                return this.oauthPlatform;
-            }
-        }
-
         public String getProfileImageUrl() {
             if (profileImageUrl == null || profileImageUrl.isBlank()) {
                 return "https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png"; // 기본 프로필 사진

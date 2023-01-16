@@ -32,4 +32,12 @@ public class MemberPrincipal {
     public String getMemberUniqueKey() {
         return account.toString();
     }
+
+    public String getEmail() {
+        return account.getEmail();
+    }
+
+    public OauthPlatform getOauthPlatform() {
+        return account.getOauthPlatform();
+    }
 }

@@ -22,6 +22,11 @@ public class Account {
     protected Account() {
     }
 
+    public Account(String email) {
+        this.email = email;
+        this.oauthPlatform = OauthPlatform.NONE;
+    }
+
     public Account(String email, OauthPlatform oauthPlatform) {
         this.email = email;
         this.oauthPlatform = oauthPlatform == null ? OauthPlatform.NONE : oauthPlatform;

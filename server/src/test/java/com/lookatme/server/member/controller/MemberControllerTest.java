@@ -156,7 +156,35 @@ class MemberControllerTest {
         );
 
         // Then
-        actions.andExpect(status().isCreated());
+        actions.andExpect(status().isCreated())
+                .andDo(document(
+                        "post-member",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                List.of(
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("password").description("비밀번호 (숫자/문자 포함 6자 이상)"),
+                                        fieldWithPath("nickname").description("닉네임"),
+                                        fieldWithPath("height").description("키(선택 사항)"),
+                                        fieldWithPath("weight").description("몸무게(선택 사항")
+                                )
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("memberId").type(NUMBER).description("회원 번호"),
+                                        fieldWithPath("email").type(STRING).description("이메일"),
+                                        fieldWithPath("nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
+                                        fieldWithPath("profileImageUrl").type(STRING).description("프로필 사진 주소"),
+                                        fieldWithPath("height").type(NUMBER).description("키"),
+                                        fieldWithPath("weight").type(NUMBER).description("몸무게"),
+                                        fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                )
+                        )
+                ));
+
     }
 
     @DisplayName("회원 수정")
@@ -248,7 +276,7 @@ class MemberControllerTest {
     @Test
     void followTest() throws Exception {
         // Given
-        willDoNothing().given(memberService).followMember(anyString(), anyString());
+        willDoNothing().given(memberService).followMember(any(Account.class), anyString());
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -299,7 +327,7 @@ class MemberControllerTest {
 
         given(
                 memberService.findFollowers(
-                        memberPrincipal.getMemberUniqueKey(),
+                        memberPrincipal.getAccount(),
                         tab,
                         page - 1,
                         size)
