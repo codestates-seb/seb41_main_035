@@ -83,12 +83,13 @@ const FWrapper = styled.div`
   text-align: center;
   justify-content: space-evenly;
   background-color: #d9d9d9;
-  width: 100%;
+
   padding: 50px;
   /* 중앙정렬 */
   margin: 0 auto;
   .FooterBox {
     cursor: pointer;
+    width: 100%;
 
     /* :hover {
       color: #ffff;
