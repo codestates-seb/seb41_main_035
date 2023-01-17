@@ -1,21 +1,30 @@
-import React from 'react';
-import Select from 'react-select';
+// import Select from 'react-select';
 import styled from 'styled-components';
+import { useState } from 'react';
 
-const categorylist = [
-  { label: '아우터', value: '아우터' },
-  { label: '상의', value: '상의' },
-  { label: '하의', value: '하의' },
-  { label: '원피스', value: '원피스' },
-  { label: '모자', value: '모자' },
-  { label: '신발', value: '신발' },
-];
+const categorylist = ['아우터', '상의', '하의', '원피스', '모자', '신발'];
+
 const Dropdown = () => {
+  const [selected, setSelected] = useState('');
+
+  const onchangeSelected = (e) => {
+    setSelected(e.target.value);
+  };
+
   return (
     <SDropdown>
-      <div className="container">
-        <Select options={categorylist} placeholder="선택" />
-      </div>
+      <form>
+        <div className="container">
+          {/* select 태그 사용 */}
+          <select onChange={onchangeSelected} value={selected}>
+            {categorylist.map((item) => (
+              <option value={item} key={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+      </form>
     </SDropdown>
   );
 };
@@ -23,6 +32,11 @@ const Dropdown = () => {
 const SDropdown = styled.div`
   .container {
     background-color: #eee6ca;
+  }
+  .container select {
+    border: 1.5px solid #d9d4a6;
+    border-radius: 3px;
+    width: 4.5vw;
   }
 `;
 
