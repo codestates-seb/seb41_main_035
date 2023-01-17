@@ -25,8 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration {
@@ -43,7 +41,8 @@ public class SecurityConfiguration {
                 .headers().frameOptions().sameOrigin() // H2 콘솔을 위한 설정
                 .and()
                 .csrf().disable() // csrf 토큰 검증 X
-                .cors(withDefaults())
+                .cors(httpSecurityCorsConfigurer ->
+                        httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 X
                 .and()
                 .formLogin().disable()
@@ -77,7 +76,7 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
