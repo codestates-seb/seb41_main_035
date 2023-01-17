@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import { BsChatLeftText, BsPersonPlus } from 'react-icons/bs';
+import { BsChatLeftText, BsPersonPlus, BsBookmarkHeart } from 'react-icons/bs';
 import Comment from '../components/Comment';
 
 const PostView = () => {
   return (
-    <SWapper>
+    <SWrapper>
       <SContainer>
         <div className="top_container">
           <SPost>
             <div className="outfit_upload"> 착용사진 나오는 칸</div>
-            <span className="like_container"> 좋아요</span>
           </SPost>
           <SMiddle>
             <div className="user_info">
@@ -18,6 +17,7 @@ const PostView = () => {
                 <div className="icon">
                   <BsChatLeftText size="20" />
                   <BsPersonPlus size="20" />
+                  <BsBookmarkHeart size="20" />
                 </div>
               </div>
               <div className="user_boxtwo">
@@ -34,11 +34,11 @@ const PostView = () => {
           <Comment />
         </div>
       </SContainer>
-    </SWapper>
+    </SWrapper>
   );
 };
 
-const SWapper = styled.div`
+const SWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
@@ -57,7 +57,7 @@ const SContainer = styled.div`
   .botton_container {
     margin: 30px;
     .item_info {
-      background-color: #f7e1ff;
+      background-color: #eee6ca;
       height: 100px;
       margin-bottom: 13px;
     }

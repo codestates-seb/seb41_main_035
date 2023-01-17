@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
+import Avatar from '../components/Avatar';
+import { BsBookmarkHeart } from 'react-icons/bs';
 const PostBox = () => {
   return (
     <SWrapper>
@@ -7,11 +9,23 @@ const PostBox = () => {
         {dummyData.posts.map((post) => (
           <PostBoxOne key={post.id}>
             <div className="user-info ">
-              <div className="user-info picture">사진</div>
-              <div className="user-info name">{post.userNickname}</div>
+              <div className="user-info left">
+                {' '}
+                <Avatar size="25px" image={post.avatar} />
+                <div className="user-info name">{post.userNickname}</div>
+              </div>
+              <div className="user-info right">
+                <div className="user-info height">170cm</div>
+                <div className="user-info weight">56kg</div>
+              </div>
             </div>
-            <div className="style-picture">사진</div>
-            <div className="add container">좋아요</div>
+
+            <div className="style-picture">
+              <Avatar size="400px" image={post.picture} />
+            </div>
+            <div className="add container">
+              <BsBookmarkHeart />
+            </div>
           </PostBoxOne>
         ))}
       </Container>
@@ -22,31 +36,62 @@ const SWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 const Container = styled.div`
-  width: 70%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  /* grid-template-columns: 20vw 20vw 20vw; */
+  grid-template-columns: 320px 320px 320px;
 `;
 const PostBoxOne = styled.div`
-  width: 30%;
   height: 400px;
-  background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
-  margin: 30px 15px;
+  margin: 0px 15px 60px 15px;
+  border: 2px solid #949494;
+  border-radius: 5px;
 
   .user-info {
     display: flex;
+    width: 90%;
     padding-top: 8px;
     padding-bottom: 4px;
+    align-items: center;
+    justify-content: space-between;
+    .right {
+      color: #2e2d2a;
+      font-size: 15px;
+    }
+    .name {
+      margin-left: 10px;
+      margin-bottom: 7px;
+      font-size: 20px;
+    }
   }
   .style-picture {
-    width: 250px;
+    width: 258px;
     height: 300px;
-    background-color: skyblue;
+    object-fit: cover;
+    position: relative;
+    overflow: hidden;
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .add {
+    display: flex;
+    width: 95%;
+    justify-content: flex-end;
+    margin-top: 8px;
+    svg {
+      font-size: 20px;
+    }
   }
 `;
 

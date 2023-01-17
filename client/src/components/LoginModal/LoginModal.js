@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import axios from 'axios';
 import userStore from '../../store/userStore';
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';

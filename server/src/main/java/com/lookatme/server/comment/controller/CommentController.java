@@ -1,5 +1,6 @@
 package com.lookatme.server.comment.controller;
 
+import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
 import com.lookatme.server.comment.dto.CommentResponseDto;
@@ -8,6 +9,7 @@ import com.lookatme.server.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,17 +23,19 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity postComment(@RequestBody @Valid CommentPostDto commentPostDto){
+    public ResponseEntity postComment(@RequestBody @Valid CommentPostDto commentPostDto,
+                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal){
         return new ResponseEntity<>(
-                CommentResponseDto.of(commentService.createComment(commentPostDto)),
+                CommentResponseDto.of(commentService.createComment(commentPostDto, memberPrincipal)),
                 HttpStatus.CREATED);
     }
 
     @PatchMapping("/{commentId}")
     public ResponseEntity patchComment(@PathVariable("commentId") Long commentId,
-                                       @RequestBody @Valid CommentPatchDto commentPatchDto) {
+                                       @RequestBody @Valid CommentPatchDto commentPatchDto,
+                                       @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         return new ResponseEntity<>(
-                CommentResponseDto.of(commentService.editComment(commentId, commentPatchDto)),
+                CommentResponseDto.of(commentService.editComment(commentId, commentPatchDto, memberPrincipal)),
                 HttpStatus.OK);
     }
 
@@ -52,8 +56,9 @@ public class CommentController {
 //    }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId) {
-        commentService.deleteComment(commentId);
+    public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId,
+                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        commentService.deleteComment(commentId, memberPrincipal);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }
