@@ -4,9 +4,12 @@ import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
+import { useParams } from 'react-router-dom';
 
 const PostView = () => {
   const data = dummyData.posts;
+  const params = useParams();
+  console.log(params);
   return (
     <SWrapper>
       <SContainer>
@@ -15,7 +18,7 @@ const PostView = () => {
             <Avatar
               className="outfit_upload"
               size="400px"
-              image={data[0].picture}
+              image={data[params.id].picture}
             />
           </SPost>
           <SMiddle>
@@ -23,10 +26,12 @@ const PostView = () => {
               <div className="user_box">
                 <div className="user_box left">
                   <div className="user_avatar">
-                    <Avatar image={data[0].avatar} />
+                    <Avatar image={data[params.id].avatar} />
                   </div>
                   <div className="user_info_detail">
-                    <div className="user_id">{data[0].userNickname}</div>
+                    <div className="user_id">
+                      {data[params.id].userNickname}
+                    </div>
                     <div className="user_boxtwo">
                       <div className="user_tall">170cm</div>
                       <div className="user_weight"> 55kg</div>
