@@ -58,12 +58,6 @@ public class MessageControllerTest {
     @MockBean
     private MessageService messageService;
 
-    @MockBean
-    private RedisRepository redisRepository;
-
-    @MockBean
-    private MemberService memberService;
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test

@@ -56,14 +56,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
 public class CommentControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private CommentService commentService;
-    @MockBean
-    private RedisRepository redisRepository;
-    @MockBean
-    private MemberService memberService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

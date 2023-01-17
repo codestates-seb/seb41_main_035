@@ -55,10 +55,10 @@ public class Member extends BaseTimeEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "from")
+    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE) // Member를 제거할 때 Follow도 같이 제거
     private List<Follow> followees = new ArrayList<>(); // 내가 팔로우 한 사람
 
-    @OneToMany(mappedBy = "to")
+    @OneToMany(mappedBy = "to", cascade = CascadeType.REMOVE)
     private List<Follow> followers = new ArrayList<>(); // 나를 팔로우하는 사람
 
     @CreatedDate

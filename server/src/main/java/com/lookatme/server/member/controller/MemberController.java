@@ -64,7 +64,7 @@ public class MemberController {
                                           @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         // 로그인 유저와 정보가 다르다면 수정 불가 (접근 권한 X)
         if (memberPrincipal.getMemberId() != memberId) {
-            throw new ErrorLogicException(ErrorCode.UNAUTHORIZED);
+            throw new ErrorLogicException(ErrorCode.FORBIDDEN);
         }
         return new ResponseEntity<>(
                 memberService.updateMember(patchDto, memberId),
@@ -76,7 +76,7 @@ public class MemberController {
                                           @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         // 로그인 유저와 정보가 다르다면 수정 불가 (접근 권한 X)
         if (memberPrincipal.getMemberId() != memberId) {
-            throw new ErrorLogicException(ErrorCode.UNAUTHORIZED);
+            throw new ErrorLogicException(ErrorCode.FORBIDDEN);
         }
         memberService.deleteMember(memberId);
         return new ResponseEntity<>("회원탈퇴 되었습니다", HttpStatus.NO_CONTENT);

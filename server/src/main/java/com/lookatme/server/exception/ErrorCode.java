@@ -29,7 +29,8 @@ public enum ErrorCode {
     LOGIN_ACCOUNT_LOCKED("계정이 잠겼습니다", HttpStatus.BAD_REQUEST),
 
     // 공통
-    UNAUTHORIZED("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    UNAUTHORIZED("로그인 후 시도해주세요.", HttpStatus.UNAUTHORIZED),
+    FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
     EXCEPTION("알 수 없는 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     BAD_REQUEST("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
 

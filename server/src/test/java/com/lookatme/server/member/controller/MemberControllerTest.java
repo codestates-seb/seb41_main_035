@@ -1,12 +1,10 @@
 package com.lookatme.server.member.controller;
 
 import com.google.gson.Gson;
-import com.lookatme.server.auth.controller.AuthController;
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.auth.jwt.RedisRepository;
-import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
+import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
@@ -43,6 +41,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import({
@@ -51,18 +50,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         JwtTokenizer.class
 })
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest({MemberController.class, AuthController.class})
+@WebMvcTest({MemberController.class})
 @AutoConfigureRestDocs
 class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
-
-    @MockBean
-    private AuthService authService;
-
-    @MockBean
-    private RedisRepository redisRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -248,6 +241,28 @@ class MemberControllerTest {
 
     }
 
+    @DisplayName("회원 수정 실패 테스트")
+    @Test
+    void updateMemberFailTest() throws Exception {
+        // Given
+        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", "http://프사_주소", 150, 50);
+        String content = gson.toJson(patchDto);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                patch("/members/{memberId}", 2L)
+                        .header("Authorization", accessToken) // Access Token 전달
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+
+        // Then
+        actions.andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.FORBIDDEN.name()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.FORBIDDEN.getValue()));
+    }
+
     @DisplayName("회원 탈퇴")
     @Test
     void deleteMemberTest() throws Exception {
@@ -271,6 +286,22 @@ class MemberControllerTest {
                         )
                 ));
     }
+
+    @DisplayName("회원 탈퇴 실패 테스트")
+    @Test
+    void deleteMemberFailTest() throws Exception {
+        // When
+        ResultActions actions = mockMvc.perform(
+                delete("/members/{memberId}", 2L)
+                        .header("Authorization", accessToken)
+        );
+
+        // Then
+        actions.andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.FORBIDDEN.name()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.FORBIDDEN.getValue()));
+    }
+
 
     @DisplayName("팔로우 테스트")
     @Test

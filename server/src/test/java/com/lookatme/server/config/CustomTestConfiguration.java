@@ -2,8 +2,11 @@ package com.lookatme.server.config;
 
 import com.lookatme.server.auth.handler.LoginTransactionalListener;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.userdetails.MemberDetails;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.OauthPlatform;
@@ -32,6 +35,9 @@ public class CustomTestConfiguration {
     private MemberRepository memberRepository;
 
     @MockBean
+    private RedisRepository redisRepository;
+
+    @MockBean
     private LoginTransactionalListener loginTransactionalListener;
 
     @Bean
@@ -43,6 +49,9 @@ public class CustomTestConfiguration {
     private class TestMemberDetailsService implements UserDetailsService {
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            if (username.equals("none@com")) {
+                throw new ErrorLogicException(ErrorCode.LOGIN_ACCOUNT_FAILED);
+            }
             Member member = Member.builder()
                     .memberId(1L)
                     .account(new Account("email@com", OauthPlatform.NONE))

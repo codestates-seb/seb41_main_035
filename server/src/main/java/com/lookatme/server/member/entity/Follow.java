@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+
+)
 @Entity
 public class Follow {
 
@@ -17,11 +20,16 @@ public class Follow {
     private long followId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_member_id")
+    @JoinColumn(
+            name = "from_member_id",
+            foreignKey = @ForeignKey(name = "FK_from_member")
+    )
     Member from; // 팔로우를 누른 사람
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_member_id")
+    @JoinColumn(
+            name = "to_member_id",
+            foreignKey = @ForeignKey(name = "FK_to_member"))
     Member to; // 팔로우가 눌린 사람
 
     @Column(name = "follow_start_date", updatable = false)
