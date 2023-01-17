@@ -85,13 +85,13 @@ public class MemberController {
     @PostMapping("/follow")
     public ResponseEntity<?> follow(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                     @RequestParam String type,
-                                    @RequestParam String nickname) {
+                                    @RequestParam(name = "op") long opMemberId) {
         switch (type) {
             case "up":
-                memberService.followMember(memberPrincipal.getAccount(), nickname);
+                memberService.followMember(memberPrincipal.getAccount(), opMemberId);
                 break;
             case "down":
-                memberService.unfollowMember(memberPrincipal.getAccount(), nickname);
+                memberService.unfollowMember(memberPrincipal.getAccount(), opMemberId);
                 break;
             default:
                 throw new IllegalArgumentException();

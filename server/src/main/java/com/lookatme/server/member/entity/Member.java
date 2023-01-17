@@ -35,16 +35,20 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
+    @ColumnDefault("0")
     private int loginTryCnt;
 
     private LocalDateTime lastLoginTime; // 최근 로그인 시간
 
     private String nickname; // Unique
 
+    @ColumnDefault("0")
     private int height;
 
+    @ColumnDefault("0")
     private int weight;
 
+    @ColumnDefault("'MEMBER_ACTIVE'")
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
 

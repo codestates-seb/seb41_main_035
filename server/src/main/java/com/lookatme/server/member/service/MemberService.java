@@ -1,6 +1,5 @@
 package com.lookatme.server.member.service;
 
-import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
@@ -77,10 +76,9 @@ public class MemberService {
     }
 
     // 로그인 되어있는 사용자가 / nickname 회원을 / followers list에 추가한다
-    public void followMember(Account account, String nickname) {
+    public void followMember(Account account, long opMemberId) {
         Member member = getMember(account);
-        Member opponent = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+        Member opponent = getMember(opMemberId);
 
         if (followRepository.existsByFromAndTo(member, opponent)) {
             throw new ErrorLogicException(ErrorCode.MEMBER_ALREADY_FOLLOW); // 이미 팔로우 한 회원
@@ -92,10 +90,9 @@ public class MemberService {
         followRepository.save(follow);
     }
 
-    public void unfollowMember(Account account, String nickname) {
+    public void unfollowMember(Account account, long opMemberId) {
         Member member = getMember(account);
-        Member opponent = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+        Member opponent = getMember(opMemberId);
 
         if (!followRepository.existsByFromAndTo(member, opponent)) {
             throw new ErrorLogicException(ErrorCode.MEMBER_NOT_FOLLOW); // 팔로우 되어있지 않은 회원

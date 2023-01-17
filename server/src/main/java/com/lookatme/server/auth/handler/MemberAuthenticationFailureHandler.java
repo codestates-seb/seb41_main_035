@@ -28,15 +28,15 @@ public class MemberAuthenticationFailureHandler implements AuthenticationFailure
 
         ErrorCode errorCode = ErrorCode.EXCEPTION;
         if (exception.getCause() instanceof ErrorLogicException) {
-            errorCode = ErrorCode.LOGIN_ACCOUNT_FAILED;
+            errorCode = ErrorCode.LOGIN_ACCOUNT_FAILED; // 계정이 없는 경우
         } else if (exception instanceof LockedException) {
-            errorCode = ErrorCode.LOGIN_ACCOUNT_LOCKED;
+            errorCode = ErrorCode.LOGIN_ACCOUNT_LOCKED; // 계정이 잠긴 경우 (로그인 5회 이상 실패)
         } else if (exception instanceof BadCredentialsException) {
-            String email = (String) request.getAttribute("email");
+            String email = (String) request.getAttribute("email"); // 로그인 실패 (5회 미만)
             int loginFailedCnt = loginTransactionalListener.loginFailed(email);
             String errorCodeStr = ErrorCode.LOGIN_PASSWORD_FAILED.name();
             String message = ErrorCode.LOGIN_PASSWORD_FAILED.getValue() + String.format(" (%d/5)", loginFailedCnt);
-            ErrorResponder.sendErrorResponse(response, errorCodeStr, message);
+            ErrorResponder.sendErrorResponse(response, errorCodeStr, message); // 별도의 errorResponder를 이용
             return;
         }
         ErrorResponder.sendErrorResponse(response, errorCode);

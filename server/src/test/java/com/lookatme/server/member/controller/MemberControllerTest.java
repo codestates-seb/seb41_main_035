@@ -241,7 +241,7 @@ class MemberControllerTest {
 
     }
 
-    @DisplayName("회원 수정 실패 테스트")
+    @DisplayName("회원 수정 실패 테스트 - 본인 계정 아님")
     @Test
     void updateMemberFailTest() throws Exception {
         // Given
@@ -287,7 +287,7 @@ class MemberControllerTest {
                 ));
     }
 
-    @DisplayName("회원 탈퇴 실패 테스트")
+    @DisplayName("회원 탈퇴 실패 테스트 - 본인 계정 아님")
     @Test
     void deleteMemberFailTest() throws Exception {
         // When
@@ -307,14 +307,14 @@ class MemberControllerTest {
     @Test
     void followTest() throws Exception {
         // Given
-        willDoNothing().given(memberService).followMember(any(Account.class), anyString());
+        willDoNothing().given(memberService).followMember(any(Account.class), anyInt());
 
         // When
         ResultActions actions = mockMvc.perform(
                 post("/members/follow")
                         .header("Authorization", accessToken)
                         .param("type", "up")
-                        .param("nickname", "opponent_nickname")
+                        .param("op", "1")
         );
 
         // Then
@@ -326,7 +326,7 @@ class MemberControllerTest {
                                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                                 requestParameters(
                                         parameterWithName("type").description("팔로우 기능 구분(up/down)"),
-                                        parameterWithName("nickname").description("상대방 닉네임")
+                                        parameterWithName("op").description("상대방 회원 번호")
                                 )
                         )
                 );

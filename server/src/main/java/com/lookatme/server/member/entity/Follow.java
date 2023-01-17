@@ -9,9 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-
-)
 @Entity
 public class Follow {
 
