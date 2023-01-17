@@ -1,38 +1,52 @@
 import styled from 'styled-components';
 import { BsChatLeftText, BsPersonPlus, BsBookmarkHeart } from 'react-icons/bs';
 import Comment from '../components/Comment';
+import Avatar from '../components/Avatar';
+import dummyData from '../db/dummyData.json';
+import Item from '../components/Item';
 
 const PostView = () => {
+  const data = dummyData.posts;
   return (
     <SWrapper>
       <SContainer>
         <div className="top_container">
           <SPost>
-            <div className="outfit_upload"> 착용사진 나오는 칸</div>
+            <Avatar
+              className="outfit_upload"
+              size="400px"
+              image={data[0].picture}
+            />
           </SPost>
           <SMiddle>
             <div className="user_info">
               <div className="user_box">
-                <div className="user_id">아이디</div>
+                <div className="user_box left">
+                  <div className="user_avatar">
+                    <Avatar image={data[0].avatar} />
+                  </div>
+                  <div className="user_info_detail">
+                    <div className="user_id">{data[0].userNickname}</div>
+                    <div className="user_boxtwo">
+                      <div className="user_tall">170cm</div>
+                      <div className="user_weight"> 55kg</div>
+                    </div>
+                  </div>
+                </div>
                 <div className="icon">
                   <BsChatLeftText size="20" />
                   <BsPersonPlus size="20" />
                   <BsBookmarkHeart size="20" />
                 </div>
               </div>
-              <div className="user_boxtwo">
-                <div className="user_tall">키</div>
-                <div className="user_weight"> 몸무게</div>
-              </div>
             </div>
-            <div className="post">게시물나오는 칸</div>
+            <div className="post">{data[0].content}</div>
           </SMiddle>
         </div>
-        <div className="botton_container">
-          <div className="item_info">착용 제품 정보</div>
-
+        <SBottom>
+          <Item />
           <Comment />
-        </div>
+        </SBottom>
       </SContainer>
     </SWrapper>
   );
@@ -45,75 +59,85 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  width: 40%;
-  height: 600px;
+  width: 650px;
+  height: 660px;
   border: 1px solid gray;
+  margin: 40px 0px;
 
   .top_container {
     display: flex;
-    margin: 30px;
-  }
-
-  .botton_container {
-    margin: 30px;
-    .item_info {
-      background-color: #eee6ca;
-      height: 100px;
-      margin-bottom: 13px;
-    }
+    margin: 30px 30px 0px 30px;
   }
 `;
 
 const SPost = styled.div`
-  .outfit_upload {
-    width: 16vw;
-    height: 31vh;
-    background-color: #f2b9b9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 20px;
-  }
-  .like_container {
-    margin-bottom: 10px;
-    background-color: #faf4c5;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  position: relative;
+  overflow: hidden;
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
   }
 `;
 
 const SMiddle = styled.div`
+  width: 270px;
+  margin-left: 10px;
   .user_info {
     display: flex;
     flex-direction: column;
   }
   .user_box {
     display: flex;
-    flex-direction: row;
     margin: 5px;
     align-items: center;
     justify-content: space-between;
+    .user_id {
+      margin-left: 10px;
+      font-size: 18px;
+    }
+    svg {
+      padding-left: 5px;
+    }
   }
-  .user_id {
-    margin-right: 20px;
-  }
-
-  svg {
-    padding: 0 20px;
+  .user_avatar {
+    width: 2vw;
+    height: 30px;
+    object-fit: cover;
+    position: relative;
+    overflow: hidden;
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+    }
   }
   .user_boxtwo {
     display: flex;
-    flex-direction: row;
-    margin: 5px;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    font-size: 10px;
     .user_tall {
-      margin-right: 10px;
+      margin: 0px 10px;
     }
   }
-
   .post {
-    width: 20vw;
     height: 25vh;
-    background-color: #eaebba;
+    /* background-color: #eaebba; */
+    margin-left: 10px;
+    font-size: 20px;
   }
+`;
+const SBottom = styled.div`
+  margin: 15px 30px;
 `;
 export default PostView;

@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 import PostUploadBar from './PostUploadBar';
 import ImageInput from '../components/ImageInput';
+import PlusButton from '../components/Plusbutton';
 
 const PostUpload = () => {
   return (
     <Section>
       <Scontainer>
-        <QHeader>
+        <SHeader>
           <div className="image_upload">
             <button type="submit">완료</button>
           </div>
-        </QHeader>
+        </SHeader>
 
         <SMid>
           <ImageInput />
@@ -24,6 +25,8 @@ const PostUpload = () => {
         </SMid>
 
         <PostUploadBar />
+        <PostUploadBar />
+        <PlusButton />
       </Scontainer>
     </Section>
   );
@@ -39,7 +42,7 @@ const Scontainer = styled.div`
   /* border: 1px solid green; */
 `;
 
-const QHeader = styled.div`
+const SHeader = styled.div`
   display: flex;
   justify-content: center;
   /* border: 1px solid pink; */
@@ -47,7 +50,7 @@ const QHeader = styled.div`
 
   .image_upload {
     /* margin-left: 20px; */
-    width: 38vw;
+    width: 43.5vw;
     margin-bottom: 10px;
     border-bottom: 1px solid #b3b3b3;
   }
@@ -66,6 +69,8 @@ const QHeader = styled.div`
 const SMid = styled.div`
   display: flex;
   justify-content: center;
+  margin: 10px 0px;
+
   /* border: 1px solid pink; */
   /* width: 30vw; */
   .input_box {
@@ -73,13 +78,14 @@ const SMid = styled.div`
     margin-bottom: 10px;
     display: flex;
     justify-content: end;
+
     /* background-color: #b3b3b3; */
   }
   textarea {
     font-size: 14px;
     box-sizing: border-box;
     min-height: 25vh;
-    width: 23vw;
+    width: 28vw;
     border: none;
     border-radius: 5px;
     background-color: #ffffff;

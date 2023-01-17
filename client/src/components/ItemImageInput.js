@@ -54,14 +54,13 @@ const ItemImageInput = () => {
 
 const SWrapper = styled.div`
   background-color: #eee6ca;
-  .image-upload {
-  }
+
   .image-upload > input {
     display: none;
   }
   //파일 업로드버튼
   .btn-upload {
-    width: 3.5vw;
+    width: 5vw;
     height: 3vh;
     /* padding: 7px 14px; */
     background-color: #d9d4a6;
@@ -72,6 +71,7 @@ const SWrapper = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    margin-top: 15px;
   }
 `;
 const SImagefiles = styled.div`
@@ -84,7 +84,7 @@ const SImagefiles = styled.div`
     background-color: #eee6ca;
   }
   img {
-    width: 4vw;
+    width: 4.5vw;
     height: 8vh;
     margin-left: 14px;
   }

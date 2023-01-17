@@ -1,11 +1,34 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import ItemImageInput from '../components/ItemImageInput';
 
 const PostUploadBar = () => {
-  //   const [selectedDropValue, setSelectedDropValue] = useState([
-  //     '카테고리를 선택하세요.',
-  //   ]);
+  const [brandName, setBrandname] = useState('');
+  const [itemName, setItemname] = useState('');
+  const [itemSize, setItemsize] = useState('');
+  const [itemPrice, setItemprice] = useState('');
+  const [itemSite, setItemsite] = useState('');
+  const [rentalPrice, setRentalprice] = useState('');
+
+  const onChangeBrandname = (e) => {
+    setBrandname(e.target.value);
+  };
+  const onChangeName = (e) => {
+    setItemname(e.target.value);
+  };
+  const onChangeSize = (e) => {
+    setItemsize(e.target.value);
+  };
+  const onChangePrice = (e) => {
+    setItemprice(e.target.value);
+  };
+  const onChangeSite = (e) => {
+    setItemsite(e.target.value);
+  };
+  const onChangeRentalprice = (e) => {
+    setRentalprice(e.target.value);
+  };
   return (
     <SWrapper>
       <SContainer>
@@ -19,25 +42,46 @@ const PostUploadBar = () => {
           <div className="item-top">
             <div className="item-brand">
               브랜드
-              <input type="text" placeholder="브랜드"></input>
+              <input
+                type="text"
+                placeholder="브랜드"
+                onChange={onChangeBrandname}
+              ></input>
             </div>
             <div className="item-name">
               제품명
-              <input type="text" placeholder="제품명"></input>
+              <input
+                type="text"
+                placeholder="제품명"
+                onChange={onChangeName}
+              ></input>
             </div>
           </div>
           <div className="item-mid">
             <div className="item-size">
               사이즈
-              <input type="text" placeholder="사이즈"></input>
+              <input
+                type="text"
+                placeholder="사이즈"
+                onChange={onChangeSize}
+              ></input>
             </div>
             <div className="item-price">
-              가격<input type="text" placeholder="가격"></input>
+              가격
+              <input
+                type="text"
+                placeholder="가격"
+                onChange={onChangePrice}
+              ></input>
             </div>
           </div>
           <div className="item-site">
             구매링크
-            <input type="text" placeholder="구매링크"></input>
+            <input
+              type="text"
+              placeholder="구매링크"
+              onChange={onChangeSite}
+            ></input>
           </div>
         </SMidle>
         <SRentalcheck>
@@ -47,7 +91,11 @@ const PostUploadBar = () => {
           </div>
           <div className="rental-price">
             렌탈금액
-            <input type="text" size="10" placeholder="렌탈금액"></input>
+            <input
+              type="text"
+              placeholder="렌탈금액"
+              onChange={onChangeRentalprice}
+            ></input>
           </div>
         </SRentalcheck>
       </SContainer>
@@ -58,9 +106,10 @@ const PostUploadBar = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
 
   input {
-    width: 5.5vw;
+    width: 6vw;
     border: 1.5px solid #d9d4a6;
     border-radius: 3px;
   }
@@ -75,26 +124,23 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  width: 57%;
-  height: 14vh;
+  width: 44vw;
+  /* height: 16vh; */
   background-color: #eee6ca;
   /* flex-direction: row; */
   display: flex;
-  button {
-    margin: 20px 0px;
-    width: 7vw;
-    height: 3vh;
-  }
+  margin: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `;
 const SMidle = styled.div`
   font-size: 14px;
   margin: 10px 0px;
-  width: 47%;
+  width: 20vw;
   background-color: #eee6ca;
 
   .item-top {
     display: flex;
-    margin: 10px;
+    margin: 10px 10px 15px 10px;
     background-color: #eee6ca;
     .item-brand {
       background-color: #eee6ca;
@@ -110,7 +156,7 @@ const SMidle = styled.div`
 
   .item-mid {
     display: flex;
-    margin: 10px;
+    margin: 10px 10px 15px 10px;
     background-color: #eee6ca;
     .item-size {
       background-color: #eee6ca;
@@ -134,7 +180,7 @@ const SMidle = styled.div`
   }
   .item-site > input {
     margin-left: 10px;
-    width: 14vw;
+    width: 15vw;
   }
 `;
 
