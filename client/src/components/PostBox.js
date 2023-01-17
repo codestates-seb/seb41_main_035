@@ -2,12 +2,21 @@ import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
+const BREAK_POINT_PC = 1300;
+const BREAK_POINT_TABLET = 768;
 const PostBox = () => {
+  const navigate = useNavigate();
   return (
     <SWrapper>
       <Container>
         {dummyData.posts.map((post) => (
-          <PostBoxOne key={post.id}>
+          <PostBoxOne
+            key={post.id}
+            onClick={() => {
+              navigate(`/postview`);
+            }}
+          >
             <div className="user-info ">
               <div className="user-info left">
                 {' '}
@@ -40,8 +49,18 @@ const SWrapper = styled.div`
 `;
 const Container = styled.div`
   display: grid;
-  /* grid-template-columns: 20vw 20vw 20vw; */
-  grid-template-columns: 320px 320px 320px;
+  grid-template-columns: 22vw 22vw 22vw;
+  /* grid-template-columns: 320px 320px 320px; */
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    & {
+      grid-template-columns: 320px 320px;
+    }
+  }
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    & {
+      grid-template-columns: 320px;
+    }
+  }
 `;
 const PostBoxOne = styled.div`
   height: 400px;
@@ -51,7 +70,7 @@ const PostBoxOne = styled.div`
   margin: 0px 15px 60px 15px;
   border: 2px solid #949494;
   border-radius: 5px;
-
+  cursor: pointer;
   .user-info {
     display: flex;
     width: 90%;
@@ -70,11 +89,21 @@ const PostBoxOne = styled.div`
     }
   }
   .style-picture {
-    width: 258px;
+    width: 18vw;
     height: 300px;
     object-fit: cover;
     position: relative;
     overflow: hidden;
+    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      & {
+        width: 258px;
+      }
+    }
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        width: 258px;
+      }
+    }
     img {
       position: absolute;
       top: 50%;
