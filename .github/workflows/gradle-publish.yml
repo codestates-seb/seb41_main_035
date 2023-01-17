@@ -1,10 +1,13 @@
 name: Look At Me Application CI
 
-on:
+on: # 트리거 발생 조건 (1. dev/main 브랜치에 push / 2. server 디렉토리 내에서 발생한 변경일 것)
   push:
     branches:
       - main
+      - dev
       - feat/be/cloud
+    paths:
+      - server/**
 
 env:
   S3_BUCKET_NAME: my-springboot-build
@@ -16,6 +19,10 @@ jobs: # Groups together all the jobs
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./server # 작업 디렉토리 지정
 
     # 수행할 작업 단계의 목록
     steps:
@@ -28,22 +35,21 @@ jobs: # Groups together all the jobs
         with:
           java-version: '11'
           distribution: 'temurin'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-      - name: Add permission to gradlew
-        run: | 
-          cd ./server
+      - name: Add permission to gradlew & Build
+        run: |
           chmod +x ./gradlew
-
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-        with:
-          arguments: build
+          ./gradlew clean build
 
       - name: Make build file to zip file
-        run: zip -r ./lookatme-server.zip .
-        shell: bash
+        run: |
+          mkdir -p before-deploy
+          mkdir -p before-deploy/scripts
+          cp build/libs/*.jar before-deploy/
+          cp scripts/*.sh before-deploy/scripts
+          cp appspec.yml before-deploy/
+          cd before-deploy && zip -r lookatme-server.zip *
+          mv ./lookatme-server.zip ../
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -54,3 +60,11 @@ jobs: # Groups together all the jobs
 
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./lookatme-server.zip s3://$S3_BUCKET_NAME/lookatme-server.zip
+
+      - name: Code Deploy CD
+        run: >
+          aws deploy create-deployment --application-name lookatme
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name lookatme-group
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=lookatme-server.zip
+          
