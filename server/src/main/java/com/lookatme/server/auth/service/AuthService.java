@@ -31,22 +31,22 @@ public class AuthService {
         redisRepository.addAccessTokenToBlacklist(accessToken);
     }
 
-    public String getMemberUniqueKeyAtToken(String token) {
+    public String getTokenSubject(String token) {
         return jwtTokenizer.getTokenSubject(token);
     }
 
-    public String reissueAccessToken(String refreshToken, String memberUniqueKey) {
-        // 1. 유효한 RTK인지? (redis에 저장되어 있는지?)
-        String tokenSubject = jwtTokenizer.getTokenSubject(refreshToken);
-        Account account = Member.uniqueKeyToAccount(memberUniqueKey);
+    public String reissueAccessToken(String refreshToken, String tokenSubject) {
+        // 1. Redis에 저장되지 않은 (사용할 수 없는) RTK인 경우 예외 발생
+        if (!redisRepository.hasRefreshToken(refreshToken, tokenSubject)) {
+            throw new ErrorLogicException(ErrorCode.TOKEN_INVALID);
+        }
+
+        // 2. tokenSubject를 통해 회원 조회
+        Account account = Member.uniqueKeyToAccount(tokenSubject);
         Member member = memberRepository.findByAccount(account)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (!redisRepository.hasRefreshToken(tokenSubject, refreshToken)) {
-            throw new ErrorLogicException(ErrorCode.TOKEN_INVALID);
-        }
-        // 2. ATK 재발급
-        String accessToken = jwtTokenizer.delegateAccessToken(member);
-        return accessToken;
+        // 3. ATK 재발급
+        return jwtTokenizer.delegateAccessToken(member);
     }
 }

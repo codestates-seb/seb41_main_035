@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  * 각 테스트가 끝날때마다 데이터가 롤백되기 때문에 db에 영향 X
  */
 @Transactional
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MemberServiceTest {
 
     @Autowired
