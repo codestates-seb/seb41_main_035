@@ -13,17 +13,17 @@ import Footer from './components/Footer';
 import PostUpload from './pages/PostUpload';
 import PostView from './pages/PostView';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PostUpload from './pages/PostUpload';
+import Sidebar from './components/Sidebar';
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <LoginHeader />
+        <Sidebar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile/:userId" element={<Profile />} />
-          <Route path="/post/" element={<PostUpload />} />
           <Route path="/outer" element={<Outer />} />
           <Route path="/top" element={<Top />} />
           <Route path="/bottom" element={<Bottom />} />
@@ -31,7 +31,7 @@ function App() {
           <Route path="/hat" element={<Hat />} />
           <Route path="/shoes" element={<Shoes />} />
           <Route path="/postupload" element={<PostUpload />} />
-          <Route path="/postview" element={<PostView />} />
+          <Route path="/postview/:id" element={<PostView />} />
         </Routes>
         <Footer />
       </BrowserRouter>

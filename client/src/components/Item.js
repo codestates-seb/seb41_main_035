@@ -2,6 +2,9 @@ import { ReactComponent as Rent } from '../svg/Rent.svg';
 import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
+const BREAK_POINT_PC = 1300;
+const BREAK_POINT_TABLET = 768;
+
 const Item = () => {
   const data = dummyData.posts;
   return (
@@ -23,9 +26,6 @@ const Item = () => {
                 <span> 나이키</span>
                 <span> 2,000원</span>
               </div>
-              {/* <div className="item_brand">브랜드 나이키</div>
-              <div className="item_name">제품명  나이키</div>
-              <div className="item_price">가격 2,000원</div> */}
             </div>
             {/* {isRent ? ( */}
             <div className="item_rent">
@@ -44,11 +44,16 @@ const Item = () => {
 };
 const SItemContainer = styled.div`
   overflow: auto;
-  height: 110px;
+  height: 12vh;
   margin-bottom: 10px;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    & {
+      height: 115px;
+    }
+  }
 
   .item_box {
-    height: 85px;
+    height: 70px;
     margin-bottom: 13px;
     display: flex;
     align-items: center;
@@ -80,11 +85,13 @@ const SItemContainer = styled.div`
           display: flex;
           flex-direction: column;
           justify-content: center;
+
           font-size: 15px;
           margin-top: 2px;
           background-color: #eee6ca;
           span {
             background-color: #eee6ca;
+            margin: 1px 0px;
           }
         }
       }
@@ -94,6 +101,7 @@ const SItemContainer = styled.div`
         justify-content: center;
         align-items: center;
         background-color: #eee6ca;
+        margin-top: 5px;
         svg {
           background-color: #eee6ca;
         }
@@ -108,8 +116,8 @@ const SItemContainer = styled.div`
     }
   }
   .item_picture {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     object-fit: cover;
     position: relative;
     overflow: hidden;

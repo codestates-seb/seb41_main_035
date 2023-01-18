@@ -1,5 +1,14 @@
 {
   "posts": [
+    {
+      "id": 0,
+      "avatar": "https://avatars.githubusercontent.com/u/111413253?v=4",
+      "createdAt": "2022.12.24",
+      "userNickname": "TUtuda",
+      "picture":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLKhj9uyPkG_X9wqGsYzRAsYehTNBKzvxanQ&usqp=CAU",
+      "content":"옷 어떤가요? 노란 목폴라, 체크셋업"
+      
+    },
    
     {
       "id": 1,

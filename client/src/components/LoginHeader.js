@@ -52,7 +52,11 @@ const LoginHeader = () => {
           {/* ) : ( */}
           <div className="right zone">
             <BsPersonCircle size="30" />
-            <BsPencilSquare size="30" />
+            <BsPencilSquare
+              size="30"
+              role="presentation"
+              onClick={() => navigate(`/postupload`)}
+            />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button" onClick={onClickButton}>
               Log in
