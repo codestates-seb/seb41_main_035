@@ -1,6 +1,7 @@
 package com.lookatme.server.message.service;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
+import com.lookatme.server.common.dto.MultiResponseDto;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.exception.message.MessageNotFoundException;
@@ -8,6 +9,7 @@ import com.lookatme.server.exception.message.MessageNotSendToSelfException;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.message.dto.MessagePostDto;
+import com.lookatme.server.message.dto.MessageResponseDto;
 import com.lookatme.server.message.entity.Message;
 import com.lookatme.server.message.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,22 +79,18 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Message> getMessages(final MemberPrincipal memberPrincipal,
+    public MultiResponseDto getMessages(final MemberPrincipal memberPrincipal,
                                      final Long memberId,
                                      final int page, final int size) {
-        //받은 편지함 불러오기, 한 명의 유저가 받은 모든 메시지;
         //특정한 사람과 주고 받은 모든 메시지 조회
-        return messageRepository.findAllMessages(memberPrincipal.getMemberId(), memberId,
+        Page<Message> messages = messageRepository.findAllMessages(memberPrincipal.getMemberId(), memberId,
                 PageRequest.of(page, size, Sort.by("createdAt")));
+        List<MessageResponseDto> messageResponseDtos = messages.getContent()
+                .stream()
+                .map(message -> MessageResponseDto.of(message))
+                .collect(Collectors.toList());
+        return new MultiResponseDto<>(messageResponseDtos, messages);
     }
-    
-
-//    @Transactional(readOnly = true)
-//    public Page<Message> getSentMessage(final MemberPrincipal memberPrincipal, final int page, final int size) {
-//        //보낸 편지함 불러오기, 한 명의 유저가 받은 모든 메시지
-//        return messageRepository.findAllMessagesBySender(memberPrincipal.getMemberId(),
-//                PageRequest.of(page, size, Sort.by("createdAt")));
-//    }
 
     //받은 편지 삭제
     @Transactional
