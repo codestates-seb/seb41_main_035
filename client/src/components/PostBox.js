@@ -14,7 +14,7 @@ const PostBox = () => {
           <PostBoxOne
             key={post.id}
             onClick={() => {
-              navigate(`/postview`);
+              navigate(`/postview/${post.id}`);
             }}
           >
             <div className="user-info ">
