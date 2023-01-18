@@ -1,7 +1,7 @@
 package com.lookatme.server.auth.controller;
 
 import com.google.gson.Gson;
-import com.lookatme.server.auth.dto.LoginDto;
+import com.lookatme.server.auth.dto.LoginRequest;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
@@ -79,8 +79,8 @@ class AuthControllerTest {
     @Test
     void loginTest() throws Exception {
         // Given
-        LoginDto loginDto = new LoginDto("email@com", "qwe123!@#");
-        String content = gson.toJson(loginDto);
+        LoginRequest loginRequest = new LoginRequest("email@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -115,8 +115,8 @@ class AuthControllerTest {
     @Test
     void loginFailedTest_Password() throws Exception {
         // Given
-        LoginDto loginDto = new LoginDto("email@com", "wrongPassword");
-        String content = gson.toJson(loginDto);
+        LoginRequest loginRequest = new LoginRequest("email@com", "wrongPassword");
+        String content = gson.toJson(loginRequest);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -137,8 +137,8 @@ class AuthControllerTest {
     @Test
     void loginFailedTest_Account() throws Exception {
         // Given
-        LoginDto loginDto = new LoginDto("none@com", "qwe123!@#");
-        String content = gson.toJson(loginDto);
+        LoginRequest loginRequest = new LoginRequest("none@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
 
         // When
         ResultActions actions = mockMvc.perform(
