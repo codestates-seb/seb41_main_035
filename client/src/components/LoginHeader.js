@@ -51,7 +51,10 @@ const LoginHeader = () => {
           </div> */}
           {/* ) : ( */}
           <div className="right zone">
-            <BsPersonCircle size="30" />
+            <BsPersonCircle
+              size="30"
+              onClick={() => navigate(`/profile/${userId}`)}
+            />
             <BsPencilSquare size="30" />
             <AiOutlineMessage size="30" onClick={onChatOpen} />
             <button className="login button" onClick={onClickButton}>
