@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const ItemImageInput = () => {
   const [iamgeFile, setIamgeFile] = useState([]); // 이미지 배열
-  // const upload = useRef();
 
   const onChangeImg = (e) => {
     const imageLists = e.target.files;
@@ -37,11 +36,9 @@ const ItemImageInput = () => {
       </div>
 
       <SImagefiles>
-        {/* <div style={{ display: 'flex' }}> */}
         <div className="image-add">
           {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
           {iamgeFile?.map((img, idx) => (
-            // <div key={idx} style={{ margin: '20px' }}>
             <div className="image-info" key={idx}>
               <img src={img} alt="img" />
             </div>
