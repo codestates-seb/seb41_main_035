@@ -6,7 +6,7 @@ import com.lookatme.server.auth.handler.*;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.member.service.MemberService;
+import com.lookatme.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration {
@@ -34,7 +32,8 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthorityUtils authorityUtils;
     private final RedisRepository redisRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final LoginTransactionalListener loginTransactionalListener;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,7 +41,8 @@ public class SecurityConfiguration {
                 .headers().frameOptions().sameOrigin() // H2 콘솔을 위한 설정
                 .and()
                 .csrf().disable() // csrf 토큰 검증 X
-                .cors(withDefaults())
+                .cors(httpSecurityCorsConfigurer ->
+                        httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 X
                 .and()
                 .formLogin().disable()
@@ -54,15 +54,17 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
-                        .antMatchers(HttpMethod.POST,"/auth/**").authenticated()
                         .antMatchers(HttpMethod.GET, "/auth/profile").permitAll()
+                        .antMatchers(HttpMethod.POST, "/members/signup").permitAll()
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/comment/**").permitAll()
+                        .antMatchers( "/auth/**").authenticated()
+                        .antMatchers("/comment/**").authenticated()
                         .antMatchers("/members/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OauthAuthenticationSuccessHandler(jwtTokenizer, memberService))
+                        .successHandler(new OauthAuthenticationSuccessHandler(jwtTokenizer, memberRepository))
                 );
 
         return http.build();
@@ -73,8 +75,9 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of("*"));
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*")); // 허용할 헤더 추가
+        configuration.setAllowedOriginPatterns(List.of("*")); // 허용할 도메인
+        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS")); // 허용할 메서드
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
@@ -88,8 +91,8 @@ public class SecurityConfiguration {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisRepository, jwtTokenizer);
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(loginTransactionalListener));
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler(loginTransactionalListener));
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(redisRepository, jwtTokenizer, authorityUtils);
