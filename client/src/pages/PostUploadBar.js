@@ -4,31 +4,36 @@ import Dropdown from '../components/Dropdown';
 import ItemImageInput from '../components/ItemImageInput';
 
 const PostUploadBar = () => {
-  const [brandName, setBrandname] = useState('');
-  const [itemName, setItemname] = useState('');
-  const [itemSize, setItemsize] = useState('');
-  const [itemPrice, setItemprice] = useState('');
-  const [itemSite, setItemsite] = useState('');
-  const [rentalPrice, setRentalprice] = useState('');
+  const [brandname, setBrandname] = useState('');
+  const [itemName, setItemName] = useState('');
+  const [itemSize, setItemSize] = useState('');
+  const [itemPrice, setItemPrice] = useState('');
+  const [itemSite, setItemSite] = useState('');
+  const [rentalCheck, setRentalCheck] = useState(false);
+  const [rentalPrice, setRentalPrice] = useState('');
 
   const onChangeBrandname = (e) => {
     setBrandname(e.target.value);
   };
   const onChangeName = (e) => {
-    setItemname(e.target.value);
+    setItemName(e.target.value);
   };
   const onChangeSize = (e) => {
-    setItemsize(e.target.value);
+    setItemSize(e.target.value);
   };
   const onChangePrice = (e) => {
-    setItemprice(e.target.value);
+    setItemPrice(e.target.value);
   };
   const onChangeSite = (e) => {
-    setItemsite(e.target.value);
+    setItemSite(e.target.value);
   };
-  const onChangeRentalprice = (e) => {
-    setRentalprice(e.target.value);
+  const onChangeRentalCheck = () => {
+    setRentalCheck((prev) => !prev);
   };
+  const onChangeRentalPrice = (e) => {
+    setRentalPrice(e.target.value);
+  };
+
   return (
     <SWrapper>
       <SContainer>
@@ -87,14 +92,14 @@ const PostUploadBar = () => {
         <SRentalcheck>
           <div className="check">
             렌탈가능체크
-            <input type="checkbox"></input>
+            <input type="checkbox" onChange={onChangeRentalCheck}></input>
           </div>
           <div className="rental-price">
             렌탈금액
             <input
               type="text"
               placeholder="렌탈금액"
-              onChange={onChangeRentalprice}
+              onChange={onChangeRentalPrice}
             ></input>
           </div>
         </SRentalcheck>
@@ -132,6 +137,7 @@ const SContainer = styled.div`
   margin: 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `;
+
 const SMidle = styled.div`
   font-size: 14px;
   margin: 10px 0px;
