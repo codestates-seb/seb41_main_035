@@ -3,13 +3,12 @@ package com.lookatme.server.auth.controller;
 import com.google.gson.Gson;
 import com.lookatme.server.auth.dto.LoginDto;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.service.AuthService;
 import com.lookatme.server.config.CustomTestConfiguration;
-import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.mapper.MemberMapperImpl;
-import com.lookatme.server.member.service.MemberService;
+import com.lookatme.server.member.entity.OauthPlatform;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -36,10 +36,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+// ** 테스트 시 CustomTestConfiguration -> loadUserByUsername을 통해 고정된 데이터를 조회 **
 @Import({
         CustomTestConfiguration.class,
-        JwtTokenizer.class,
-        MemberMapperImpl.class
+        JwtTokenizer.class
 })
 @MockBean(JpaMetamodelMappingContext.class)
 @WebMvcTest(AuthController.class)
@@ -47,13 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest {
 
     @MockBean
-    private MemberService memberService;
-
-    @MockBean
     private AuthService authService;
-
-    @MockBean
-    private RedisRepository redisRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -72,39 +66,13 @@ class AuthControllerTest {
     void createAccessToken() {
         savedMember = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname("nickname")
                 .profileImageUrl("http://프사링크")
-                .oauthPlatform(Member.OauthPlatform.NONE)
                 .height(180)
                 .weight(70)
                 .build();
         accessToken = jwtTokenizer.delegateAccessToken(savedMember);
-    }
-
-    @DisplayName("회원 가입")
-    @Test
-    void registerMemberTest() throws Exception {
-        // Given
-        MemberDto.Post postDto = new MemberDto.Post(
-                "email@com",
-                "{noop}pwd123!@#",
-                "닉네임",
-                Member.OauthPlatform.NONE,
-                180, 70);
-        String content = gson.toJson(postDto);
-        given(memberService.registerMember(any())).willReturn(savedMember);
-
-        // When
-        ResultActions actions = mockMvc.perform(
-                post("/auth/signup")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content)
-        );
-
-        // Then
-        actions.andExpect(status().isCreated());
     }
 
     @DisplayName("로그인")
@@ -141,6 +109,50 @@ class AuthControllerTest {
                                 )
                         )
                 );
+    }
+
+    @DisplayName("로그인 실패 테스트 - 비밀번호")
+    @Test
+    void loginFailedTest_Password() throws Exception {
+        // Given
+        LoginDto loginDto = new LoginDto("email@com", "wrongPassword");
+        String content = gson.toJson(loginDto);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+
+        // Then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.LOGIN_PASSWORD_FAILED.name()))
+                .andExpect(jsonPath("$.message").value(startsWith(ErrorCode.LOGIN_PASSWORD_FAILED.getValue())));
+
+    }
+
+    @DisplayName("로그인 실패 테스트 - 계정")
+    @Test
+    void loginFailedTest_Account() throws Exception {
+        // Given
+        LoginDto loginDto = new LoginDto("none@com", "qwe123!@#");
+        String content = gson.toJson(loginDto);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+
+        // Then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.LOGIN_ACCOUNT_FAILED.name()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.LOGIN_ACCOUNT_FAILED.getValue()));
+
     }
 
     @DisplayName("액세스 토큰 상태 조회")

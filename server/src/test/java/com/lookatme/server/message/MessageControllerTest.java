@@ -5,8 +5,8 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
-import com.lookatme.server.comment.controller.CommentController;
-import com.lookatme.server.config.SecurityConfiguration;
+import com.lookatme.server.config.CustomTestConfiguration;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.service.MemberService;
 import com.lookatme.server.message.controller.MessageController;
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import({
-        SecurityConfiguration.class,
+        CustomTestConfiguration.class,
         MemberAuthorityUtils.class,
         JwtTokenizer.class
 })
@@ -58,12 +58,6 @@ public class MessageControllerTest {
     @MockBean
     private MessageService messageService;
 
-    @MockBean
-    private RedisRepository redisRepository;
-
-    @MockBean
-    private MemberService memberService;
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
@@ -76,7 +70,7 @@ public class MessageControllerTest {
 
         Member receiver = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com"))
                 .nickname("메시지 발신자 닉네임")
                 .profileImageUrl("메시지 발신자 프로필 사진 URL")
                 .height(180)
@@ -85,7 +79,7 @@ public class MessageControllerTest {
 
         Member sender = Member.builder()
                 .memberId(2L)
-                .email("email2@com")
+                .account(new Account("email2@com"))
                 .nickname("메시지 수신자 닉네임")
                 .profileImageUrl("메시지 수신자 프로필 사진 URL")
                 .height(180)
@@ -147,7 +141,7 @@ public class MessageControllerTest {
 
         Member receiver = Member.builder()
                 .memberId(1L)
-                .email("email@com")
+                .account(new Account("email@com"))
                 .nickname("메시지 발신자 닉네임")
                 .profileImageUrl("메시지 수신자 프로필 사진 URL")
                 .height(180)
@@ -156,7 +150,7 @@ public class MessageControllerTest {
 
         Member sender = Member.builder()
                 .memberId(2L)
-                .email("email2@com")
+                .account(new Account("email2@com"))
                 .nickname("메시지 수신자 닉네임")
                 .profileImageUrl("메시지 발신자 프로필 사진 URL")
                 .height(180)
