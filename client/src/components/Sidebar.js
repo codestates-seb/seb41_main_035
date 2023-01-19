@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
+const BREAK_POINT_TABLET = 768;
 const Sidebar = () => {
   const usenavigate = useNavigate();
 
@@ -16,7 +16,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/outer`);
+                usenavigate(`/category/outer`);
               }}
             >
               아우터
@@ -25,7 +25,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/top`);
+                usenavigate(`/category/top`);
               }}
             >
               상의
@@ -34,7 +34,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/bottom`);
+                usenavigate(`/category/bottom`);
               }}
             >
               하의
@@ -43,7 +43,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/onepiece`);
+                usenavigate(`/category/onepiece`);
               }}
             >
               원피스
@@ -52,7 +52,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/hat`);
+                usenavigate(`/category/hat`);
               }}
             >
               모자
@@ -61,7 +61,7 @@ const Sidebar = () => {
               className="items"
               role="presentation"
               onClick={() => {
-                usenavigate(`/shoes`);
+                usenavigate(`/category/shoes`);
               }}
             >
               신발
