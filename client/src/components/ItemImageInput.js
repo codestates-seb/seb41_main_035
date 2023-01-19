@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-const ItemImageInput = () => {
-  const [iamgeFile, setIamgeFile] = useState([]); // 이미지 배열
+//postuploadbar.js 에서 받아온 index,imgFile,onUploadImages 함수
+const ItemImageInput = ({ index, imgFile, onUploadImages }) => {
+  // const [iamgeFile, setIamgeFile] = useState([]); // 이미지 배열
 
   const onChangeImg = (e) => {
     const imageLists = e.target.files;
-    let imageUrlLists = [...iamgeFile];
+    let imageUrlLists = [...imgFile];
 
     for (let i = 0; i < imageLists.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
@@ -16,19 +18,18 @@ const ItemImageInput = () => {
     if (imageUrlLists.length > 1) {
       imageUrlLists = imageUrlLists.slice(0, 1);
     }
-    setIamgeFile(imageUrlLists);
+    onUploadImages(imageUrlLists);
   };
 
   return (
     <SWrapper>
       <div className="image-upload ">
-        <label htmlFor="input-imgfile">
+        <label htmlFor={`input-imgfile${index}`}>
           <div className="btn-upload">제품업로드</div>
         </label>
         <input
           type="file"
-          id="input-imgfile"
-          // ref={upload} //참조
+          id={`input-imgfile${index}`}
           onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
           multiple // 파일 여러개 선택 가능
           accept="image/*" //모든 이미지 파일형식
@@ -38,7 +39,7 @@ const ItemImageInput = () => {
       <SImagefiles>
         <div className="image-add">
           {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
-          {iamgeFile?.map((img, idx) => (
+          {imgFile?.map((img, idx) => (
             <div className="image-info" key={idx}>
               <img src={img} alt="img" />
             </div>
@@ -47,6 +48,12 @@ const ItemImageInput = () => {
       </SImagefiles>
     </SWrapper>
   );
+};
+
+ItemImageInput.propTypes = {
+  index: PropTypes.number,
+  imgFile: PropTypes.array,
+  onUploadImages: PropTypes.func,
 };
 
 const SWrapper = styled.div`

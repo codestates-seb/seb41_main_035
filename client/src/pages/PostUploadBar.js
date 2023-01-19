@@ -2,8 +2,11 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import ItemImageInput from '../components/ItemImageInput';
+import PropTypes from 'prop-types';
 
-const PostUploadBar = () => {
+const PostUploadBar = ({ index, onChangeItem }) => {
+  const [imgFile, setImgFile] = useState([]); // 이미지 배열
+
   const [brandname, setBrandname] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemSize, setItemSize] = useState('');
@@ -12,33 +15,50 @@ const PostUploadBar = () => {
   const [rentalCheck, setRentalCheck] = useState(false);
   const [rentalPrice, setRentalPrice] = useState('');
 
+  // 이미지 업데이트 함수
+  const onUploadImages = (imageUrlLists) => {
+    setImgFile(imageUrlLists);
+    onChangeItem(index, 'images', imageUrlLists);
+  };
+
   const onChangeBrandname = (e) => {
     setBrandname(e.target.value);
+    onChangeItem(index, 'brandName', e.target.value); //상위 컴포넌트인 PostUpload의 contentList State가 업데이트
   };
   const onChangeName = (e) => {
     setItemName(e.target.value);
+    onChangeItem(index, 'itemName', e.target.value);
   };
   const onChangeSize = (e) => {
     setItemSize(e.target.value);
+    onChangeItem(index, 'itemSize', e.target.value);
   };
   const onChangePrice = (e) => {
     setItemPrice(e.target.value);
+    onChangeItem(index, 'itemPrice', e.target.value);
   };
   const onChangeSite = (e) => {
     setItemSite(e.target.value);
+    onChangeItem(index, 'itemSite', e.target.value);
   };
   const onChangeRentalCheck = () => {
     setRentalCheck((prev) => !prev);
+    onChangeItem(index, 'rentalCheck', (prev) => !prev);
   };
   const onChangeRentalPrice = (e) => {
     setRentalPrice(e.target.value);
+    onChangeItem(index, 'rentalPrice', e.target.value);
   };
 
   return (
     <SWrapper>
       <SContainer>
-        {/* <button className="image-upload">제품 이미지 업로드</button> */}
-        <ItemImageInput />
+        {/* 제품 이미지 업로드*/}
+        <ItemImageInput
+          index={index}
+          imgFile={imgFile}
+          onUploadImages={onUploadImages}
+        />
         <span className="category">
           {/* 드롭다운구현하기 */}
           <Dropdown />
@@ -50,6 +70,7 @@ const PostUploadBar = () => {
               <input
                 type="text"
                 placeholder="브랜드"
+                value={brandname}
                 onChange={onChangeBrandname}
               ></input>
             </div>
@@ -58,6 +79,7 @@ const PostUploadBar = () => {
               <input
                 type="text"
                 placeholder="제품명"
+                value={itemName}
                 onChange={onChangeName}
               ></input>
             </div>
@@ -68,6 +90,7 @@ const PostUploadBar = () => {
               <input
                 type="text"
                 placeholder="사이즈"
+                value={itemSize}
                 onChange={onChangeSize}
               ></input>
             </div>
@@ -76,6 +99,7 @@ const PostUploadBar = () => {
               <input
                 type="text"
                 placeholder="가격"
+                value={itemPrice}
                 onChange={onChangePrice}
               ></input>
             </div>
@@ -85,6 +109,7 @@ const PostUploadBar = () => {
             <input
               type="text"
               placeholder="구매링크"
+              value={itemSite}
               onChange={onChangeSite}
             ></input>
           </div>
@@ -92,13 +117,18 @@ const PostUploadBar = () => {
         <SRentalcheck>
           <div className="check">
             렌탈가능체크
-            <input type="checkbox" onChange={onChangeRentalCheck}></input>
+            <input
+              type="checkbox"
+              value={rentalCheck}
+              onChange={onChangeRentalCheck}
+            ></input>
           </div>
           <div className="rental-price">
             렌탈금액
             <input
               type="text"
               placeholder="렌탈금액"
+              value={rentalPrice}
               onChange={onChangeRentalPrice}
             ></input>
           </div>
@@ -106,6 +136,11 @@ const PostUploadBar = () => {
       </SContainer>
     </SWrapper>
   );
+};
+
+PostUploadBar.propTypes = {
+  index: PropTypes.number,
+  onChangeItem: PropTypes.func,
 };
 
 const SWrapper = styled.div`
