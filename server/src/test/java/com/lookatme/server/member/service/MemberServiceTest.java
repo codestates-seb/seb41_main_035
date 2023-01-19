@@ -86,10 +86,7 @@ class MemberServiceTest {
     @Test
     void updateMemberTest() {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch(
-                "닉네임_2",
-                "새 프사 주소",
-                123, 45);
+        MemberDto.Patch patchDto = new MemberDto.Patch("닉네임_2", 123, 45);
 
         // When
         Throwable exception = catchThrowable(
