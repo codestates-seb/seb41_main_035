@@ -59,7 +59,7 @@ const SInputContainer = styled.div`
   border-right: 0;
   position: releative;
   input {
-    width: 28vw;
+    width: 24vw;
     height: 5vh;
     border: none;
     background: transparent;

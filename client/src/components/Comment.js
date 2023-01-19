@@ -1,18 +1,14 @@
 import styled from 'styled-components';
-import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-// import { AiOutlineDelete } from 'react-icons/ai';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 768;
 
 const Comment = () => {
-  const data = dummyData.posts;
   const params = useParams();
-  const url = 'http://54.180.127.165:8080/comment';
+  const url = 'http://13.125.30.88/comment';
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
 
@@ -71,7 +67,7 @@ const Comment = () => {
   }, []);
   const onDelteComment = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      axios(url + `/{commentId}`, {
+      axios(url + `/${commentData.commentId}`, {
         method: 'DELETE',
       })
         .then((res) => {
@@ -131,6 +127,7 @@ const Comment = () => {
 
 const SWrapper = styled.div`
   width: 100%;
+  height: 50%;
   .line {
     width: 100%;
     text-align: center;
@@ -140,7 +137,6 @@ const SWrapper = styled.div`
   }
 
   .commentWrap {
-    margin-top: 10px;
     display: flex;
     .my_avatar {
       width: 30px;
@@ -185,7 +181,7 @@ const SWrapper = styled.div`
     justify-content: space-between;
   }
   .comment_container {
-    height: 9vh;
+    height: 16vh;
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
         height: 85px;
