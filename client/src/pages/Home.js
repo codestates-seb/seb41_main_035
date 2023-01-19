@@ -1,9 +1,11 @@
 import styled from 'styled-components';
+import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 const Home = () => {
   return (
     <>
       <SWrapper>
+        <Sidebar />
         <div className="main post">
           <Filter>
             <button className="filter button">Hot</button>

@@ -1,7 +1,7 @@
 package com.lookatme.server.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lookatme.server.auth.dto.LoginRequest;
+import com.lookatme.server.auth.dto.LoginDto;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.userdetails.MemberDetails;
@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -31,11 +33,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override // LoginDto를 받아서 로그인 인증 -> MemberDetailsService의 loadUserByUsername을 이용
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         ObjectMapper objectMapper = new ObjectMapper();
-        LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+        LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(), loginRequest.getPassword());
-        request.setAttribute("email", loginRequest.getEmail());
+                loginDto.getEmail(), loginDto.getPassword());
 
         return authenticationManager.authenticate(authenticationToken);
     }

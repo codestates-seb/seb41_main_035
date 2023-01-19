@@ -3,7 +3,7 @@ import userStore from '../../store/userStore';
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import Signup from '../Signup/Signup';
-
+import axios from 'axios';
 const backendUrl = 'http://13.125.30.88/';
 
 function LoginModal(props) {
@@ -20,24 +20,28 @@ function LoginModal(props) {
   };
 
   const onChangeId = (e) => {
-    setId(e);
+    setId(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    setPassword(e);
+    setPassword(e.target.value);
   };
 
   const SignIn = async () => {
-    // const res = await axios.get(
-    //   `${backendUrl}auth/login`,
-    //   {
-    //     email: id,
-    //     password: password,
-    //   },
-    //   { withCredentials: true }
-    // );
-    const user_id = 5;
-    setUserId(user_id);
+    const res = await axios.post(`${backendUrl}auth/login`, {
+      email: id,
+      password: password,
+    });
+    if (res) {
+      console.log(res.headers);
+      localStorage.setItem('accessToken', res.headers.authorization);
+      localStorage.setItem('refreshToken', res.headers.refresh);
+      const user_id = res.data.memberId;
+      setUserId(user_id);
+      // eslint-disable-next-line react/prop-types
+      props.onClose();
+    }
+
     // axios sign in
   };
 

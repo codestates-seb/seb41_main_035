@@ -1,7 +1,6 @@
 package com.lookatme.server.member.dto;
 
-import com.lookatme.server.member.entity.Account;
-import com.lookatme.server.member.entity.OauthPlatform;
+import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.validator.Password;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,30 +21,9 @@ public class MemberDto {
         @Password
         private String password;
         private String nickname;
-        private String profileImageUrl;
-        private OauthPlatform oauthPlatform;
+        private Member.OauthPlatform oauthPlatform; // 필수 X (없으면 NONE으로 저장)
         private int height;
         private int weight;
-
-        public Post(String email, String password, String nickname, int height, int weight) {
-            this.email = email;
-            this.password = password;
-            this.nickname = nickname;
-            this.height = height;
-            this.weight = weight;
-        }
-
-        public Account getAccount() {
-            return new Account(email, oauthPlatform);
-        }
-
-        public String getProfileImageUrl() {
-            if (profileImageUrl == null || profileImageUrl.isBlank()) {
-                return "https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png"; // 기본 프로필 사진
-            } else {
-                return this.profileImageUrl;
-            }
-        }
     }
 
     @Getter
@@ -62,9 +40,7 @@ public class MemberDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private long memberId;
         private String email;
-        private OauthPlatform oauthPlatform;
         private String nickname;
         private String profileImageUrl;
         private int height;

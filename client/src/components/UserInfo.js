@@ -22,35 +22,26 @@ const UserInfo = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const userData = await axios.get(
+        const token = localStorage.getItem('accessToken');
+        const res = await axios.get(
           `${backendUrl}members/${userId}`,
           {
-            headers: `Bearer wsefwefwrefwrefwfasdf`,
+            headers: { Authorization: token },
           },
           { withCredentials: true }
         );
+        if (res) {
+          setNickname(res.data.nickname);
+          setFollow(res.data.followeeCnt);
+          setFollower(res.data.followerCnt);
+          setHeight(res.data.height);
+          setWeight(res.data.weight);
+          setProfileImg(res.data.profileImageUrl);
+        }
       } catch (err) {
         console.log(err);
       }
       // axios 내정보받아오기
-      const res = {
-        data: {
-          email: 'eheh12321@gmail.com',
-          nickname: '이도형',
-          profileImageUrl:
-            'https://lh3.googleusercontent.com/a/AEdFTp43nhHiZ1fH-i0wbZcHkmGnhenCG3ROID_2FfB-SQ=s96-c',
-          height: 170,
-          weight: 60,
-          followerCnt: 10,
-          followeeCnt: 200,
-        },
-      };
-      setNickname(res.data.nickname);
-      setFollow(res.data.followeeCnt);
-      setFollower(res.data.followerCnt);
-      setHeight(res.data.height);
-      setWeight(res.data.weight);
-      setProfileImg(res.data.profileImageUrl);
     };
     getUser();
   }, []);
@@ -61,21 +52,22 @@ const UserInfo = () => {
 
   const save = async () => {
     try {
+      const token = localStorage.getItem('accessToken');
       await axios.patch(
-        `${backendUrl}members/${1}`,
+        `${backendUrl}members/${userId}`,
         {
-          nickname: '수정된 닉네임',
-          profileImageUrl: 'http://프사_주소',
-          height: 150,
-          weight: 50,
+          nickname: nickname,
+          profileImageUrl: profileImg,
+          height: height,
+          weight: weight,
         },
         {
-          headers: `Bearer wsefwefwrefwrefwfasdf`,
+          headers: { Authorization: token },
         },
         { withCredentials: true }
       );
     } catch (err) {
-      console.log(err);
+      window.alert(err);
     }
 
     setIsFixing(false);
@@ -85,7 +77,7 @@ const UserInfo = () => {
     setNickname(e.target.value);
   };
 
-  const changeTall = (e) => {
+  const changeHeight = (e) => {
     setHeight(e.target.value);
   };
 
@@ -110,7 +102,7 @@ const UserInfo = () => {
           <SBody>
             <SHeight>키</SHeight>
             {isFixing ? (
-              <SHeightIn value={height} onChange={setHeight}></SHeightIn>
+              <SHeightIn value={height} onChange={changeHeight}></SHeightIn>
             ) : (
               <StallVs>{height}</StallVs>
             )}

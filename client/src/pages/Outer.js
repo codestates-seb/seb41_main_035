@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
 const Outer = () => {
@@ -13,6 +14,7 @@ const Outer = () => {
   return (
     <>
       <SWrapper>
+        <Sidebar />
         <div className="main post">
           <span className="category-name">아우터</span>
           <Filter>

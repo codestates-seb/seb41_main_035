@@ -36,12 +36,11 @@ public class MessageController {
         return new ResponseEntity<>(MessageResponseDto.of(messageService.getMessage(messageId)), HttpStatus.OK);
     }
 
-    @GetMapping("/received/{memberId}")
-    public ResponseEntity<MultiResponseDto> getMessages(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                                               @PathVariable("memberId") final Long memberId,
-                                                               @RequestParam("page") final int page,
-                                                               @RequestParam("size") final int size) {
-        Page<Message> messages = messageService.getMessages(memberPrincipal, memberId, page - 1, size);
+    @GetMapping("/received")
+    public ResponseEntity<MultiResponseDto> getReceivedMessage(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                             @RequestParam("page") final int page,
+                                             @RequestParam("size") final int size) {
+        Page<Message> messages = messageService.getReceivedMessage(memberPrincipal, page - 1, size);
         List<MessageResponseDto> messageResponseDtos = messages.getContent()
                 .stream()
                 .map(message -> MessageResponseDto.of(message))
@@ -49,17 +48,17 @@ public class MessageController {
         return new ResponseEntity<>(new MultiResponseDto<>(messageResponseDtos, messages), HttpStatus.OK);
     }
 
-//    @GetMapping("/sent")
-//    public ResponseEntity<MultiResponseDto> getSentMessage(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-//                                         @RequestParam("page") final int page,
-//                                         @RequestParam("size") final int size) {
-//        Page<Message> messages = messageService.getSentMessage(memberPrincipal, page - 1, size);
-//        List<MessageResponseDto> messageResponseDtos = messages.getContent()
-//                .stream()
-//                .map(message -> MessageResponseDto.of(message))
-//                .collect(Collectors.toList());
-//        return new ResponseEntity<>(new MultiResponseDto<>(messageResponseDtos, messages), HttpStatus.OK);
-//    }
+    @GetMapping("/sent")
+    public ResponseEntity<MultiResponseDto> getSentMessage(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                         @RequestParam("page") final int page,
+                                         @RequestParam("size") final int size) {
+        Page<Message> messages = messageService.getSentMessage(memberPrincipal, page - 1, size);
+        List<MessageResponseDto> messageResponseDtos = messages.getContent()
+                .stream()
+                .map(message -> MessageResponseDto.of(message))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new MultiResponseDto<>(messageResponseDtos, messages), HttpStatus.OK);
+    }
 
     @DeleteMapping("/received/{messageId}")
     public ResponseEntity deleteReceivedMessage(@PathVariable("messageId") Long messageId,

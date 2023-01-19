@@ -4,14 +4,9 @@ import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
-import { useParams } from 'react-router-dom';
-const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 768;
 
 const PostView = () => {
   const data = dummyData.posts;
-  const params = useParams();
-  console.log(params);
   return (
     <SWrapper>
       <SContainer>
@@ -20,7 +15,7 @@ const PostView = () => {
             <Avatar
               className="outfit_upload"
               size="400px"
-              image={data[params.id].picture}
+              image={data[0].picture}
             />
           </SPost>
           <SMiddle>
@@ -28,12 +23,10 @@ const PostView = () => {
               <div className="user_box">
                 <div className="user_box left">
                   <div className="user_avatar">
-                    <Avatar image={data[params.id].avatar} />
+                    <Avatar image={data[0].avatar} />
                   </div>
                   <div className="user_info_detail">
-                    <div className="user_id">
-                      {data[params.id].userNickname}
-                    </div>
+                    <div className="user_id">{data[0].userNickname}</div>
                     <div className="user_boxtwo">
                       <div className="user_tall">170cm</div>
                       <div className="user_weight"> 55kg</div>
@@ -66,14 +59,8 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  width: 50vw;
-  height: 53vw;
-  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-    & {
-      width: 650px;
-      height: 700px;
-    }
-  }
+  width: 650px;
+  height: 660px;
   border: 1px solid gray;
   margin: 40px 0px;
 
@@ -84,14 +71,8 @@ const SContainer = styled.div`
 `;
 
 const SPost = styled.div`
-  width: 23.5vw;
-  height: 26vw;
-  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-    & {
-      width: 305px;
-      height: 340px;
-    }
-  }
+  width: 300px;
+  height: 300px;
   object-fit: cover;
   position: relative;
   overflow: hidden;
@@ -106,12 +87,7 @@ const SPost = styled.div`
 `;
 
 const SMiddle = styled.div`
-  width: 22vw;
-  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-    & {
-      width: 275px;
-    }
-  }
+  width: 270px;
   margin-left: 10px;
   .user_info {
     display: flex;
@@ -127,7 +103,7 @@ const SMiddle = styled.div`
       font-size: 18px;
     }
     svg {
-      padding-left: 10px;
+      padding-left: 5px;
     }
   }
   .user_avatar {
@@ -163,6 +139,5 @@ const SMiddle = styled.div`
 `;
 const SBottom = styled.div`
   margin: 15px 30px;
-  height: 40%;
 `;
 export default PostView;

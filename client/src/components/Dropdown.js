@@ -7,7 +7,7 @@ const categorylist = ['아우터', '상의', '하의', '원피스', '모자', '�
 const Dropdown = () => {
   const [selected, setSelected] = useState('');
 
-  const onChangeSelected = (e) => {
+  const onchangeSelected = (e) => {
     setSelected(e.target.value);
   };
 
@@ -16,7 +16,7 @@ const Dropdown = () => {
       <form>
         <div className="container">
           {/* select 태그 사용 */}
-          <select onChange={onChangeSelected} value={selected}>
+          <select onChange={onchangeSelected} value={selected}>
             {categorylist.map((item) => (
               <option value={item} key={item}>
                 {item}

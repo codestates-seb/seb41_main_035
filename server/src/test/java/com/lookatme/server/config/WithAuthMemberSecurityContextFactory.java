@@ -2,7 +2,6 @@ package com.lookatme.server.config;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
 
-import com.lookatme.server.member.entity.Account;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +18,12 @@ public class WithAuthMemberSecurityContextFactory implements WithSecurityContext
     public SecurityContext createSecurityContext(WithAuthMember authMember) {
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Account account = new Account(authMember.email(), authMember.oauthPlatform());
+
         MemberPrincipal principal = new MemberPrincipal(
                 authMember.memberId(),
-                account,
-                List.of("USER")
+                authMember.email(),
+                authMember.oauthPlatform(),
+                authMember.email() + "/" + authMember.oauthPlatform().name()
         );
 
         Authentication auth =
