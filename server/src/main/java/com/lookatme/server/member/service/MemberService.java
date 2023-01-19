@@ -71,7 +71,7 @@ public class MemberService {
         if (!patchDto.getNickname().equals(findMember.getNickname())) {
             verifyUniqueNickname(patchDto.getNickname());
         }
-        findMember.updateMemberProfile(patchDto.getNickname(), patchDto.getProfileImageUrl(), patchDto.getHeight(), patchDto.getWeight());
+        findMember.updateMemberProfile(patchDto.getNickname(), patchDto.getHeight(), patchDto.getWeight());
         return mapper.memberToMemberResponse(findMember);
     }
 
@@ -130,6 +130,12 @@ public class MemberService {
 
     public void deleteMember(long memberId) {
         memberRepository.deleteById(memberId);
+    }
+
+    public MemberDto.Response setProfileImage(Account account, String imageUrl) {
+        Member member = getMember(account);
+        member.setProfileImage(imageUrl);
+        return mapper.memberToMemberResponse(member);
     }
 
     private void verifyUniqueMember(Account account, String nickname) {

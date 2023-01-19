@@ -5,6 +5,7 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
@@ -56,6 +57,9 @@ class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private FileService fileService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -184,14 +188,14 @@ class MemberControllerTest {
     @Test
     void updateMemberTest() throws Exception {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", "http://프사_주소", 150, 50);
+        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", 150, 50);
         String content = gson.toJson(patchDto);
 
         Member updatedMember = Member.builder()
                 .memberId(1L)
                 .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname(patchDto.getNickname())
-                .profileImageUrl(patchDto.getProfileImageUrl())
+                .profileImageUrl("http://기본 프사 주소")
                 .height(patchDto.getHeight())
                 .weight(patchDto.getWeight())
                 .build();
@@ -220,8 +224,7 @@ class MemberControllerTest {
                                 List.of(
                                         fieldWithPath("nickname").type(STRING).description("수정된 닉네임"),
                                         fieldWithPath("height").type(NUMBER).description("키"),
-                                        fieldWithPath("weight").type(NUMBER).description("몸무게"),
-                                        fieldWithPath("profileImageUrl").type(STRING).description("프로필 사진 주소")
+                                        fieldWithPath("weight").type(NUMBER).description("몸무게")
                                 )
                         ),
                         responseFields(
@@ -245,7 +248,7 @@ class MemberControllerTest {
     @Test
     void updateMemberFailTest() throws Exception {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", "http://프사_주소", 150, 50);
+        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", 150, 50);
         String content = gson.toJson(patchDto);
 
         // When
