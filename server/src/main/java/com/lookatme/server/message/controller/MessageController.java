@@ -41,25 +41,8 @@ public class MessageController {
                                                                @PathVariable("memberId") final Long memberId,
                                                                @RequestParam("page") final int page,
                                                                @RequestParam("size") final int size) {
-        Page<Message> messages = messageService.getMessages(memberPrincipal, memberId, page - 1, size);
-        List<MessageResponseDto> messageResponseDtos = messages.getContent()
-                .stream()
-                .map(message -> MessageResponseDto.of(message))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(new MultiResponseDto<>(messageResponseDtos, messages), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.getMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
     }
-
-//    @GetMapping("/sent")
-//    public ResponseEntity<MultiResponseDto> getSentMessage(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-//                                         @RequestParam("page") final int page,
-//                                         @RequestParam("size") final int size) {
-//        Page<Message> messages = messageService.getSentMessage(memberPrincipal, page - 1, size);
-//        List<MessageResponseDto> messageResponseDtos = messages.getContent()
-//                .stream()
-//                .map(message -> MessageResponseDto.of(message))
-//                .collect(Collectors.toList());
-//        return new ResponseEntity<>(new MultiResponseDto<>(messageResponseDtos, messages), HttpStatus.OK);
-//    }
 
     @DeleteMapping("/received/{messageId}")
     public ResponseEntity deleteReceivedMessage(@PathVariable("messageId") Long messageId,
