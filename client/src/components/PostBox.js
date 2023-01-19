@@ -1,41 +1,25 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+import { useState } from 'react';
 const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 768;
-const PostBox = () => {
+const BREAK_POINT_TABLET = 800;
+const PostBox = ({ data }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const [good, setGood] = useState(false);
-  const [postData, setPostData] = useState([]);
   const onClickGood = () => {
     setGood(!good);
   };
-  const url = 'http://13.125.30.88/post';
-  console.log(location.pathname);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       if (location.pathname === '/') {
-  //         const response = await axios.get(url);
-  //         setPostData(response.data);
-  //       }
-  //     } catch (err) {
-  //       window.alert('오류가 발생했습니다.');
-  //       return err;
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+
   return (
     <SWrapper>
       <Container>
         {/* //postData로 렌더링 */}
-        {dummyData.posts.map((post) => (
+        {data.map((post) => (
           <PostBoxOne
             key={post.id}
             onClick={() => {
@@ -81,6 +65,7 @@ const SWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 300;
 `;
 const Container = styled.div`
   display: grid;
@@ -92,7 +77,7 @@ const Container = styled.div`
   }
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     & {
-      grid-template-columns: 320px;
+      grid-template-columns: 70vw;
     }
   }
 `;
