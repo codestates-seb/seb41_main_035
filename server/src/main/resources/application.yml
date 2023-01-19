@@ -51,7 +51,9 @@ cloud:
     stack:
       auto: false
     s3:
-      bucketName: lookatme-image-bucket
+      bucketName: secret
+    cloudfront:
+      domain: secret
 logging:
   level:
     org:

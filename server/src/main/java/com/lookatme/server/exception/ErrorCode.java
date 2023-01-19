@@ -28,6 +28,10 @@ public enum ErrorCode {
     LOGIN_PASSWORD_FAILED("비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST),
     LOGIN_ACCOUNT_LOCKED("계정이 잠겼습니다", HttpStatus.BAD_REQUEST),
 
+    // File
+    FILE_SAVE_FAILED("파일 저장에 실패했습니다.", HttpStatus.BAD_REQUEST),
+    FILE_CONVERT_FAILED("파일 변환에 실패했습니다", HttpStatus.BAD_REQUEST),
+
     // 공통
     UNAUTHORIZED("로그인 후 시도해주세요.", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
