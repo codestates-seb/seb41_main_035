@@ -27,7 +27,6 @@ public class LoginTransactionalListener {
     public int loginFailed(String email) {
         Member savedMember = memberRepository.findByAccount(new Account(email, OauthPlatform.NONE))
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.LOGIN_ACCOUNT_FAILED));
-        savedMember.loginFailed();
         int loginFailedCnt = savedMember.loginFailed();
         log.error(">> 계정 {} 회 틀림", loginFailedCnt);
 
