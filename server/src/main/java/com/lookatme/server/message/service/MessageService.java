@@ -80,8 +80,8 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public MultiResponseDto getMessages(final MemberPrincipal memberPrincipal,
-                                     final Long memberId,
-                                     final int page, final int size) {
+                                        final Long memberId,
+                                        final int page, final int size) {
         //특정한 사람과 주고 받은 모든 메시지 조회
         Page<Message> messages = messageRepository.findAllMessages(memberPrincipal.getMemberId(), memberId,
                 PageRequest.of(page, size, Sort.by("createdAt")));
