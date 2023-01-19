@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 //Postupload.js에서 props로 받아온 것
 const ImageInput = ({ imgFile, setImgFile }) => {
   // const [imgFile, setImgFile] = useState([]); // 이미지 배열
-  ImageInput.propTypes = {
-    imgFile: PropTypes.array,
-    setImgFile: PropTypes.func,
-  };
 
   // 이미지 상대경로 저장
   const onChangeImg = (e) => {
@@ -53,6 +49,11 @@ const ImageInput = ({ imgFile, setImgFile }) => {
       </SImagefiles>
     </SWrapper>
   );
+};
+
+ImageInput.propTypes = {
+  imgFile: PropTypes.array,
+  setImgFile: PropTypes.func,
 };
 
 const SWrapper = styled.div`

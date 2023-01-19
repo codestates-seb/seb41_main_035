@@ -15,7 +15,6 @@ import PostView from './pages/PostView';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 
-
 function App() {
   return (
     <div>
