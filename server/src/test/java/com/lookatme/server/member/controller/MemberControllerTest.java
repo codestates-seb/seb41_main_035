@@ -27,9 +27,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -408,6 +410,47 @@ class MemberControllerTest {
                                         fieldWithPath("pageInfoDto.totalElements").type(NUMBER).description("전체 데이터 개수"),
                                         fieldWithPath("pageInfoDto.totalPages").type(NUMBER).description("전체 페이지")
 
+                                )
+                        )
+                ));
+    }
+
+    @DisplayName("프로필 사진 등록 테스트")
+    @Test
+    void memberProfileImageTest() throws Exception {
+        // Given
+        MockMultipartFile image = new MockMultipartFile("image", "testImage.png", "image/png", "<<png data>>".getBytes());
+
+        given(fileService.upload(any(MultipartFile.class), anyString())).willReturn("새 프로필 사진 링크");
+        given(memberService.setProfileImage(any(Account.class), anyString())).willReturn(savedMemberResponse);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                multipart("/members/profile")
+                        .file(image)
+                        .header("Authorization", accessToken)
+        );
+
+        // Then
+        actions.andExpect(status().isOk())
+                .andDo(document(
+                        "post-member-profile",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestParts(
+                                partWithName("image").description("첨부 이미지(jpg/png) - 최대 3MB")
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("memberId").type(NUMBER).description("회원 번호"),
+                                        fieldWithPath("email").type(STRING).description("이메일"),
+                                        fieldWithPath("nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
+                                        fieldWithPath("profileImageUrl").type(STRING).description("변경된 프로필 사진 주소"),
+                                        fieldWithPath("height").type(NUMBER).description("키"),
+                                        fieldWithPath("weight").type(NUMBER).description("몸무게"),
+                                        fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
                                 )
                         )
                 ));

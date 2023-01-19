@@ -131,6 +131,19 @@ include::{snippets}/patch-member/http-response.adoc[]
 .response-fields
 include::{snippets}/patch-member/response-fields.adoc[]
 
+=== 회원 프로필 사진 등록
+.http-request
+include::{snippets}/post-member-profile/http-request.adoc[]
+
+.request-parts
+include::{snippets}/post-member-profile/request-parts.adoc[]
+
+.http-response
+include::{snippets}/post-member-profile/http-response.adoc[]
+
+.response-fields
+include::{snippets}/post-member-profile/response-fields.adoc[]
+
 === 회원 팔로우/언팔로우
 .http-request
 include::{snippets}/post-member-follow/http-request.adoc[]
@@ -138,7 +151,7 @@ include::{snippets}/post-member-follow/http-request.adoc[]
 .request-parameters
 include::{snippets}/post-member-follow/request-parameters.adoc[]
 
-=== 회원 삭제
+=== 회원 탈퇴
 .http-request
 include::{snippets}/delete-member/http-request.adoc[]
 
