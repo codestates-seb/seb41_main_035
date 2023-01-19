@@ -12,9 +12,8 @@ const Hat = () => {
     }
   };
   return (
-    <>
-      <SWrapper>
-        <Sidebar />
+    <SWrapper>
+      <div className="hat">
         <div className="main post">
           <span className="category-name">모자</span>
           <Filter>
@@ -36,14 +35,18 @@ const Hat = () => {
           </Filter>
           <PostBox />
         </div>
-      </SWrapper>
-    </>
+      </div>
+    </SWrapper>
   );
 };
 const SWrapper = styled.div`
   display: flex;
+  justify-content: flex-end;
+  .hat {
+    width: 75%;
+  }
   .post {
-    width: 100%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,11 +60,11 @@ const SWrapper = styled.div`
 `;
 const Filter = styled.div`
   display: flex;
-  width: 69%;
+  width: 105%;
   justify-content: space-between;
   .availability {
     margin-top: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .dropdown_button {
     margin-top: 40px;

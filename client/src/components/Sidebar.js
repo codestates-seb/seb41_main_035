@@ -76,10 +76,10 @@ const Sidebar = () => {
 //전체부분
 const SWrapper = styled.div`
   position: fixed;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
-  width: 10%;
-  justify-content: center;
+  width: 18%;
+  justify-content: flex-end;
   /* text-align: center; */
   /* margin-right: auto; */
 `;
@@ -90,6 +90,7 @@ const SidebarBox = styled.div`
     font-weight: 700;
     color: #4e4e4e;
     padding: 40px 0px 20px 0px;
+    font-family: 'Gowun Batang', serif;
   }
 `;
 const ItemList = styled.div`
