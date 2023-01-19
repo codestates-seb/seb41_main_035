@@ -41,7 +41,17 @@ jwt:
   secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 360
-  
+cloud:
+  aws:
+    credentials:
+      accessKey: secret
+      secretKey: secret
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucketName: lookatme-image-bucket
 logging:
   level:
     org:
