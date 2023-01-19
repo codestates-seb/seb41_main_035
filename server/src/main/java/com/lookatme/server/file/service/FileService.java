@@ -31,13 +31,14 @@ public class FileService {
     private final AmazonS3Client amazonS3Client;
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+        String fileType = imageTypeCheck(multipartFile);
         File uploadFile = convertMultipartFileToFile(multipartFile)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED));
-        return upload(uploadFile, dirName);
+        return upload(uploadFile, dirName, fileType);
     }
 
-    private String upload(File file, String dirName) {
-        String fileName = String.format("%s/%s", dirName, UUID.randomUUID());
+    private String upload(File file, String dirName, String fileType) {
+        String fileName = String.format("%s/%s.%s", dirName, UUID.randomUUID(), fileType);
         putS3(file, fileName);
         removeNewFile(file);
 
@@ -63,5 +64,21 @@ public class FileService {
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    // 파일 타입이 이미지 타입인지 검증 (image/png, image/jpeg)
+    private String imageTypeCheck(MultipartFile file) {
+        String fileType = file.getContentType();
+        if (!fileType.startsWith("image")) {
+            throw new ErrorLogicException(ErrorCode.FILE_TYPE_NOT_SUPPORTED);
+        }
+        switch (fileType) {
+            case "image/png":
+                return "png";
+            case "image/jpeg":
+                return "jpg";
+            default:
+                throw new ErrorLogicException(ErrorCode.FILE_TYPE_NOT_SUPPORTED);
+        }
     }
 }

@@ -30,6 +30,10 @@ spring:
             scope:
               - email
               - profile
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
   sql:
     init:
       mode: embedded

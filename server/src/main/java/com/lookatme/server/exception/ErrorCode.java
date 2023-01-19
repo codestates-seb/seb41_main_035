@@ -31,6 +31,8 @@ public enum ErrorCode {
     // File
     FILE_SAVE_FAILED("파일 저장에 실패했습니다.", HttpStatus.BAD_REQUEST),
     FILE_CONVERT_FAILED("파일 변환에 실패했습니다", HttpStatus.BAD_REQUEST),
+    FILE_TYPE_NOT_SUPPORTED("지원하지 않는 파일 타입입니다", HttpStatus.BAD_REQUEST),
+    FILE_SIZE_EXCEEDED("파일 용량을 초과했습니다", HttpStatus.BAD_REQUEST),
 
     // 공통
     UNAUTHORIZED("로그인 후 시도해주세요.", HttpStatus.UNAUTHORIZED),
