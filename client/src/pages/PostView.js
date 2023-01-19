@@ -5,8 +5,32 @@ import Avatar from '../components/Avatar';
 import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
 
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+const BREAK_POINT_PC = 1300;
+
 const PostView = () => {
   const data = dummyData.posts;
+  const params = useParams();
+  console.log(params);
+  const [detailData, setDetailData] = useState([]);
+  const url = 'http://13.125.30.88/comment';
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       //postId로 변경
+  //       const response = await axios.get(url + `/post/` + [params.id]);
+  //       setDetailData(response.data);
+  //       console.log(response.data);
+  //     } catch (err) {
+  //       window.alert('오류가 발생했습니다.');
+  //       return err;
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
   return (
     <SWrapper>
       <SContainer>
@@ -132,7 +156,6 @@ const SMiddle = styled.div`
   }
   .post {
     height: 25vh;
-    /* background-color: #eaebba; */
     margin-left: 10px;
     font-size: 20px;
   }
