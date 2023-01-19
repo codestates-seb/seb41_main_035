@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 
 const Home = () => {
   return (
     <>
       <SWrapper>
+
         <div className="home">
           <div className="main post">
             <Filter>
@@ -18,6 +20,7 @@ const Home = () => {
             </Filter>
             <PostBox />
           </div>
+
         </div>
       </SWrapper>
     </>

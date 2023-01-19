@@ -36,7 +36,12 @@ const PostBox = () => {
       <Container>
         {/* //postData로 렌더링 */}
         {dummyData.posts.map((post) => (
-          <PostBoxOne key={post.id}>
+          <PostBoxOne
+            key={post.id}
+            onClick={() => {
+              navigate(`/postview`);
+            }}
+          >
             <div className="user-info ">
               <div className="user-info left">
                 {' '}

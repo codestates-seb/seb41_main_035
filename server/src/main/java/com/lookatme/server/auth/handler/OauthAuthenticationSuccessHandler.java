@@ -1,10 +1,8 @@
 package com.lookatme.server.auth.handler;
 
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.entity.OauthPlatform;
-import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -27,7 +25,7 @@ import java.util.Map;
 public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenizer jwtTokenizer;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -47,18 +45,18 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         String profileImgLink = attributes.get("picture").toString();
 
         Member savedMember;
-        Account account = new Account(email, OauthPlatform.GOOGLE);
-        savedMember = memberRepository.findByAccount(account)
-                .orElseGet(() -> {
-                    Member member = Member.builder()
-                            .account(account)
-                            .nickname(nickname)
-                            .profileImageUrl(profileImgLink).build();
+        if (memberService.hasMember(email, Member.OauthPlatform.GOOGLE)) { // 이미 가입되어있는 회원이라면
+            savedMember = memberService.findMember(email, Member.OauthPlatform.GOOGLE);
+        } else { // 신규 가입
+            Member member = Member.builder()
+                    .email(email)
+                    .nickname(nickname)
+                    .profileImageUrl(profileImgLink)
+                    .oauthPlatform(Member.OauthPlatform.GOOGLE).build();
 
-                    log.info(">> 소셜 회원가입 진행: {}", nickname);
-                    return memberRepository.save(member);
-                });
-
+            savedMember = memberService.registerMember(member);
+            log.info(">> 소셜 회원가입 완료: {}", savedMember.getUniqueKey());
+        }
         return savedMember;
     }
 
@@ -80,7 +78,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
     // 최소한의 닉네임 중복 방지
     private String checkValidNickname(String nickname) {
         int idx = 1;
-        while (memberRepository.existsByNickname(nickname)) {
+        while (memberService.hasNickname(nickname)) {
             nickname = String.format("%s-%d", nickname, idx++);
         }
         return nickname;

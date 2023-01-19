@@ -77,7 +77,9 @@ public class JwtTokenizer {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("memberId", member.getMemberId());
-        claims.put("account", member.getAccount());
+        claims.put("email", member.getEmail());
+        claims.put("oauthPlatform", member.getOauthPlatform());
+        claims.put("memberUniqueKey", member.getUniqueKey());
         claims.put("roles", member.getRoles());
 
         return claims;

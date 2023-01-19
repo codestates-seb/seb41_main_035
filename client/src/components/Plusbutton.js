@@ -1,16 +1,9 @@
 import styled from 'styled-components';
 import { AiOutlinePlus } from 'react-icons/ai';
-// import { useState } from 'react';
-import PropTypes from 'prop-types';
-
-const PlusButton = ({ onClick }) => {
-  PlusButton.propTypes = {
-    onClick: PropTypes.func,
-  };
-
+const PlusButton = () => {
   return (
     <Swrapper>
-      <button className="plus-btn" onClick={onClick}>
+      <button className="plus-btn">
         <AiOutlinePlus fill="#ffff" size="18" />
         <span className="text">추가</span>
       </button>
@@ -25,9 +18,9 @@ const Swrapper = styled.div`
 
   .plus-btn {
     background-color: #d9d4a6;
-    width: 4.2vw;
+    width: 4vw;
     height: 3vh;
-    margin: 20px;
+    margin: 15px;
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -35,7 +28,6 @@ const Swrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     .text {
       background-color: #d9d4a6;
       font-weight: 600;
@@ -45,5 +37,4 @@ const Swrapper = styled.div`
     }
   }
 `;
-
 export default PlusButton;

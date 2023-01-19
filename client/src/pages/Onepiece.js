@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
 const Onepiece = () => {
@@ -12,8 +12,10 @@ const Onepiece = () => {
     }
   };
   return (
+
     <SWrapper>
       <div className="onepiece">
+
         <div className="main post">
           <span className="category-name">원피스</span>
           <Filter>

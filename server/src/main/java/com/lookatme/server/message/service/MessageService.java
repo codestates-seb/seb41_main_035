@@ -74,22 +74,18 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Message> getMessages(final MemberPrincipal memberPrincipal,
-                                     final Long memberId,
-                                     final int page, final int size) {
+    public Page<Message> getReceivedMessage(final MemberPrincipal memberPrincipal, final int page, final int size) {
         //받은 편지함 불러오기, 한 명의 유저가 받은 모든 메시지;
-        //특정한 사람과 주고 받은 모든 메시지 조회
-        return messageRepository.findAllMessages(memberPrincipal.getMemberId(), memberId,
+        return messageRepository.findAllMessagesByReceiver(memberPrincipal.getMemberId(),
                 PageRequest.of(page, size, Sort.by("createdAt")));
     }
-    
 
-//    @Transactional(readOnly = true)
-//    public Page<Message> getSentMessage(final MemberPrincipal memberPrincipal, final int page, final int size) {
-//        //보낸 편지함 불러오기, 한 명의 유저가 받은 모든 메시지
-//        return messageRepository.findAllMessagesBySender(memberPrincipal.getMemberId(),
-//                PageRequest.of(page, size, Sort.by("createdAt")));
-//    }
+    @Transactional(readOnly = true)
+    public Page<Message> getSentMessage(final MemberPrincipal memberPrincipal, final int page, final int size) {
+        //보낸 편지함 불러오기, 한 명의 유저가 받은 모든 메시지
+        return messageRepository.findAllMessagesBySender(memberPrincipal.getMemberId(),
+                PageRequest.of(page, size, Sort.by("createdAt")));
+    }
 
     //받은 편지 삭제
     @Transactional
