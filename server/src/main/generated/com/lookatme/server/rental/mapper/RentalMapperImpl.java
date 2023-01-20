@@ -4,6 +4,7 @@ import com.lookatme.server.rental.dto.RentalPatchDto;
 import com.lookatme.server.rental.dto.RentalPostDto;
 import com.lookatme.server.rental.dto.RentalResponseDto;
 import com.lookatme.server.rental.entity.Rental;
+import com.lookatme.server.rental.entity.Rental.RentalBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-20T15:02:15+0900",
+    date = "2023-01-20T16:24:05+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -23,12 +24,12 @@ public class RentalMapperImpl implements RentalMapper {
             return null;
         }
 
-        Rental rental = new Rental();
+        RentalBuilder rental = Rental.builder();
 
-        rental.setRental( post.isRental() );
-        rental.setSize( post.getSize() );
+        rental.rental( post.isRental() );
+        rental.size( post.getSize() );
 
-        return rental;
+        return rental.build();
     }
 
     @Override
@@ -37,13 +38,13 @@ public class RentalMapperImpl implements RentalMapper {
             return null;
         }
 
-        Rental rental = new Rental();
+        RentalBuilder rental = Rental.builder();
 
-        rental.setRentalId( patch.getRentalId() );
-        rental.setRental( patch.isRental() );
-        rental.setSize( patch.getSize() );
+        rental.rentalId( patch.getRentalId() );
+        rental.rental( patch.isRental() );
+        rental.size( patch.getSize() );
 
-        return rental;
+        return rental.build();
     }
 
     @Override

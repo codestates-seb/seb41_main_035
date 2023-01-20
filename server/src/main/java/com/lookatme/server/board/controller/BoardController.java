@@ -11,6 +11,7 @@ import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.product.service.ProductService;
+import com.lookatme.server.rental.service.RentalService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,12 +32,14 @@ public class BoardController {
 
     private final BoardService boardService;
     private final ProductService productService;
+    private final RentalService rentalService;
     private final FileService fileService;
     private final BoardMapper boardMapper;
 
-    public BoardController(BoardService boardService, ProductService productService, FileService fileService, BoardMapper boardMapper) {
+    public BoardController(BoardService boardService, ProductService productService, RentalService rentalService, FileService fileService, BoardMapper boardMapper) {
         this.boardService = boardService;
         this.productService = productService;
+        this.rentalService = rentalService;
         this.fileService = fileService;
         this.boardMapper = boardMapper;
     }
@@ -53,24 +56,37 @@ public class BoardController {
                                     @RequestPart(name = "userImage") MultipartFile userImage,
                                     @RequestPart(name = "productImages") MultipartFile[] productImages, // TODO: 짝(순서)이 맞는다는 보장이 있는지 모르겠음
                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
-
         Board board = boardMapper.boardPostToBoard(post);
 
+        // 1. 게시글 사진 업로드
         String userImageUrl = fileService.upload(userImage, "post");
         board.setUserImage(userImageUrl);
 
         List<Product> products = new ArrayList<>();
-
         List<ProductPostDto> postProducts = post.getProducts();
         for(int i = 0; i < postProducts.size(); i++) {
+            // 2. 상품 사진 업로드 TODO: 상품이 이미 등록되어 있으면 생략해도 됨
             String itemImageUrl = fileService.upload(productImages[i], "item");
-            ProductPostDto product = postProducts.get(i);
-            product.setProductImage(itemImageUrl);
-            products.add(productService.createProduct(product));
+            ProductPostDto postDto = postProducts.get(i);
+            postDto.setProductImage(itemImageUrl);
+
+            // 3. 상품 등록
+            Product product = productService.createProduct(postDto);
+
+            if(postDto.isRental()) {
+                // 4. 렌탈 등록
+                rentalService.createRental(
+                        memberPrincipal.getMemberId(),
+                        product.getProductId(),
+                        postDto.getSize(),
+                        postDto.getRentalPrice()
+                );
+            }
+            products.add(product);
         }
 
+        // 5. 게시글 등록
         boardService.createBoard(board, memberPrincipal.getMemberId(), products);
-
         return new ResponseEntity(HttpStatus.OK);
     }
 
