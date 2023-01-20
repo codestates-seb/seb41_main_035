@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
 
 const SearchBox = () => {
@@ -16,7 +16,11 @@ const SearchBox = () => {
   const onDeleteButtonClick = () => {
     setInputValue('');
   };
-
+  useEffect(() => {
+    if (!inputValue) {
+      setHasText(false);
+    }
+  }, [inputValue]);
   return (
     <div className="autocomplete-wrapper">
       <SInputContainer>

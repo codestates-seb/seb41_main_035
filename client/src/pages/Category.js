@@ -1,8 +1,15 @@
 import styled from 'styled-components';
-import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
-const Shoes = () => {
+import { useParams } from 'react-router-dom';
+import CATEGORY_CODE from '../constants/index';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import CategoryData from '../db/CategoryData.json';
+const Category = () => {
+  const params = useParams();
+  const category = params.categoryId;
+  const [data, setData] = useState([]);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -11,13 +18,43 @@ const Shoes = () => {
       click.style.display = 'none';
     }
   };
+  const postCate = (url) => {
+    axios
+      .get(url)
+      .then((res) => {
+        setData([...res.data]);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (category === 'outer') {
+      // postCate();
+      setData(CategoryData.outer);
+      console.log(CategoryData.outer);
+    } else if (category === 'top') {
+      // postCate();
+      setData(CategoryData.top);
+      console.log(CategoryData.top);
+    } else if (category === 'bottom') {
+      postCate();
+    } else if (category === 'onepiece') {
+      postCate();
+    } else if (category === 'hat') {
+      postCate();
+    } else if (category === 'shoes') {
+      postCate();
+    }
+  }, [category]);
   return (
-
     <SWrapper>
-      <div className="shoes">
-
+      <div className="bottom">
         <div className="main post">
-          <span className="category-name">신발</span>
+          <span className="category-name">{CATEGORY_CODE[category]}</span>
           <Filter>
             <div className="rental availability ">
               <input type="checkbox" name="rental" value="" />
@@ -35,7 +72,7 @@ const Shoes = () => {
               </div>
             </div>
           </Filter>
-          <PostBox />
+          <PostBox data={data} />
         </div>
       </div>
     </SWrapper>
@@ -44,7 +81,7 @@ const Shoes = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  .shoes {
+  .bottom {
     width: 75%;
   }
   .post {
@@ -94,4 +131,4 @@ const Filter = styled.div`
     }
   }
 `;
-export default Shoes;
+export default Category;

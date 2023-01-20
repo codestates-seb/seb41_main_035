@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { BsChatLeftText, BsPersonPlus, BsBookmarkHeart } from 'react-icons/bs';
 import Comment from '../components/Comment';
+/* eslint-disable react/prop-types */
 import Avatar from '../components/Avatar';
 import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
@@ -76,15 +77,21 @@ const PostView = () => {
 
 const SWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  width: 100%;
+  justify-content: flex-end;
+  width: 78%;
 `;
 
 const SContainer = styled.div`
-  width: 650px;
-  height: 660px;
+  width: 47vw;
+  height: 700px;
   border: 1px solid gray;
-  margin: 40px 0px;
+  margin: 60px 0px;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    & {
+      width: 650px;
+      height: 700px;
+    }
+  }
 
   .top_container {
     display: flex;
@@ -93,11 +100,17 @@ const SContainer = styled.div`
 `;
 
 const SPost = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 22.5vw;
+  height: 320px;
   object-fit: cover;
   position: relative;
   overflow: hidden;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    & {
+      width: 290px;
+      height: 320px;
+    }
+  }
   img {
     position: absolute;
     top: 50%;
@@ -109,8 +122,13 @@ const SPost = styled.div`
 `;
 
 const SMiddle = styled.div`
-  width: 270px;
+  width: 22vw;
   margin-left: 10px;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    & {
+      width: 270px;
+    }
+  }
   .user_info {
     display: flex;
     flex-direction: column;
@@ -125,7 +143,7 @@ const SMiddle = styled.div`
       font-size: 18px;
     }
     svg {
-      padding-left: 5px;
+      padding-left: 10px;
     }
   }
   .user_avatar {

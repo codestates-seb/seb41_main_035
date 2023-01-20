@@ -18,6 +18,7 @@ const Avatar = ({ size, image }) => {
         width={size}
         height={size}
         alt="profile"
+        // style={{ objectFit: 'cover' }}
       />
     </SAvatar>
   );
