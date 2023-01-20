@@ -1,7 +1,8 @@
 package com.lookatme.server.board.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
-import com.lookatme.server.boardproduct.entity.BoardProduct;
+import com.lookatme.server.entity.BoardProduct;
+import com.lookatme.server.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,12 +25,12 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    private int like;
+    private int likeCnt;
 
-    @OneToMany(mappedBy = "board")
-    private List<BoardProduct> BoardProducts = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardProduct> boardProducts = new ArrayList<>();
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

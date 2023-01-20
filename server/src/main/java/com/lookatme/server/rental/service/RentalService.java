@@ -1,5 +1,11 @@
 package com.lookatme.server.rental.service;
 
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.product.entity.Product;
+import com.lookatme.server.product.repository.ProductRepository;
 import com.lookatme.server.rental.entity.Rental;
 import com.lookatme.server.rental.repository.RentalRepository;
 import org.springframework.data.domain.Page;
@@ -7,19 +13,36 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
 public class RentalService {
-    private final RentalRepository rentalRepository;
 
-    public RentalService(RentalRepository rentalRepository) {
+    private final RentalRepository rentalRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+
+    public RentalService(RentalRepository rentalRepository, MemberRepository memberRepository, ProductRepository productRepository) {
         this.rentalRepository = rentalRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
+
+    public Rental createRental(long memberId, int productId, int size, int rentalPrice) {
+        Rental rental = Rental.builder()
+                .member(findMember(memberId))
+                .product(findProduct(productId))
+                .rental(false)
+                .size(size)
+                .rentalPrice(rentalPrice).build();
+
+        return rentalRepository.save(rental);
+    }
+
 
     public Rental createRental(Rental rental) {
         verifyExistRental(rental.getRentalId());
-
         return rentalRepository.save(rental);
     }
 
@@ -27,7 +50,7 @@ public class RentalService {
         Rental findRental = findExistedRental(rental.getRentalId());
 
         Optional.ofNullable(rental.isRental())
-                .ifPresent(rental -> findRental.setRental(rental));
+                .ifPresent(flag -> findRental.setRental(flag));
 
         Optional.ofNullable(rental.getSize())
                 .ifPresent(size -> findRental.setSize(size));
@@ -54,9 +77,9 @@ public class RentalService {
     }
 
     public Page<Rental> findRentals(int page, int size) {
-
         return rentalRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
     }
+
     private void verifyExistRental(int rentalId) {
         Optional<Rental> optionalPost = rentalRepository.findById(rentalId);
 
@@ -71,5 +94,15 @@ public class RentalService {
         return optionalPost.orElseThrow(
                 () -> new RuntimeException("Rental_NOT_FOUND")
         );
+    }
+
+    private Member findMember(long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    private Product findProduct(int productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException());
     }
 }

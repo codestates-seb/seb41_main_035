@@ -8,17 +8,21 @@ import javax.persistence.Column;
 @Getter
 @Setter
 public class ProductPostDto {
-
     private String productName;
 
-    private String size;
+    private int size;
 
-    private int price;
+    private int price; // 상품 구매 가격
 
     private String link;
 
     private boolean rental;
 
-    // 이미지는 URL을 통해 접근하도록 한다.
-    private String image;
+    private int rentalPrice; // 렌탈 가격
+
+    private String category;
+
+    private String brand;
+
+    private String productImage;
 }

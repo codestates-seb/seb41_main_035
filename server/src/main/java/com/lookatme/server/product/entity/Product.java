@@ -1,6 +1,5 @@
 package com.lookatme.server.product.entity;
-
-import com.lookatme.server.boardproduct.entity.BoardProduct;
+import com.lookatme.server.entity.BoardProduct;
 import com.lookatme.server.rental.entity.Rental;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +28,19 @@ public class Product {
     @Column(nullable = false)
     private String link;
 
+    private String productImage;
+
     @OneToMany(mappedBy = "product")
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 
     @OneToMany(fetch=FetchType.LAZY)
-    private Rental rental;
+    private List<Rental> rentals;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 }

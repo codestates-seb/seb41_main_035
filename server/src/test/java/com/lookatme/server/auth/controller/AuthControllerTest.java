@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -57,6 +59,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
         // 1. OK 응답이 나와야 함
@@ -187,6 +190,7 @@ class AuthControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", accessToken) // 로그인 된 회원의 액세스 토큰 전달
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
         // 1. OK 응답 떠야함
@@ -222,6 +226,7 @@ class AuthControllerTest {
         String accessToken = response.getHeader("Authorization");
         String refreshToken = response.getHeader("Refresh");
 
+
         // When
         actions = mockMvc.perform(
                 post("/auth/reissue")
@@ -229,6 +234,7 @@ class AuthControllerTest {
                         .header("Authorization", accessToken)
                         .header("Refresh", refreshToken)
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
         // 1. created 응답 떠야햠

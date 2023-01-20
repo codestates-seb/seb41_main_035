@@ -9,7 +9,6 @@ public class BoardResponseDto {
 
     private int boardId;
 
-//  첨부사진 주소
     private String userImage;
 
     private String content;
@@ -18,6 +17,6 @@ public class BoardResponseDto {
 
     private String modifiedAt;
 
-    private int like;
+    private int likeCnt;
 
 }
