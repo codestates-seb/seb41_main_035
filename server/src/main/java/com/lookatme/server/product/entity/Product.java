@@ -32,5 +32,13 @@ public class Product {
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 
     @OneToMany(fetch=FetchType.LAZY)
-    private List<Rental> rental;
+    private List<Rental> rentals;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 }

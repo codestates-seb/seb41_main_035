@@ -1,26 +1,15 @@
 package com.lookatme.server.board.dto;
 
+import com.lookatme.server.product.dto.ProductPostDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
 public class BoardPostDto {
-
     private String content;
-
     private String userImage;
-
-    private String productName;
-
-    private int sellingPrice;
-
-    private String link;
-
-    private boolean rental;
-
-    private String size;
-
-    private int rentalPrice;
-
+    private List<ProductPostDto> products;
 }

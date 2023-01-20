@@ -1,6 +1,8 @@
 package com.lookatme.server.product.service;
 
+import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
+import com.lookatme.server.product.mapper.ProductMapper;
 import com.lookatme.server.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,10 +13,17 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
-    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
+    public Product createProduct(ProductPostDto post) {
+        return createProduct(productMapper.productPostToProduct(post));
     }
 
     public Product createProduct(Product product) {
