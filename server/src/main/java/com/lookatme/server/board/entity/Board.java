@@ -1,7 +1,6 @@
 package com.lookatme.server.board.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
-import com.lookatme.server.boardproduct.entity.BoardProduct;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,9 +24,9 @@ public class Board extends BaseTimeEntity {
     private String content;
 
     private int like;
-
-    @OneToMany(mappedBy = "board")
-    private List<BoardProduct> BoardProducts = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "board")
+//    private List<BoardProduct> BoardProducts = new ArrayList<>();
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id")

@@ -11,10 +11,10 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface ProductMapper {
-    Product productPostTOProduct(ProductPostDto post);
-    Product productPatchToProduct(ProductPatchDto patch);
-    ProductResponseDto productToProductResponseDto(Product product);
-    List<ProductResponseDto> ProductsToProductResponseDtos(List<Product> product);
-}
+//@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
+//public interface ProductMapper {
+//    Product productPostTOProduct(ProductPostDto post);
+//    Product productPatchToProduct(ProductPatchDto patch);
+//    ProductResponseDto productToProductResponseDto(Product product);
+//    List<ProductResponseDto> ProductsToProductResponseDtos(List<Product> product);
+//}

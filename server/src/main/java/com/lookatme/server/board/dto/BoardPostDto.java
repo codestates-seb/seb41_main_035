@@ -11,8 +11,6 @@ public class BoardPostDto {
 
     private String userImage;
 
-    private String content;
-
     private String productName;
 
     private int sellingPrice;

@@ -1,6 +1,5 @@
 package com.lookatme.server.product.entity;
-
-import com.lookatme.server.boardproduct.entity.BoardProduct;
+import com.lookatme.server.entity.BoardProduct;
 import com.lookatme.server.rental.entity.Rental;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +32,5 @@ public class Product {
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 
     @OneToMany(fetch=FetchType.LAZY)
-    private Rental rental;
+    private List<Rental> rental;
 }

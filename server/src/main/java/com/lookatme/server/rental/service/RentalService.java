@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class RentalService {
+
     private final RentalRepository rentalRepository;
 
     public RentalService(RentalRepository rentalRepository) {
@@ -19,7 +20,6 @@ public class RentalService {
 
     public Rental createRental(Rental rental) {
         verifyExistRental(rental.getRentalId());
-
         return rentalRepository.save(rental);
     }
 
@@ -27,7 +27,7 @@ public class RentalService {
         Rental findRental = findExistedRental(rental.getRentalId());
 
         Optional.ofNullable(rental.isRental())
-                .ifPresent(rental -> findRental.setRental(rental));
+                .ifPresent(flag -> findRental.setRental(flag));
 
         Optional.ofNullable(rental.getSize())
                 .ifPresent(size -> findRental.setSize(size));
@@ -54,9 +54,9 @@ public class RentalService {
     }
 
     public Page<Rental> findRentals(int page, int size) {
-
         return rentalRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
     }
+
     private void verifyExistRental(int rentalId) {
         Optional<Rental> optionalPost = rentalRepository.findById(rentalId);
 

@@ -1,9 +1,7 @@
 package com.lookatme.server.board.controller;
 
-import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.common.dto.MultiResponseDto;
 import com.lookatme.server.board.dto.BoardPatchDto;
-import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.service.BoardService;
