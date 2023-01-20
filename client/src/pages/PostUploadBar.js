@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 const PostUploadBar = ({ index, onChangeItem }) => {
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
+
   const [brandname, setBrandname] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemSize, setItemSize] = useState('');
@@ -17,12 +18,12 @@ const PostUploadBar = ({ index, onChangeItem }) => {
   // 이미지 업데이트 함수
   const onUploadImages = (imageUrlLists) => {
     setImgFile(imageUrlLists);
-    onChangeItem(index, 'images', imageUrlLists);
+    onChangeItem(index, 'images', imageUrlLists); //상위 컴포넌트인 PostUpload의 contentList State가 업데이트
   };
 
   const onChangeBrandname = (e) => {
     setBrandname(e.target.value);
-    onChangeItem(index, 'brandName', e.target.value); //상위 컴포넌트인 PostUpload의 contentList State가 업데이트
+    onChangeItem(index, 'brandName', e.target.value);
   };
   const onChangeName = (e) => {
     setItemName(e.target.value);
@@ -171,6 +172,7 @@ const SContainer = styled.div`
   margin: 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `;
+
 const SMidle = styled.div`
   font-size: 14px;
   margin: 10px 0px;

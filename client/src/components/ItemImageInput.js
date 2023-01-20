@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -18,6 +18,7 @@ const ItemImageInput = ({ index, imgFile, onUploadImages }) => {
     if (imageUrlLists.length > 1) {
       imageUrlLists = imageUrlLists.slice(0, 1);
     }
+    // setIamgeFile(imageUrlLists);
     onUploadImages(imageUrlLists);
   };
 
@@ -37,7 +38,6 @@ const ItemImageInput = ({ index, imgFile, onUploadImages }) => {
       </div>
 
       <SImagefiles>
-        {/* <div style={{ display: 'flex' }}> */}
         <div className="image-add">
           {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
           {imgFile?.map((img, idx) => (
