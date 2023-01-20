@@ -1,6 +1,5 @@
 package com.lookatme.server.member.mapper;
 
-import com.lookatme.server.member.dto.MemberDto.Patch;
 import com.lookatme.server.member.dto.MemberDto.Post;
 import com.lookatme.server.member.dto.MemberDto.Response;
 import com.lookatme.server.member.entity.Member;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-17T11:33:21+0900",
+    date = "2023-01-19T14:40:36+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -33,25 +32,6 @@ public class MemberMapperImpl implements MemberMapper {
         member.height( memberPostDto.getHeight() );
         member.weight( memberPostDto.getWeight() );
         member.profileImageUrl( memberPostDto.getProfileImageUrl() );
-
-        return member.build();
-    }
-
-    @Override
-    public Member memberPatchDtoToMember(Patch memberPatchDto, long memberId) {
-        if ( memberPatchDto == null ) {
-            return null;
-        }
-
-        MemberBuilder member = Member.builder();
-
-        if ( memberPatchDto != null ) {
-            member.nickname( memberPatchDto.getNickname() );
-            member.height( memberPatchDto.getHeight() );
-            member.weight( memberPatchDto.getWeight() );
-            member.profileImageUrl( memberPatchDto.getProfileImageUrl() );
-        }
-        member.memberId( memberId );
 
         return member.build();
     }

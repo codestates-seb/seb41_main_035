@@ -54,7 +54,6 @@ public class MemberDto {
     public static class Patch {
         @NotBlank
         private String nickname;
-        private String profileImageUrl;
         private int height;
         private int weight;
     }

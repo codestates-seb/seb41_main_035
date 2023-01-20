@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 const PostUploadBar = ({ index, onChangeItem }) => {
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
-
   const [brandname, setBrandname] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemSize, setItemSize] = useState('');
@@ -172,7 +171,6 @@ const SContainer = styled.div`
   margin: 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `;
-
 const SMidle = styled.div`
   font-size: 14px;
   margin: 10px 0px;

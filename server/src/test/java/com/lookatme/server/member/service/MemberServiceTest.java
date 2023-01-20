@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  * 각 테스트가 끝날때마다 데이터가 롤백되기 때문에 db에 영향 X
  */
 @Transactional
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MemberServiceTest {
 
     @Autowired
@@ -86,10 +86,7 @@ class MemberServiceTest {
     @Test
     void updateMemberTest() {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch(
-                "닉네임_2",
-                "새 프사 주소",
-                123, 45);
+        MemberDto.Patch patchDto = new MemberDto.Patch("닉네임_2", 123, 45);
 
         // When
         Throwable exception = catchThrowable(

@@ -85,13 +85,14 @@ public class Member extends BaseTimeEntity {
         this.roles = List.of("USER");
     }
 
-    public void updateMemberProfile(String nickname, String profileImageUrl, int height, int weight) {
+    public void updateMemberProfile(String nickname, int height, int weight) {
         this.nickname = nickname;
-        if (profileImageUrl != null) {
-            this.profileImageUrl = profileImageUrl;
-        }
         this.height = height;
         this.weight = weight;
+    }
+
+    public void setProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
     }
 
     // 비밀번호 저장 시 필수로 암호화 해서 저장하도록 하기 위함

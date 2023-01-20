@@ -4,6 +4,7 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.common.dto.MultiResponseDto;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Validated
@@ -24,6 +27,7 @@ import javax.validation.constraints.Positive;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FileService fileService;
 
     // 회원 단일 조회
     @GetMapping("/{memberId}")
@@ -97,5 +101,15 @@ public class MemberController {
                 throw new IllegalArgumentException();
         }
         return ResponseEntity.ok("OK");
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<?> uploadProfile(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                           @RequestParam(name = "image") MultipartFile multipartFile) throws IOException {
+        String imageUrl = fileService.upload(multipartFile, "profile");
+        return new ResponseEntity<>(
+                memberService.setProfileImage(memberPrincipal.getAccount(), imageUrl),
+                HttpStatus.OK
+        );
     }
 }

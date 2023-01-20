@@ -1,20 +1,45 @@
 import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
-import { BsBookmarkHeart } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 const BREAK_POINT_PC = 1300;
 const BREAK_POINT_TABLET = 768;
 const PostBox = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [good, setGood] = useState(false);
+  const [postData, setPostData] = useState([]);
+  const onClickGood = () => {
+    setGood(!good);
+  };
+  const url = 'http://13.125.30.88/post';
+  console.log(location.pathname);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (location.pathname === '/') {
+  //         const response = await axios.get(url);
+  //         setPostData(response.data);
+  //       }
+  //     } catch (err) {
+  //       window.alert('오류가 발생했습니다.');
+  //       return err;
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   return (
     <SWrapper>
       <Container>
+        {/* //postData로 렌더링 */}
         {dummyData.posts.map((post) => (
           <PostBoxOne
             key={post.id}
             onClick={() => {
-              navigate(`/postview/${post.id}`);
+              navigate(`/postview`);
             }}
           >
             <div className="user-info ">
@@ -30,10 +55,20 @@ const PostBox = () => {
             </div>
 
             <div className="style-picture">
-              <Avatar size="400px" image={post.picture} />
+              <Avatar
+                size="400px"
+                image={post.picture}
+                onClick={() => {
+                  navigate(`/postview/${post.id}`);
+                }}
+              />
             </div>
-            <div className="add container">
-              <BsBookmarkHeart />
+            <div
+              className="add container"
+              role="presentation"
+              onClick={onClickGood}
+            >
+              {good ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
             </div>
           </PostBoxOne>
         ))}
@@ -50,7 +85,6 @@ const SWrapper = styled.div`
 const Container = styled.div`
   display: grid;
   grid-template-columns: 22vw 22vw 22vw;
-  /* grid-template-columns: 320px 320px 320px; */
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       grid-template-columns: 320px 320px;
@@ -80,7 +114,8 @@ const PostBoxOne = styled.div`
     justify-content: space-between;
     .right {
       color: #2e2d2a;
-      font-size: 15px;
+      font-size: 13px;
+      margin-left: 80px;
     }
     .name {
       margin-left: 10px;
@@ -115,7 +150,7 @@ const PostBoxOne = styled.div`
   }
   .add {
     display: flex;
-    width: 95%;
+    width: 90%;
     justify-content: flex-end;
     margin-top: 8px;
     svg {

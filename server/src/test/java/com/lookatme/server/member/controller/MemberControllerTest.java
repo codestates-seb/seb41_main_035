@@ -5,6 +5,7 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
@@ -26,9 +27,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,6 +59,9 @@ class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private FileService fileService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -184,14 +190,14 @@ class MemberControllerTest {
     @Test
     void updateMemberTest() throws Exception {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", "http://프사_주소", 150, 50);
+        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", 150, 50);
         String content = gson.toJson(patchDto);
 
         Member updatedMember = Member.builder()
                 .memberId(1L)
                 .account(new Account("email@com", OauthPlatform.NONE))
                 .nickname(patchDto.getNickname())
-                .profileImageUrl(patchDto.getProfileImageUrl())
+                .profileImageUrl("http://기본 프사 주소")
                 .height(patchDto.getHeight())
                 .weight(patchDto.getWeight())
                 .build();
@@ -220,8 +226,7 @@ class MemberControllerTest {
                                 List.of(
                                         fieldWithPath("nickname").type(STRING).description("수정된 닉네임"),
                                         fieldWithPath("height").type(NUMBER).description("키"),
-                                        fieldWithPath("weight").type(NUMBER).description("몸무게"),
-                                        fieldWithPath("profileImageUrl").type(STRING).description("프로필 사진 주소")
+                                        fieldWithPath("weight").type(NUMBER).description("몸무게")
                                 )
                         ),
                         responseFields(
@@ -245,7 +250,7 @@ class MemberControllerTest {
     @Test
     void updateMemberFailTest() throws Exception {
         // Given
-        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", "http://프사_주소", 150, 50);
+        MemberDto.Patch patchDto = new MemberDto.Patch("수정된 닉네임", 150, 50);
         String content = gson.toJson(patchDto);
 
         // When
@@ -405,6 +410,47 @@ class MemberControllerTest {
                                         fieldWithPath("pageInfoDto.totalElements").type(NUMBER).description("전체 데이터 개수"),
                                         fieldWithPath("pageInfoDto.totalPages").type(NUMBER).description("전체 페이지")
 
+                                )
+                        )
+                ));
+    }
+
+    @DisplayName("프로필 사진 등록 테스트")
+    @Test
+    void memberProfileImageTest() throws Exception {
+        // Given
+        MockMultipartFile image = new MockMultipartFile("image", "testImage.png", "image/png", "<<png data>>".getBytes());
+
+        given(fileService.upload(any(MultipartFile.class), anyString())).willReturn("새 프로필 사진 링크");
+        given(memberService.setProfileImage(any(Account.class), anyString())).willReturn(savedMemberResponse);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                multipart("/members/profile")
+                        .file(image)
+                        .header("Authorization", accessToken)
+        );
+
+        // Then
+        actions.andExpect(status().isOk())
+                .andDo(document(
+                        "post-member-profile",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestParts(
+                                partWithName("image").description("첨부 이미지(jpg/png) - 최대 3MB")
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("memberId").type(NUMBER).description("회원 번호"),
+                                        fieldWithPath("email").type(STRING).description("이메일"),
+                                        fieldWithPath("nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
+                                        fieldWithPath("profileImageUrl").type(STRING).description("변경된 프로필 사진 주소"),
+                                        fieldWithPath("height").type(NUMBER).description("키"),
+                                        fieldWithPath("weight").type(NUMBER).description("몸무게"),
+                                        fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
                                 )
                         )
                 ));

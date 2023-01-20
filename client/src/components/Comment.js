@@ -1,18 +1,15 @@
 import styled from 'styled-components';
-import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-// import { AiOutlineDelete } from 'react-icons/ai';
+
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 768;
 
 const Comment = () => {
-  const data = dummyData.posts;
   const params = useParams();
-  const url = 'http://54.180.127.165:8080/comment';
+  const url = 'http://13.125.30.88/comment';
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
 
@@ -71,7 +68,7 @@ const Comment = () => {
   }, []);
   const onDelteComment = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      axios(url + `/{commentId}`, {
+      axios(url + `/${commentData.commentId}`, {
         method: 'DELETE',
       })
         .then((res) => {
@@ -85,52 +82,40 @@ const Comment = () => {
     }
   };
   //{commentData로 mapping하기}
+
   return (
     <SWrapper>
-      <div className="comment_count">댓글 {commentData.length}</div>
+      <div className="comment_count">댓글 {data.length}</div>
       <div className="line"></div>
-      <div className="comment-bottom">
-        <div className="comment_container">
-          {/* {Object.keys(commentData).map((comment) => ( */}
-          <div
-            className="comment_box"
-            key={commentData.commentId}
-            role="presentation"
-            onClick={onDelteComment}
-          >
+      <div className="comment_container">
+        {data.map((comment) => (
+          <div className="comment_box" key={comment.id}>
             <div className="user_avatar">
-              <Avatar image={commentData.profileImageUrl} />
+              {' '}
+              <Avatar image={comment.avatar} />
             </div>
-            <div className="user_name">{commentData.nickname}</div>
-            <div className="comment_content">{commentData.content}</div>
+
+            <div className="user_name">{comment.userNickname}</div>
+            <div className="comment_content">{comment.content}</div>
           </div>
-          {/* ))} */}
-        </div>
-        <form className="commentWrap">
-          <div className="my_avatar">
-            <Avatar />
-          </div>
-          <div className="comment-input">
-            <input
-              type="text"
-              placeholder="댓글달기..."
-              value={contentValue}
-              onChange={onContentChange}
-            />
-            <HiOutlinePaperAirplane
-              onClick={() => {
-                onPostComment(contentValue);
-              }}
-            />
-          </div>
-        </form>
+        ))}
       </div>
+      <form className="commentWrap">
+        <div className="my_avatar">
+          <Avatar />
+        </div>
+        <div className="comment-input">
+          <input type="text" placeholder="댓글달기..." />
+          <HiOutlinePaperAirplane />
+        </div>
+      </form>
     </SWrapper>
   );
 };
 
 const SWrapper = styled.div`
   width: 100%;
+  height: 50%;
   .line {
     width: 100%;
     text-align: center;
@@ -140,10 +125,9 @@ const SWrapper = styled.div`
   }
 
   .commentWrap {
-    margin-top: 10px;
     display: flex;
     .my_avatar {
-      width: 30px;
+      width: 2vw;
       height: 30px;
       object-fit: cover;
       position: relative;
@@ -178,19 +162,15 @@ const SWrapper = styled.div`
       }
     }
   }
-  .comment-bottom {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-  }
   .comment_container {
-    height: 9vh;
+
+    height: 16vh;
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
         height: 85px;
       }
     }
+
     overflow: auto;
     .comment_box {
       display: flex;
@@ -198,7 +178,7 @@ const SWrapper = styled.div`
       align-items: center;
     }
     .user_avatar {
-      width: 30px;
+      width: 2vw;
       height: 30px;
       object-fit: cover;
       position: relative;
@@ -219,5 +199,8 @@ const SWrapper = styled.div`
       font-weight: bold;
     }
   }
+`;
+const commetBtn = styled.div`
+  background-color: pink;
 `;
 export default Comment;

@@ -7,6 +7,9 @@ source ${ABSDIR}/profile.sh
 REPOSITORY=/home/ec2-user/lookatme/server
 PROJECT_NAME=server
 
+echo "> 프로젝트 실행 위치로 이동"
+cd ${REPOSITORY}
+
 echo "> Build 파일 이동"
 mv ${REPOSITORY}/*.jar ${REPOSITORY}/build
 
