@@ -7,12 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
+
 import memberstore from '../store/memberstore';
 import axios from 'axios';
 
 const backendUrl = 'http://13.125.30.88/';
 
-const BREAK_POINT_PC = 1300;
+const BREAK_POINT_PC = 1250;
+
 const BREAK_POINT_TABLET = 768;
 
 const LoginHeader = () => {
@@ -55,6 +57,7 @@ const LoginHeader = () => {
             image="스크린샷 2023-01-13 오후 4.47.01 1.png"
             size="54px"
           /> */}
+
             <p
               className="title"
               role="presentation"
@@ -88,6 +91,7 @@ const LoginHeader = () => {
                 </div>
               )}
             </div>
+
             {/* )} */}
           </div>
         </SHeader>
@@ -128,28 +132,35 @@ const SHeader = styled.div`
     align-items: center;
     justify-content: space-between;
   }
+  .title-name {
+    flex-grow: 4;
+    height: 12vh;
+    display: flex;
+    justify-content: flex-start;
+  }
   .title {
-    flex-grow: 1;
-    font-size: 50px;
+    font-size: 40px;
     cursor: pointer;
-    /* margin-left: 30px; */
-    margin-top: 70px;
+    width: 70%;
     font-family: 'Song Myung', serif;
     color: #196ba5;
+    margin-top: 48px;
+
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
-        font-size: 40px;
+        font-size: 30px;
+        margin-top: 55px;
       }
     }
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
-        font-size: 20px;
+        grid-template-columns: 320px;
       }
     }
   }
 
   .right {
-    flex-grow: 1;
+    flex-grow: 2;
     display: flex;
     justify-content: flex-end;
     margin-right: 20px;
@@ -157,7 +168,7 @@ const SHeader = styled.div`
     svg {
       cursor: pointer;
       color: #565656;
-      padding: 0 20px;
+      padding: 0 15px;
     }
     button {
       width: 6vw;
@@ -167,6 +178,9 @@ const SHeader = styled.div`
       color: darkgray;
       cursor: pointer;
     }
+  }
+  .autocomplete-wrapper {
+    flex-grow: 0;
   }
 `;
 

@@ -1,59 +1,41 @@
 package com.lookatme.server.auth.controller;
 
 import com.google.gson.Gson;
-import com.lookatme.server.auth.dto.LoginDto;
-import com.lookatme.server.auth.jwt.JwtTokenizer;
+import com.lookatme.server.auth.dto.LoginRequest;
 import com.lookatme.server.auth.jwt.RedisRepository;
-import com.lookatme.server.auth.service.AuthService;
-import com.lookatme.server.config.CustomTestConfiguration;
-import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.mapper.MemberMapperImpl;
-import com.lookatme.server.member.service.MemberService;
-import org.junit.jupiter.api.BeforeEach;
+import com.lookatme.server.member.entity.MemberStatus;
+import com.lookatme.server.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import({
-        CustomTestConfiguration.class,
-        JwtTokenizer.class,
-        MemberMapperImpl.class
-})
-@MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(AuthController.class)
-@AutoConfigureRestDocs
+@Transactional
+@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // 테스트 간 충돌 방지
 class AuthControllerTest {
 
-    @MockBean
-    private MemberService memberService;
-
-    @MockBean
-    private AuthService authService;
-
-    @MockBean
+    @Autowired
     private RedisRepository redisRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,58 +43,55 @@ class AuthControllerTest {
     @Autowired
     private Gson gson;
 
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    private String accessToken;
-
-    private Member savedMember;
-
-    @BeforeEach
-    void createAccessToken() {
-        savedMember = Member.builder()
-                .memberId(1L)
-                .email("email@com")
-                .nickname("nickname")
-                .profileImageUrl("http://프사링크")
-                .oauthPlatform(Member.OauthPlatform.NONE)
-                .height(180)
-                .weight(70)
-                .build();
-        accessToken = jwtTokenizer.delegateAccessToken(savedMember);
-    }
-
-    @DisplayName("회원 가입")
+    @DisplayName("로그인 성공 테스트")
     @Test
-    void registerMemberTest() throws Exception {
+    void loginSuccessTest() throws Exception {
         // Given
-        MemberDto.Post postDto = new MemberDto.Post(
-                "email@com",
-                "{noop}pwd123!@#",
-                "닉네임",
-                Member.OauthPlatform.NONE,
-                180, 70);
-        String content = gson.toJson(postDto);
-        given(memberService.registerMember(any())).willReturn(savedMember);
+        Member member = memberRepository.findById(1L).get();
+        String tokenSubject = member.getUniqueKey();
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
 
         // When
         ResultActions actions = mockMvc.perform(
-                post("/auth/signup")
+                post("/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
-        actions.andExpect(status().isCreated());
+        // 1. OK 응답이 나와야 함
+        actions.andExpect(status().isOk());
+
+        // 2. 응답에 토큰이 둘 다 담겨있어야 함
+        MvcResult mvcResult = actions.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String accessToken = response.getHeader("Authorization");
+        String refreshToken = response.getHeader("Refresh");
+
+        assertThat(accessToken).isNotNull();
+        assertThat(refreshToken).isNotNull();
+
+        // 3. Access Token은 "Bearer " 으로 시작해야 함
+        assertThat(accessToken).startsWith("Bearer ");
+
+        // 4. RedisRepository에 Refresh Token이 저장되어 있어야 함
+        boolean result = redisRepository.hasRefreshToken(refreshToken, tokenSubject);
+        assertThat(result).isTrue();
+
+        // 5. 로그인 한 member의 로그인 시도 횟수가 0으로 초기화 되야함
+        assertThat(member.getLoginTryCnt()).isEqualTo(0);
     }
 
-    @DisplayName("로그인")
+    @DisplayName("로그인 실패 테스트 - 1번 틀림")
     @Test
-    void loginTest() throws Exception {
+    void loginFailTest_1Time() throws Exception {
         // Given
-        LoginDto loginDto = new LoginDto("email@com", "qwe123!@#");
-        String content = gson.toJson(loginDto);
+        Member member = memberRepository.findById(1L).get();
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "wrongPassword123");
+        String content = gson.toJson(loginRequest);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -122,80 +101,154 @@ class AuthControllerTest {
                         .content(content)
         );
 
-        // Then
-        MvcResult mvcResult = actions.andReturn();
-        String accessToken = mvcResult.getResponse().getHeader("Authorization");
-        assertThat(accessToken).startsWith("Bearer "); // Access Token이 Bearer으로 시작하는지 검증
 
-        actions.andExpect(status().isOk())
-                .andExpect(header().exists("Refresh")) // response 헤더에 Refresh값이 있는지 검증
-                .andDo(document(
-                                "auth-login",
-                                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                                requestFields(
-                                        List.of(
-                                                fieldWithPath("email").description("로그인 이메일"),
-                                                fieldWithPath("password").description("비밀번호")
-                                        )
-                                )
-                        )
-                );
+        // Then
+        // 1. Bad Request 응답 + 비밀번호 틀림 응답
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.LOGIN_PASSWORD_FAILED.name()))
+                .andExpect(jsonPath("$.message").value(startsWith(ErrorCode.LOGIN_PASSWORD_FAILED.getValue())));
+
+        // 2. 응답에 토큰 담겨있으면 안됨!
+        MvcResult mvcResult = actions.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String accessToken = response.getHeader("Authorization");
+        String refreshToken = response.getHeader("Refresh");
+
+        assertThat(accessToken).isNull();
+        assertThat(refreshToken).isNull();
+
+        // 3. 로그인 시도 횟수가 1 늘어야 함
+        assertThat(member.getLoginTryCnt()).isEqualTo(1);
     }
 
-    @DisplayName("액세스 토큰 상태 조회")
+    @DisplayName("로그인 실패 테스트 - 5번 틀림")
     @Test
-    void checkAccessTokenAvailableTest() throws Exception {
+    void loginFailTest_5Times() throws Exception {
+        // Given
+        Member member = memberRepository.findById(1L).get();
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "wrongPassword123");
+        String content = gson.toJson(loginRequest);
+
+        // When
+        for(int i = 0; i < 5; i++) { // 5번 시도 전부 틀린 상태에서 요청
+            mockMvc.perform(
+                    post("/auth/login")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content)
+            );
+        }
         ResultActions actions = mockMvc.perform(
-                post("/auth/jwt-test")
-                        .header("Authorization", accessToken)
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
         );
 
-        actions.andExpect(status().isOk())
-                .andDo(document(
-                        "auth-jwt-test",
-                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-                ));
+        // Then
+        // 1. Bad Request 응답 + 계정 잠김 응답
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.LOGIN_ACCOUNT_LOCKED.name()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.LOGIN_ACCOUNT_LOCKED.getValue()));
+
+        // 2. 응답에 토큰 담겨있으면 안됨
+        MvcResult mvcResult = actions.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String accessToken = response.getHeader("Authorization");
+        String refreshToken = response.getHeader("Refresh");
+
+        assertThat(accessToken).isNull();
+        assertThat(refreshToken).isNull();
+
+        // 3. 회원 상태가 잠김 상태로 변해야 함
+        assertThat(member.getLoginTryCnt()).isEqualTo(5);
+        assertThat(member.getMemberStatus()).isEqualTo(MemberStatus.MEMBER_LOCKED);
     }
 
     @DisplayName("로그아웃 테스트")
     @Test
     void logoutTest() throws Exception {
         // Given
+        // 미리 로그인 해 둠
+        Member member = memberRepository.findById(1L).get();
+        String tokenSubject = member.getUniqueKey();
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
+        ResultActions actions = mockMvc.perform(
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+        MockHttpServletResponse response = actions.andReturn().getResponse();
+        String accessToken = response.getHeader("Authorization");
+        String refreshToken = response.getHeader("Refresh");
 
         // When
-        ResultActions actions = mockMvc.perform(
+        actions = mockMvc.perform(
                 post("/auth/logout")
-                        .header("Authorization", accessToken)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken) // 로그인 된 회원의 액세스 토큰 전달
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
+        // 1. OK 응답 떠야함
         actions.andExpect(status().isOk());
+
+        // 2. redis에 저장된 Refresh 토큰 없어야 됨 (액세스 토큰 재발급 방지)
+        boolean hasRefreshToken = redisRepository.hasRefreshToken(tokenSubject, refreshToken);
+        assertThat(hasRefreshToken).isFalse();
+
+        // 3. 액세스 토큰이 블랙리스트에 올라가야함
+        boolean hasAccessToken = redisRepository.hasAccessTokenInBlacklist(
+                accessToken.replace("Bearer ", "")
+        );
+        assertThat(hasAccessToken).isTrue();
     }
 
-    // 실제 Redis에 저장 되었는지를 확인하려면 통합 테스트에서 확인해봐야함
     @DisplayName("토큰 재발급 테스트")
     @Test
-    void reissueTest() throws Exception {
+    void tokenReissueTest() throws Exception {
         // Given
-        String refreshToken = jwtTokenizer.generateRefreshToken(
-                savedMember.getUniqueKey(),
-                jwtTokenizer.getTokenExpiration(180),
-                jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey())
+        // 미리 로그인 해 둠
+        Member member = memberRepository.findById(1L).get();
+        String tokenSubject = member.getUniqueKey();
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
+        ResultActions actions = mockMvc.perform(
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
         );
+        MockHttpServletResponse response = actions.andReturn().getResponse();
+        String accessToken = response.getHeader("Authorization");
+        String refreshToken = response.getHeader("Refresh");
 
-        String newAccessToken = jwtTokenizer.delegateAccessToken(savedMember);
-        given(authService.reissueAccessToken(any(), any())).willReturn(newAccessToken);
 
         // When
-        ResultActions actions = mockMvc.perform(
+        actions = mockMvc.perform(
                 post("/auth/reissue")
+                        .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", accessToken)
                         .header("Refresh", refreshToken)
         );
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         // Then
+        // 1. created 응답 떠야햠
         actions.andExpect(status().isCreated());
+
+        // 2. 응답에 새로운 Authorization 있어야 함
+        response = actions.andReturn().getResponse();
+        String newAccessToken = response.getHeader("Authorization");
+        assertThat(newAccessToken).startsWith("Bearer ");
+
+        // 3. 기존에 쓰던 액세스 토큰은 블랙리스트에 올라가야함
+        boolean hasAccessToken = redisRepository.hasAccessTokenInBlacklist(
+                accessToken.replace("Bearer ", "")
+        );
+        assertThat(hasAccessToken).isTrue();
     }
 }

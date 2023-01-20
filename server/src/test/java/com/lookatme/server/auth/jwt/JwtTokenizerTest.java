@@ -1,6 +1,8 @@
 package com.lookatme.server.auth.jwt;
 
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.OauthPlatform;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.Decoders;
@@ -44,9 +46,7 @@ class JwtTokenizerTest {
         Map<String, Object> claims = jwtTokenizer.generateClaims(member);
 
         assertThat(claims.get("memberId")).isEqualTo(member.getMemberId());
-        assertThat(claims.get("email")).isEqualTo(member.getEmail());
-        assertThat(claims.get("oauthPlatform")).isEqualTo(member.getOauthPlatform());
-        assertThat(claims.get("memberUniqueKey")).isEqualTo(member.getUniqueKey());
+        assertThat(claims.get("account")).isEqualTo(member.getAccount());
         assertThat(claims.get("roles")).isEqualTo(member.getRoles());
     }
 
@@ -65,10 +65,11 @@ class JwtTokenizerTest {
 
         assertThat(claims.getSubject()).isEqualTo(member.getUniqueKey());
         assertThat(Long.parseLong(claims.get("memberId").toString())).isEqualTo(member.getMemberId());
-        assertThat(claims.get("email")).isEqualTo(member.getEmail());
-        assertThat(claims.get("oauthPlatform")).isEqualTo(member.getOauthPlatform().name());
-        assertThat(claims.get("memberUniqueKey")).isEqualTo(member.getUniqueKey());
         assertThat(claims.get("roles")).isEqualTo(member.getRoles());
+
+        Map<String, String> accountMap = (Map<String, String>) claims.get("account");
+        assertThat(accountMap.get("email")).isEqualTo(member.getEmail());
+        assertThat(accountMap.get("oauthPlatform")).isEqualTo(member.getOauthPlatform().name());
     }
 
     @DisplayName("토큰 만료 시간이 지나면 예외가 터지는지 테스트")
@@ -88,7 +89,7 @@ class JwtTokenizerTest {
     }
 
     private String getAccessToken(Map<String, Object> claims, int timeUnit, int timeAmount) {
-        String subject = claims.get("memberUniqueKey").toString();
+        String subject = claims.get("account").toString();
         Calendar calendar = Calendar.getInstance();
         calendar.add(timeUnit, timeAmount);
         Date expiration = calendar.getTime();
@@ -99,7 +100,6 @@ class JwtTokenizerTest {
     private Member getAuthenticatedMember() {
         return Member.builder()
                 .memberId(1L)
-                .email("email@com")
-                .oauthPlatform(Member.OauthPlatform.GOOGLE).build();
+                .account(new Account("email@google.com", OauthPlatform.GOOGLE)).build();
     }
 }

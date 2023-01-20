@@ -1,8 +1,15 @@
 import styled from 'styled-components';
-import Sidebar from '../components/Sidebar';
 import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
-const Outer = () => {
+import { useParams } from 'react-router-dom';
+import CATEGORY_CODE from '../constants/index';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import CategoryData from '../db/CategoryData.json';
+const Category = () => {
+  const params = useParams();
+  const category = params.categoryId;
+  const [data, setData] = useState([]);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -11,11 +18,45 @@ const Outer = () => {
       click.style.display = 'none';
     }
   };
+
+  const postCate = (url) => {
+    axios
+      .get(url)
+      .then((res) => {
+        setData([...res.data]);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (category === 'outer') {
+      // postCate();
+      setData(CategoryData.outer);
+      console.log(CategoryData.outer);
+    } else if (category === 'top') {
+      // postCate();
+      setData(CategoryData.top);
+      console.log(CategoryData.top);
+    } else if (category === 'bottom') {
+      postCate();
+    } else if (category === 'onepiece') {
+      postCate();
+    } else if (category === 'hat') {
+      postCate();
+    } else if (category === 'shoes') {
+      postCate();
+    }
+  }, [category]);
+
   return (
     <SWrapper>
-      <div className="outer">
+      <div className="bottom">
         <div className="main post">
-          <span className="category-name">아우터</span>
+          <span className="category-name">{CATEGORY_CODE[category]}</span>
           <Filter>
             <div className="rental availability ">
               <input type="checkbox" name="rental" value="" />
@@ -24,7 +65,7 @@ const Outer = () => {
             <div className="dropdown">
               <button className="dropdown_button" onClick={onDpMenu}>
                 <BiCaretDownCircle />
-                <p>정렬 순서</p>
+                정렬 순서
               </button>
               <div id="drop-content">
                 <button>가격 낮은순</button>
@@ -33,7 +74,7 @@ const Outer = () => {
               </div>
             </div>
           </Filter>
-          <PostBox />
+          <PostBox data={data} />
         </div>
       </div>
     </SWrapper>
@@ -42,7 +83,7 @@ const Outer = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  .outer {
+  .bottom {
     width: 75%;
   }
   .post {
@@ -92,4 +133,4 @@ const Filter = styled.div`
     }
   }
 `;
-export default Outer;
+export default Category;

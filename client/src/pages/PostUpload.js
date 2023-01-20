@@ -2,8 +2,40 @@ import styled from 'styled-components';
 import PostUploadBar from './PostUploadBar';
 import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
+import { useState } from 'react';
+
+const defaultContent = {
+  images: [],
+  brandName: '',
+  itemName: '',
+  itemSize: '',
+  itemPrice: '',
+  itemSite: '',
+  rentalCheck: false,
+  rentalPrice: '',
+};
 
 const PostUpload = () => {
+  const [contentList, setContentList] = useState([
+    defaultContent,
+    defaultContent,
+  ]); // PostUploadBar에 전달 , defaultContent기본값 2개뜨게끔
+  const [inputContent, setInputContent] = useState(); // textarea 입력값저장
+  const [imgFile, setImgFile] = useState([]); // 업로드한 이미지 배열저장
+
+  const onChangeItem = (index, key, value) => {
+    setContentList((preContentList) => {
+      const newContentList = preContentList;
+      newContentList[index][key] = value;
+      return newContentList;
+    });
+  };
+
+  //plusButton클릭시 호출
+  const addContent = () => {
+    setContentList((prev) => [...prev, defaultContent]);
+  };
+
   return (
     <Section>
       <Scontainer>
@@ -14,19 +46,27 @@ const PostUpload = () => {
         </SHeader>
 
         <SMid>
-          <ImageInput />
+          {/* 이미지파일첨부 */}
+          <ImageInput imgFile={imgFile} setImgFile={setImgFile} />
           <div className="input_box">
             <textarea
               placeholder="게시글을 작성하세요."
-              // value={content}
-              // onChange={(e) => setContent(e.target.value)}
+              value={inputContent}
+              onChange={(e) => setInputContent(e.target.value)}
             ></textarea>
           </div>
         </SMid>
 
-        <PostUploadBar />
-        <PostUploadBar />
-        <PlusButton />
+        {contentList.map((content, index) => {
+          return (
+            <PostUploadBar
+              key={index}
+              index={index}
+              onChangeItem={onChangeItem}
+            />
+          );
+        })}
+        <PlusButton onClick={addContent} />
       </Scontainer>
     </Section>
   );
@@ -34,24 +74,21 @@ const PostUpload = () => {
 
 const Section = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
 `;
 const Scontainer = styled.div`
   width: 70%;
-  /* border: 1px solid green; */
 `;
 
 const SHeader = styled.div`
   display: flex;
   justify-content: center;
-  /* border: 1px solid pink; */
   text-align: end;
-
   .image_upload {
-    /* margin-left: 20px; */
-    width: 43.5vw;
-    margin-bottom: 10px;
+    width: 44vw;
+    margin: 10px 0px;
     border-bottom: 1px solid #b3b3b3;
   }
   button {
@@ -63,6 +100,7 @@ const SHeader = styled.div`
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   }
 `;
 
@@ -70,15 +108,11 @@ const SMid = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px 0px;
-
-  /* border: 1px solid pink; */
-  /* width: 30vw; */
   .input_box {
     /* width: 34vw; */
     margin-bottom: 10px;
     display: flex;
     justify-content: end;
-
     /* background-color: #b3b3b3; */
   }
   textarea {
