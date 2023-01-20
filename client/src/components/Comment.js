@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
+
+import dummyData from '../db/dummyData.json';
+
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import dummyData from '../db/dummyData.json';
+
 import { fetchDelete } from '../utils/CommentApi';
 const BREAK_POINT_PC = 1300;
 
@@ -180,6 +183,7 @@ const SWrapper = styled.div`
   }
   .comment_container {
     height: 12vh;
+
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
         height: 85px;

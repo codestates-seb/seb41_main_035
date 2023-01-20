@@ -7,10 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
+
+import memberstore from '../store/memberstore';
+import axios from 'axios';
+
+const backendUrl = 'http://13.125.30.88/';
+
 const BREAK_POINT_PC = 1250;
+
 const BREAK_POINT_TABLET = 768;
 
 const LoginHeader = () => {
+  const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -19,6 +27,23 @@ const LoginHeader = () => {
   const onClickButton = () => {
     setIsOpen(true);
   };
+
+  const Logout = async () => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `${backendUrl}auth/logout`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res) {
+      localStorage.removeItem('accessToken');
+      // eslint-disable-next-line react/prop-types
+    }
+    setisLogin(false);
+  };
+
   const onChatOpen = () => {
     setIsChatOpen((prev) => !prev);
   };
@@ -32,37 +57,41 @@ const LoginHeader = () => {
             image="스크린샷 2023-01-13 오후 4.47.01 1.png"
             size="54px"
           /> */}
-            <div className="title-name">
-              <p
-                className="title"
-                role="presentation"
-                onClick={() => navigate(`/`)}
-              >
-                Look at me
-              </p>
-            </div>
-            {/* className={isLogin ? 'Loginsearch' : 'LogoutSearch'} */}
+
+            <p
+              className="title"
+              role="presentation"
+              onClick={() => navigate(`/`)}
+            >
+              Look at me
+            </p>
+
             <SearchBox />
-            {/* {isLogin ? ( */}
+
             <div className="right zone">
-              <BsPersonCircle
-                onClick={() => navigate(`/profile/${userId}`)}
-                size="30"
-              />
-              <BsPencilSquare
-                size="30"
-                role="presentation"
-                onClick={() => navigate(`/postupload`)}
-              />
-              <AiOutlineMessage size="30" onClick={onChatOpen} />
-              <button className="login button">Log out</button>
+              {!isLogin ? (
+                <button className="login button" onClick={onClickButton}>
+                  Log in
+                </button>
+              ) : (
+                <div className="right zone">
+                  <BsPersonCircle
+                    onClick={() => navigate(`/profile/${userId}`)}
+                    size="30"
+                  />
+                  <BsPencilSquare
+                    size="30"
+                    role="presentation"
+                    onClick={() => navigate(`/postupload`)}
+                  />
+                  <AiOutlineMessage size="30" onClick={onChatOpen} />
+                  <button className="logout button" onClick={Logout}>
+                    Log out
+                  </button>
+                </div>
+              )}
             </div>
-            {/* ) : ( */}
-            {/* <div className="right zone">
-              <button className="login button" onClick={onClickButton}>
-                Log in
-              </button>
-            </div> */}
+
             {/* )} */}
           </div>
         </SHeader>
