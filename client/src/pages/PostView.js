@@ -1,6 +1,11 @@
 import styled from 'styled-components';
-import { BsChatLeftText, BsPersonPlus, BsBookmarkHeart } from 'react-icons/bs';
-import Comment from '../components/Comment';
+import {
+  BsChatLeftText,
+  BsPersonPlus,
+  BsPersonCheck,
+  BsBookmarkHeart,
+} from 'react-icons/bs';
+// import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
@@ -15,14 +20,21 @@ const PostView = () => {
   const params = useParams();
   console.log(params);
   const [detailData, setDetailData] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const url = 'http://13.125.30.88/comment';
+
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
   //       //postId로 변경
   //       const response = await axios.get(url + `/post/` + [params.id]);
+
   //       setDetailData(response.data);
   //       console.log(response.data);
+
+  //       if (response.data.is_following) {
+  //         setIsFollowing(true);
+  //       }
   //     } catch (err) {
   //       window.alert('오류가 발생했습니다.');
   //       return err;
@@ -30,6 +42,34 @@ const PostView = () => {
   //   };
   //   fetchData();
   // }, []);
+
+  const unfollow = async () => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `/members/follow?op=${detailData.memberId}&type=down`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res) {
+      setIsFollowing(false);
+    }
+  };
+
+  const follow = async () => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `/members/follow?op=${detailData.memberId}&type=up`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res) {
+      setIsFollowing(true);
+    }
+  };
 
   return (
     <SWrapper>
@@ -59,7 +99,11 @@ const PostView = () => {
                 </div>
                 <div className="icon">
                   <BsChatLeftText size="20" />
-                  <BsPersonPlus size="20" />
+                  {isFollowing ? (
+                    <BsPersonCheck size="20" onClick={unfollow} />
+                  ) : (
+                    <BsPersonPlus size="20" onClick={follow} />
+                  )}
                   <BsBookmarkHeart size="20" />
                 </div>
               </div>
@@ -69,7 +113,7 @@ const PostView = () => {
         </div>
         <SBottom>
           <Item />
-          <Comment />
+          {/* <Comment /> */}
         </SBottom>
       </SContainer>
     </SWrapper>

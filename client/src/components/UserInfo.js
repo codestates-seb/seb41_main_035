@@ -81,6 +81,23 @@ const UserInfo = () => {
     setHeight(e.target.value);
   };
 
+  const onChangeImg = async (e) => {
+    const image = e.target.files[0];
+    const token = localStorage.getItem('accessToken');
+
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const res = await axios.post(`${backendUrl}members/profile`, formData, {
+      headers: { Authorization: token },
+    });
+
+    if (res) {
+      setProfileImg(res.data.profileImageUrl);
+      setIsFixing(false);
+    }
+  };
+
   const changeWeight = (e) => {
     setWeight(e.target.value);
   };
@@ -88,7 +105,22 @@ const UserInfo = () => {
     <SWrapper>
       <SProfileWrapper>
         <SPicture>
-          <img style={{ height: '200px' }} src={profileImg} alt="face" />
+          <img
+            style={{ height: '200px', width: '200px' }}
+            src={profileImg}
+            alt="face"
+          />
+          {isFixing ? (
+            <input
+              type="file"
+              id="input-file"
+              // ref={upload} //참조
+              onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
+              accept="image/*" //모든 이미지 파일형식
+            />
+          ) : (
+            ''
+          )}
         </SPicture>
         <SDetail>
           <SName>
