@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const ImageInput = () => {
-  const [imgFile, setImgFile] = useState([]); // 이미지 배열
-  // const upload = useRef();
+//Postupload.js에서 props로 받아온 것
+const ImageInput = ({ imgFile, setImgFile }) => {
+  // const [imgFile, setImgFile] = useState([]); // 이미지 배열
 
   const onChangeImg = (e) => {
     const imageLists = e.target.files;
@@ -49,6 +49,11 @@ const ImageInput = () => {
       </SImagefiles>
     </SWrapper>
   );
+};
+
+ImageInput.propTypes = {
+  imgFile: PropTypes.array,
+  setImgFile: PropTypes.func,
 };
 
 const SWrapper = styled.div`
