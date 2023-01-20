@@ -8,6 +8,8 @@ import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.service.BoardService;
 import com.lookatme.server.file.service.FileService;
+import com.lookatme.server.member.entity.Follow;
+import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.product.service.ProductService;
@@ -44,46 +46,44 @@ public class BoardController {
         this.boardMapper = boardMapper;
     }
 
-    //    @PostMapping
-//    public ResponseEntity postBoard(@Valid @RequestBody BoardPostDto post) {
-//        Board createBoard = boardService.crea
-//        BoardResponseDto boardResponseDto = boardMapper.BOARD(createBoard);
-//        return new ResponseEntity<>(boardMapper.boardToBoardResponse(createBoard), HttpStatus.CREATED);
-//    }
-
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity postBoard(@Valid @RequestPart(name = "request") BoardPostDto post,
+    public ResponseEntity postBoard(@Valid @RequestPart(name = "request", required = false) BoardPostDto post,
+                                    @RequestPart String content,
                                     @RequestPart(name = "userImage") MultipartFile userImage,
-                                    @RequestPart(name = "productImages") MultipartFile[] productImages, // TODO: 짝(순서)이 맞는다는 보장이 있는지 모르겠음
+//                                    @RequestPart(name = "productImages") MultipartFile[] productImages,
                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
-        Board board = boardMapper.boardPostToBoard(post);
+//        Board board = boardMapper.boardPostToBoard(post);
+
+        Board board = new Board();
+        board.setContent(content);
 
         // 1. 게시글 사진 업로드
         String userImageUrl = fileService.upload(userImage, "post");
         board.setUserImage(userImageUrl);
 
         List<Product> products = new ArrayList<>();
-        List<ProductPostDto> postProducts = post.getProducts();
-        for(int i = 0; i < postProducts.size(); i++) {
-            // 2. 상품 사진 업로드 TODO: 상품이 이미 등록되어 있으면 생략해도 됨
-            String itemImageUrl = fileService.upload(productImages[i], "item");
-            ProductPostDto postDto = postProducts.get(i);
-            postDto.setProductImage(itemImageUrl);
-
-            // 3. 상품 등록
-            Product product = productService.createProduct(postDto);
-
-            if(postDto.isRental()) {
-                // 4. 렌탈 등록
-                rentalService.createRental(
-                        memberPrincipal.getMemberId(),
-                        product.getProductId(),
-                        postDto.getSize(),
-                        postDto.getRentalPrice()
-                );
-            }
-            products.add(product);
-        }
+//        List<ProductPostDto> postProducts = post.getProducts();
+//        for(int i = 0; i < postProducts.size(); i++) {
+//            // 2. 상품 사진 업로드 TODO: 상품이 이미 등록되어 있으면 생략해도 됨
+////            String itemImageUrl = fileService.upload(productImages[i], "item");
+//            String itemImageUrl = "https://cdn.imweb.me/upload/S20211026228188315d8e6/590e88b6bb53b.jpg";
+//            ProductPostDto postDto = postProducts.get(i);
+//            postDto.setProductImage(itemImageUrl);
+//
+//            // 3. 상품 등록
+//            Product product = productService.createProduct(postDto);
+//
+//            if(postDto.isRental()) {
+//                // 4. 렌탈 등록
+//                rentalService.createRental(
+//                        memberPrincipal.getMemberId(),
+//                        product.getProductId(),
+//                        postDto.getSize(),
+//                        postDto.getRentalPrice()
+//                );
+//            }
+//            products.add(product);
+//        }
 
         // 5. 게시글 등록
         boardService.createBoard(board, memberPrincipal.getMemberId(), products);
@@ -94,20 +94,20 @@ public class BoardController {
     public ResponseEntity patchBoard(@PathVariable("board-Id") int boardId,
                                      @Valid @RequestBody BoardPatchDto patch) {
         Board board = boardService.updateBoard(boardMapper.boardPatchToBoard(patch));
-
         return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
-    @GetMapping("/board-Id")
-    public ResponseEntity getBoard(@PathVariable("board-Id") int boardId) {
-        Board board = boardService.findBoard(boardId);
-
+    @GetMapping("/{board-Id}")
+    public ResponseEntity getBoard(@PathVariable("board-Id") int boardId,
+                                   @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+        Board board = boardService.findBoard(boardId, loginMemberId);
         return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getBoards(@Positive @RequestParam int page,
-                                    @Positive @RequestParam int size) {
+    public ResponseEntity getBoards(@Positive @RequestParam(defaultValue = "1") int page,
+                                    @Positive @RequestParam(defaultValue = "50") int size) {
         Page<Board> findPosts = boardService.findBoards(page - 1, size);
         List<Board> boards = findPosts.getContent();
 
