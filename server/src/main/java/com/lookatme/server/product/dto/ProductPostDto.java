@@ -11,10 +11,6 @@ public class ProductPostDto {
 
     private String productName;
 
-    private String category;
-
-    private String brand;
-
     private String size;
 
     private int price;
@@ -23,6 +19,9 @@ public class ProductPostDto {
 
     private boolean isRental;
 
-    // 이미지는 URL을 통해 접근하도록 한다.
-    private String image;
+    private String category;
+
+    private String brand;
+
+    private String productImage;
 }

@@ -28,6 +28,8 @@ public class Product {
     @Column(nullable = false)
     private String link;
 
+    private String productImage;
+
     @OneToMany(mappedBy = "product")
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 

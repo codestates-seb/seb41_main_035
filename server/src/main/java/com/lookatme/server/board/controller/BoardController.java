@@ -13,12 +13,15 @@ import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,19 +48,28 @@ public class BoardController {
 //        return new ResponseEntity<>(boardMapper.boardToBoardResponse(createBoard), HttpStatus.CREATED);
 //    }
 
-    @PostMapping
-    public ResponseEntity postBoard(@Valid @RequestBody BoardPostDto post,
-                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity postBoard(@Valid @RequestPart(name = "request") BoardPostDto post,
+                                    @RequestPart(name = "userImage") MultipartFile userImage,
+                                    @RequestPart(name = "productImages") MultipartFile[] productImages, // TODO: 짝(순서)이 맞는다는 보장이 있는지 모르겠음
+                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
 
         Board board = boardMapper.boardPostToBoard(post);
 
+        String userImageUrl = fileService.upload(userImage, "post");
+        board.setUserImage(userImageUrl);
+
         List<Product> products = new ArrayList<>();
-        for (ProductPostDto product : post.getProducts()) {
+
+        List<ProductPostDto> postProducts = post.getProducts();
+        for(int i = 0; i < postProducts.size(); i++) {
+            String itemImageUrl = fileService.upload(productImages[i], "item");
+            ProductPostDto product = postProducts.get(i);
+            product.setProductImage(itemImageUrl);
             products.add(productService.createProduct(product));
         }
 
         boardService.createBoard(board, memberPrincipal.getMemberId(), products);
-
 
         return new ResponseEntity(HttpStatus.OK);
     }
