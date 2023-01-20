@@ -3,7 +3,6 @@ package com.lookatme.server.comment.controller;
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
-import com.lookatme.server.comment.dto.CommentResponseDto;
 import com.lookatme.server.comment.service.CommentService;
 import com.lookatme.server.common.dto.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,8 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity postComment(@RequestBody @Valid CommentPostDto commentPostDto,
-                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal){
-        return new ResponseEntity<>(
-                CommentResponseDto.of(commentService.createComment(commentPostDto, memberPrincipal)),
+                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        return new ResponseEntity<>(commentService.createComment(commentPostDto, memberPrincipal),
                 HttpStatus.CREATED);
     }
 
@@ -32,23 +30,20 @@ public class CommentController {
     public ResponseEntity patchComment(@PathVariable("commentId") Long commentId,
                                        @RequestBody @Valid CommentPatchDto commentPatchDto,
                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-        return new ResponseEntity<>(
-                CommentResponseDto.of(commentService.editComment(commentId, commentPatchDto, memberPrincipal)),
+        return new ResponseEntity<>(commentService.editComment(commentId, commentPatchDto, memberPrincipal),
                 HttpStatus.OK);
     }
 
     @GetMapping("/{commentId}")
     public ResponseEntity getComment(@PathVariable("commentId") Long commentId) {
-        return new ResponseEntity<>(
-                CommentResponseDto.of(commentService.findComment(commentId)),
-                HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findComment(commentId), HttpStatus.OK);
     }
 
     @GetMapping("/board/{boardId}")
     public ResponseEntity<MultiResponseDto> getComments(@PathVariable("boardId") int boardId,
-                                      @RequestParam("page") final int page,
-                                      @RequestParam("size") final int size) {
-        return new ResponseEntity<>(commentService.getComments(boardId, page-1, size), HttpStatus.OK);
+                                                        @RequestParam("page") final int page,
+                                                        @RequestParam("size") final int size) {
+        return new ResponseEntity<>(commentService.getComments(boardId, page - 1, size), HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")

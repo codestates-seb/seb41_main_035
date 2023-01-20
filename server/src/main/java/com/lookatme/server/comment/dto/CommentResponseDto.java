@@ -1,7 +1,6 @@
 package com.lookatme.server.comment.dto;
 
 import com.lookatme.server.board.dto.BoardResponseDto;
-import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.comment.entity.Comment;
 import lombok.Builder;
 import lombok.Getter;

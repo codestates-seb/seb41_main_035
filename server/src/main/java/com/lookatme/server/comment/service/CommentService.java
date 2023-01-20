@@ -35,8 +35,8 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Comment createComment(final CommentPostDto commentPostDto,
-                                 final MemberPrincipal memberPrincipal) {
+    public CommentResponseDto createComment(final CommentPostDto commentPostDto,
+                                            final MemberPrincipal memberPrincipal) {
         Member member = findValidateMember(memberPrincipal.getMemberId());
         Board board = findValidatePost(Integer.parseInt(commentPostDto.getBoardId()));
 
@@ -45,7 +45,7 @@ public class CommentService {
         comment.addMember(member);
         comment.addBoard(board);
 
-        return commentRepository.save(comment);
+        return CommentResponseDto.of(commentRepository.save(comment));
     }
 
     private Member findValidateMember(final Long memberId) {
@@ -64,16 +64,16 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment editComment(final Long commentId,
-                               final CommentPatchDto commentPatchDto,
-                               final MemberPrincipal memberPrincipal) {
+    public CommentResponseDto editComment(final Long commentId,
+                                          final CommentPatchDto commentPatchDto,
+                                          final MemberPrincipal memberPrincipal) {
         Comment findComment = findValidateComment(commentId);
         checkValidateMember(memberPrincipal.getEmail(), findComment.getMember().getEmail());
 
         Optional.ofNullable(commentPatchDto.getContent())
                 .ifPresent(content -> findComment.changeContent(content));
 
-        return findComment;
+        return CommentResponseDto.of(findComment);
     }
 
     private void checkValidateMember(final String authMemberEmail,
@@ -82,13 +82,14 @@ public class CommentService {
             throw new ErrorLogicException(ErrorCode.UNAUTHORIZED);
         }
     }
-    public Comment findComment(final Long commentId) {
-        return findValidateComment(commentId);
+
+    public CommentResponseDto findComment(final Long commentId) {
+        return CommentResponseDto.of(findValidateComment(commentId));
     }
 
     public MultiResponseDto getComments(final int boardId,
-                                     final int page,
-                                     final int size) {
+                                        final int page,
+                                        final int size) {
         Page<Comment> comments = commentRepository.findCommentsByBoard(boardId,
                 PageRequest.of(page, size, Sort.by("createdDate")));
 
@@ -101,7 +102,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(final Long commentId, final MemberPrincipal memberPrincipal) {
+    public void deleteComment(final Long commentId,
+                              final MemberPrincipal memberPrincipal) {
         Comment findComment = findValidateComment(commentId);
         checkValidateMember(memberPrincipal.getEmail(), findComment.getMember().getEmail());
         commentRepository.deleteById(commentId);

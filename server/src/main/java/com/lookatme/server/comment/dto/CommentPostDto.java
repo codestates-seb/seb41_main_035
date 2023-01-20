@@ -1,6 +1,5 @@
 package com.lookatme.server.comment.dto;
 
-import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.comment.entity.Comment;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class CommentPostDto {
 
     @Builder
     public CommentPostDto(final String boardId,
-                          final String content){
+                          final String content) {
         this.boardId = boardId;
         this.content = content;
     }

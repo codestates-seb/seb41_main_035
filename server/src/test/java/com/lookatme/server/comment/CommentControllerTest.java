@@ -3,7 +3,6 @@ package com.lookatme.server.comment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
-import com.lookatme.server.auth.jwt.RedisRepository;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.entity.Board;
@@ -18,7 +17,6 @@ import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.config.WithAuthMember;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +104,17 @@ public class CommentControllerTest {
         comment.addMember(member);
         comment.addBoard(board);
 
-        given(commentService.createComment(Mockito.any(CommentPostDto.class), Mockito.any())).willReturn(comment);
+        CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                .commentId(comment.getCommentId())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate())
+                .updatedDate(comment.getUpdatedDate())
+                .nickname(comment.getMember().getNickname())
+                .profileImageUrl(comment.getMember().getProfileImageUrl())
+                .board(BoardResponseDto.of(comment.getBoard()))
+                .build();
+
+        given(commentService.createComment(Mockito.any(CommentPostDto.class), Mockito.any())).willReturn(commentResponseDto);
 
         //when
         ResultActions actions =
@@ -187,7 +195,17 @@ public class CommentControllerTest {
         comment.addMember(member);
         comment.addBoard(board);
 
-        given(commentService.editComment(Mockito.anyLong(),Mockito.any(CommentPatchDto.class), Mockito.any())).willReturn(comment);
+        CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                .commentId(comment.getCommentId())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate())
+                .updatedDate(comment.getUpdatedDate())
+                .nickname(comment.getMember().getNickname())
+                .profileImageUrl(comment.getMember().getProfileImageUrl())
+                .board(BoardResponseDto.of(comment.getBoard()))
+                .build();
+
+        given(commentService.editComment(Mockito.anyLong(), Mockito.any(CommentPatchDto.class), Mockito.any())).willReturn(commentResponseDto);
 
         //when
         Long commentId = comment.getCommentId();
@@ -264,7 +282,17 @@ public class CommentControllerTest {
         comment.addMember(member);
         comment.addBoard(board);
 
-        given(commentService.findComment(Mockito.anyLong())).willReturn(comment);
+        CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                .commentId(comment.getCommentId())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate())
+                .updatedDate(comment.getUpdatedDate())
+                .nickname(comment.getMember().getNickname())
+                .profileImageUrl(comment.getMember().getProfileImageUrl())
+                .board(BoardResponseDto.of(comment.getBoard()))
+                .build();
+
+        given(commentService.findComment(Mockito.anyLong())).willReturn(commentResponseDto);
 
         //when
         ResultActions actions =
@@ -424,6 +452,7 @@ public class CommentControllerTest {
                         )
                 ));
     }
+
     @Test
     @WithAuthMember
     public void deleteCommentTest() throws Exception {
