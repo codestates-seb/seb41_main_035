@@ -1,6 +1,7 @@
 package com.lookatme.server.comment.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
+import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "comments")
+@Table(name = "comment")
 public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +34,11 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "post_id")
-//    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     private Comment() {
 
     }
@@ -44,10 +46,12 @@ public class Comment extends BaseTimeEntity {
     @Builder
     public Comment(final Long commentId,
                    final String content,
-                   final Member member) {
+                   final Member member,
+                   final Board board) {
         this.commentId = commentId;
         this.content = content;
         this.member = member;
+        this.board = board;
     }
 
     public void changeContent(final String content) {
@@ -56,5 +60,10 @@ public class Comment extends BaseTimeEntity {
 
     public void addMember(final Member member) {
         this.member = member;
+    }
+
+    public void addBoard(final Board board) {
+        this.board = board;
+        board.getCommentList().add(this);
     }
 }

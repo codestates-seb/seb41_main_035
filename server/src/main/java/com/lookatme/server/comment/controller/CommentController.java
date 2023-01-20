@@ -4,8 +4,8 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.comment.dto.CommentPatchDto;
 import com.lookatme.server.comment.dto.CommentPostDto;
 import com.lookatme.server.comment.dto.CommentResponseDto;
-import com.lookatme.server.comment.entity.Comment;
 import com.lookatme.server.comment.service.CommentService;
+import com.lookatme.server.common.dto.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,14 +44,12 @@ public class CommentController {
                 HttpStatus.OK);
     }
 
-//    @GetMapping("/post/{postId}")
-//    public ResponseEntity getComments(@PathVariable("postId") Long postId) {
-//        List<Comment> comments = commentService.findComments(postId);
-//        List<CommentResponseDto> commentResponseDtos = comments.stream()
-//                .map(comment -> CommentResponseDto.of(comment))
-//                .collect(Collectors.toList());
-//        return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
-//    }
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<MultiResponseDto> getComments(@PathVariable("boardId") int boardId,
+                                      @RequestParam("page") final int page,
+                                      @RequestParam("size") final int size) {
+        return new ResponseEntity<>(commentService.getComments(boardId, page-1, size), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId,
