@@ -2,10 +2,6 @@ package com.lookatme.server.auth.controller;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.service.AuthService;
-import com.lookatme.server.member.dto.MemberDto;
-import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.mapper.MemberMapper;
-import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -14,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,9 +18,7 @@ import java.util.List;
 @RestController
 public class AuthController {
 
-    private final MemberService memberService;
     private final AuthService authService;
-    private final MemberMapper mapper;
     private final Environment env;
 
     @GetMapping("/profile")
@@ -40,22 +33,15 @@ public class AuthController {
                 .orElse(defaultProfile);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerMember(@Valid @RequestBody MemberDto.Post postDto) {
-        // 1. DTO -> Member 변환
-        Member member = mapper.memberPostDtoToMember(postDto);
-        // 2. 비밀번호 암호화
-        authService.encodePassword(member);
-        // 3. 회원 등록
-        return new ResponseEntity<>(
-                mapper.memberToMemberResponse(memberService.registerMember(member)),
-                HttpStatus.CREATED
-        );
-    }
-
+    /**
+     * 로그아웃
+     * @param memberPrincipal -> 로그인 된 상태여야 함
+     * @param authHeader -> 액세스 토큰을 블랙리스트에 등록해서 사용하지 못하도록 만들어야 함
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                     @RequestHeader("Authorization") String authHeader) {
+        // Redis 저장 시 액세스 토큰의 Bearer 떼고 저장
         String accessToken = authHeader.replace("Bearer ", "");
         authService.logout(accessToken, memberPrincipal.getMemberUniqueKey());
         return new ResponseEntity<>("로그아웃 되었습니다", HttpStatus.OK);
@@ -72,12 +58,11 @@ public class AuthController {
             @RequestHeader("Refresh") String refreshToken,
             HttpServletResponse response) {
 
-        // 1. Refresh 토큰에서 회원 식별값 꺼내옴 -> 회원 조회
-        String memberUniqueKey = authService.getMemberUniqueKeyAtToken(refreshToken);
-        Member member = memberService.findMember(memberUniqueKey);
+        // 1. Refresh 토큰에서 회원 식별값(Token Subject) 꺼내옴 -> 회원 조회
+        String tokenSubject = authService.getTokenSubject(refreshToken);
 
-        // 2. DB에서 찾아온 회원 정보를 통해 Access 토큰 재발급
-        String newAccessToken = authService.reissueAccessToken(refreshToken, member);
+        // 2.Access 토큰 재발급
+        String newAccessToken = authService.reissueAccessToken(refreshToken, tokenSubject);
         authService.addAccessTokenToBlacklist(accessToken); // 기존에 사용하던 액세스 토큰은 사용할 수 없도록 블랙리스트 등록
 
         response.setHeader("Authorization", newAccessToken);

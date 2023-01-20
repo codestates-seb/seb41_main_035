@@ -4,6 +4,36 @@ import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
 
 const PostUpload = () => {
+  const defaultContent = {
+    images: [],
+    brandName: '',
+    itemName: '',
+    itemSize: '',
+    itemPrice: '',
+    itemSite: '',
+    rentalCheck: false,
+    rentalPrice: '',
+  };
+
+  const [contentList, setContentList] = useState([
+    defaultContent,
+    defaultContent,
+  ]); // PostUploadBar에 전달할 데이터 , defaultContent기본값 2개 뜨게끔
+  const [inputContent, setInputContent] = useState(); // textarea 입력값저장
+  const [imgFile, setImgFile] = useState([]); // 업로드한 이미지 배열저장
+
+  const onChangeItem = (index, key, value) => {
+    setContentList((preContentList) => {
+      const newContentList = preContentList;
+      newContentList[index][key] = value;
+      return newContentList;
+    });
+  };
+
+  //plusButton클릭시 호출
+  const addContent = () => {
+    setContentList((prev) => [...prev, defaultContent]);
+  };
   return (
     <Section>
       <Scontainer>
@@ -23,10 +53,16 @@ const PostUpload = () => {
             ></textarea>
           </div>
         </SMid>
-
-        <PostUploadBar />
-        <PostUploadBar />
-        <PlusButton />
+        {contentList.map((content, index) => {
+          return (
+            <PostUploadBar
+              key={index}
+              index={index}
+              onChangeItem={onChangeItem}
+            />
+          );
+        })}
+        <PlusButton onClick={addContent} />
       </Scontainer>
     </Section>
   );

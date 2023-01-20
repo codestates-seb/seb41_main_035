@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { AiOutlinePlus } from 'react-icons/ai';
-const PlusButton = () => {
+// import { useState } from 'react';
+import PropTypes from 'prop-types';
+
+const PlusButton = ({ onClick }) => {
   return (
     <Swrapper>
       <button className="plus-btn">
@@ -9,6 +12,10 @@ const PlusButton = () => {
       </button>
     </Swrapper>
   );
+};
+
+PlusButton.propTypes = {
+  onClick: PropTypes.func,
 };
 
 const Swrapper = styled.div`
