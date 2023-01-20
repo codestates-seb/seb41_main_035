@@ -4,6 +4,7 @@ import com.lookatme.server.audit.BaseTimeEntity;
 import com.lookatme.server.comment.entity.Comment;
 import com.lookatme.server.entity.BoardProduct;
 import com.lookatme.server.member.entity.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,4 +38,17 @@ public class Board extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
+
+    private Board() {
+    }
+    @Builder
+    public Board(final int boardId,
+                 final String userImage,
+                 final String content,
+                 final int likeCnt) {
+        this.boardId = boardId;
+        this.userImage = userImage;
+        this.content = content;
+        this.likeCnt = likeCnt;
+    }
 }
