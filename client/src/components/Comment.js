@@ -4,13 +4,12 @@ import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import dummyData from '../db/dummyData.json';
 import { fetchDelete } from '../utils/CommentApi';
 const BREAK_POINT_PC = 1300;
+const token = localStorage.getItem('accessToken');
 
 const Comment = () => {
   const params = useParams();
-  const data = dummyData.posts;
   const url = 'http://13.125.30.88/comment';
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
@@ -27,7 +26,7 @@ const Comment = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${getLocalStorage()}`,
+          Authorization: token,
         },
         data: JSON.stringify({
           content,
@@ -35,7 +34,7 @@ const Comment = () => {
       })
         .then((res) => {
           if (res) {
-            window.location.replace('/postview/:id'); //새로고침
+            window.location.replace('/postview/:boardId'); //새로고침
           }
         })
         .catch((err) => {
@@ -46,10 +45,10 @@ const Comment = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await axios.get(url + `/post/` + [params.id]);
-        const response = await axios.get(url + `/3`);
+        const response = await axios.get(
+          url + `/board/${params.boardId}?page=1&size=10`
+        );
         setCommentData(response.data);
-        console.log(response.data);
       } catch (err) {
         window.alert('오류가 발생했습니다.');
         return err;
@@ -61,24 +60,12 @@ const Comment = () => {
   const onDelteComment = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
       fetchDelete(url + `/${commentData.commentId}`);
-      // axios(url + `/${commentData.commentId}`, {
-      //   method: 'DELETE',
-      // })
-      //   .then((res) => {
-      //     if (res) {
-      //       window.location.replace('/postview/:id'); //새로고침
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     return err;
-      //   });
     }
   };
   //{commentData로 mapping하기}
-  console.log(commentData.commentId);
   return (
     <SWrapper>
-      <div className="comment_count">댓글 {commentData.length}</div>
+      <div className="comment_count">댓글 {commentData.data?.length}</div>
       <div className="line"></div>
       <form className="commentWrap">
         <div className="my_avatar">
@@ -100,24 +87,20 @@ const Comment = () => {
         </div>
       </form>
       <div className="comment_container">
-        {/* {Object.keys(commentData).map((comment) => ( */}
-        {data.map((commet) => (
+        {commentData.data?.map((comment) => (
           <div
             className="comment_box"
-            key={commet.id}
+            key={comment.commentId}
             role="presentation"
             onClick={onDelteComment}
           >
             <div className="user_avatar">
-              {' '}
-              <Avatar image={commet.profileImageUrl} />
+              <Avatar image={comment.profileImageUrl} />
             </div>
-
-            <div className="user_name">{commet.nickname}</div>
-            <div className="comment_content">{commet.content}</div>
+            <div className="user_name">{comment.nickname}</div>
+            <div className="comment_content">{comment.content}</div>
           </div>
         ))}
-        {/* ))} */}
       </div>
     </SWrapper>
   );

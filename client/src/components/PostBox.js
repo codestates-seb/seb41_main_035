@@ -3,13 +3,10 @@ import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-
 import { useState } from 'react';
-const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 800;
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 const PostBox = ({ data }) => {
   const navigate = useNavigate();
-
   const [good, setGood] = useState(false);
   const onClickGood = () => {
     setGood(!good);
@@ -21,16 +18,16 @@ const PostBox = ({ data }) => {
         {/* //postData로 렌더링 */}
         {data.map((post) => (
           <PostBoxOne
-            key={post.id}
+            key={post.boardId}
             onClick={() => {
-              navigate(`/postview`);
+              navigate(`/postview/${post.boardId}`);
             }}
           >
             <div className="user-info ">
               <div className="user-info left">
                 {' '}
-                <Avatar size="25px" image={post.avatar} />
-                <div className="user-info name">{post.userNickname}</div>
+                <Avatar size="25px" image={post.member?.profileImageUrl} />
+                <div className="user-info name">{post.member?.nickname}</div>
               </div>
               <div className="user-info right">
                 <div className="user-info height">170cm</div>
@@ -41,7 +38,7 @@ const PostBox = ({ data }) => {
             <div className="style-picture">
               <Avatar
                 size="400px"
-                image={post.picture}
+                image={post.userImage}
                 onClick={() => {
                   navigate(`/postview/${post.id}`);
                 }}
@@ -65,11 +62,11 @@ const SWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 300;
+  /* z-index: 300; */
 `;
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 22vw 22vw 22vw;
+  grid-template-columns: 320px 320px 320px;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       grid-template-columns: 320px 320px;
@@ -109,21 +106,12 @@ const PostBoxOne = styled.div`
     }
   }
   .style-picture {
-    width: 18vw;
+    width: 258px;
     height: 300px;
     object-fit: cover;
     position: relative;
     overflow: hidden;
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-      & {
-        width: 258px;
-      }
-    }
-    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-      & {
-        width: 258px;
-      }
-    }
+
     img {
       position: absolute;
       top: 50%;

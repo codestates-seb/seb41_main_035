@@ -10,10 +10,6 @@ const ImageInput = ({ imgFile, setImgFile }) => {
     const imageLists = e.target.files[0];
     let imageUrlLists = [...imgFile, imageLists];
     // 미리보기 기능은 위의 결과값에서 없는 상대경로가 필요- URL.createObjectUrl() 메소드
-    // for (let i = 0; i < imageLists.length; i++) {
-    //   const currentImageUrl = URL.createObjectURL(imageLists[i]);
-    //   imageUrlLists.push(currentImageUrl);
-    // }
     //미리보기 기능
     let reader = new FileReader();
     if (imageLists) {
@@ -22,7 +18,6 @@ const ImageInput = ({ imgFile, setImgFile }) => {
     reader.onloadend = () => {
       const resultImage = reader.result;
       setFileImage(resultImage);
-      // console.log(resultImage);
     };
 
     if (imageUrlLists.length > 1) {
@@ -73,6 +68,7 @@ ImageInput.propTypes = {
 const SWrapper = styled.div`
   width: 15vw;
   .image-upload {
+    margin: 10px;
   }
   .image-upload > input {
     display: none;
@@ -97,14 +93,5 @@ const SWrapper = styled.div`
     margin: 20px 3px;
   }
 `;
-// const SImagefiles = styled.div`
-//   .imageadd {
-//     display: flex;
-//   }
-//   img {
-//     width: 12vw;
-//     height: 26vh;
-//     margin: 20px 3px;
-//   }
-// `;
+
 export default ImageInput;
