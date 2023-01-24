@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-const userStore = create((set, get) => ({
+const userStore = create((set) => ({
   userId: '',
   setUserId: (e) => {
     set({

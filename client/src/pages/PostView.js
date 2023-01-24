@@ -1,9 +1,17 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import { BsChatLeftText, BsPersonPlus, BsBookmarkHeart } from 'react-icons/bs';
+import {
+  BsChatLeftText,
+  BsPersonPlus,
+  BsPersonCheck,
+  BsBookmarkHeart,
+} from 'react-icons/bs';
+// import Comment from '../components/Comment';
+
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
+
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -12,6 +20,7 @@ import { token, BREAK_POINT_PC } from '../constants/index';
 const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const url = 'http://13.125.30.88';
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +53,35 @@ const PostView = () => {
         });
     }
   };
+
+  const unfollow = async () => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `/members/follow?op=${detailData.memberId}&type=down`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res) {
+      setIsFollowing(false);
+    }
+  };
+
+  const follow = async () => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `/members/follow?op=${detailData.memberId}&type=up`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res) {
+      setIsFollowing(true);
+    }
+  };
+
   return (
     <SWrapper>
       <div className="container">
@@ -73,28 +111,32 @@ const PostView = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="icon">
-                    <BsChatLeftText size="20" />
-                    <BsPersonPlus size="20" />
-                    <BsBookmarkHeart size="20" />
-                  </div>
+                </div>
+                <div className="icon">
+                  <BsChatLeftText size="20" />
+                  {isFollowing ? (
+                    <BsPersonCheck size="20" onClick={unfollow} />
+                  ) : (
+                    <BsPersonPlus size="20" onClick={follow} />
+                  )}
+                  <BsBookmarkHeart size="20" />
                 </div>
               </div>
-              <div className="post">{detailData.content}</div>
-              <div className="edit-delete">
+            </div>
+            <div className="post">{detailData.content}</div>
+            <div className="edit-delete">
                 <span>Edit</span>
                 <span role="presentation" onClick={onPostDelete}>
                   Delete
                 </span>
               </div>
-            </SMiddle>
-          </div>
-          <SBottom>
-            <Item />
-            <Comment />
-          </SBottom>
-        </SContainer>
-      </div>
+          </SMiddle>
+        </div>
+        <SBottom>
+          <Item />
+          {/* <Comment /> */}
+        </SBottom>
+      </SContainer>
     </SWrapper>
   );
 };
