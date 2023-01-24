@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
-import com.lookatme.server.config.CustomTestConfiguration;
-import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.common.dto.MultiResponseDto;
+import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.config.WithAuthMember;
+import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.message.controller.MessageController;
 import com.lookatme.server.message.dto.MessagePostDto;
@@ -37,9 +37,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,12 +91,24 @@ public class MessageControllerTest {
                 .messageId(1L)
                 .content(messagePostDto.getContent())
                 .receiver(receiver)
+                .messageRoom(1L)
                 .build();
 
         message.addReceiver(receiver);
         message.addSender(sender);
 
-        given(messageService.createMessage(Mockito.any(MessagePostDto.class), Mockito.any())).willReturn(message);
+        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+                .messageId(message.getMessageId())
+                .content(message.getContent())
+                .createdAt(message.getCreatedAt())
+                .messageRoom(message.getMessageRoom())
+                .senderNickname(message.getSender().getNickname())
+                .senderProfileImageUrl(message.getSender().getProfileImageUrl())
+                .receiverNickname(message.getReceiver().getNickname())
+                .receiverProfileImageUrl(message.getReceiver().getProfileImageUrl())
+                .build();
+
+        given(messageService.createMessage(Mockito.any(MessagePostDto.class), Mockito.any())).willReturn(messageResponseDto);
 
         //when
         ResultActions actions =
@@ -126,6 +136,7 @@ public class MessageControllerTest {
                                         fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
                                         fieldWithPath("receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
@@ -162,12 +173,24 @@ public class MessageControllerTest {
                 .messageId(1L)
                 .content("메시지 내용")
                 .receiver(receiver)
+                .messageRoom(1L)
                 .build();
 
         message.addReceiver(receiver);
         message.addSender(sender);
 
-        given(messageService.getMessage(Mockito.anyLong())).willReturn(message);
+        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+                .messageId(message.getMessageId())
+                .content(message.getContent())
+                .createdAt(message.getCreatedAt())
+                .messageRoom(message.getMessageRoom())
+                .senderNickname(message.getSender().getNickname())
+                .senderProfileImageUrl(message.getSender().getProfileImageUrl())
+                .receiverNickname(message.getReceiver().getNickname())
+                .receiverProfileImageUrl(message.getReceiver().getProfileImageUrl())
+                .build();
+
+        given(messageService.getMessage(Mockito.anyLong())).willReturn(messageResponseDto);
 
         //when
         ResultActions actions =
@@ -191,6 +214,7 @@ public class MessageControllerTest {
                                         fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
                                         fieldWithPath("receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
@@ -237,6 +261,7 @@ public class MessageControllerTest {
         Message message1 = Message.builder()
                 .messageId(1L)
                 .content("메시지 내용")
+                .messageRoom(1L)
                 .sender(member2)
                 .receiver(member1)
                 .build();
@@ -247,8 +272,9 @@ public class MessageControllerTest {
         Message message2 = Message.builder()
                 .messageId(2L)
                 .content("메시지 내용")
+                .messageRoom(2L)
                 .sender(member3)
-                .receiver(member1)
+                .receiver(member2)
                 .build();
 
         message2.addReceiver(member2);
@@ -257,22 +283,24 @@ public class MessageControllerTest {
         Message message3 = Message.builder()
                 .messageId(3L)
                 .content("메시지 내용")
+                .messageRoom(3L)
                 .sender(member1)
-                .receiver(member1)
+                .receiver(member3)
                 .build();
 
-        message2.addReceiver(member3);
-        message2.addSender(member1);
+        message3.addReceiver(member3);
+        message3.addSender(member1);
 
         Message message4 = Message.builder()
                 .messageId(4L)
                 .content("메시지 내용")
+                .messageRoom(3L)
                 .sender(member3)
                 .receiver(member1)
                 .build();
 
-        message2.addReceiver(member1);
-        message2.addSender(member3);
+        message4.addReceiver(member1);
+        message4.addSender(member3);
 
         List<Message> messages = List.of(message3, message4);
 
@@ -283,6 +311,7 @@ public class MessageControllerTest {
                 .messageId(message3.getMessageId())
                 .content(message3.getContent())
                 .createdAt(message3.getCreatedAt())
+                .messageRoom(message3.getMessageRoom())
                 .senderNickname(message3.getSender().getNickname())
                 .senderProfileImageUrl(message3.getSender().getProfileImageUrl())
                 .receiverNickname(message3.getReceiver().getNickname())
@@ -293,6 +322,7 @@ public class MessageControllerTest {
                 .messageId(message4.getMessageId())
                 .content(message4.getContent())
                 .createdAt(message4.getCreatedAt())
+                .messageRoom(message4.getMessageRoom())
                 .senderNickname(message4.getSender().getNickname())
                 .senderProfileImageUrl(message4.getSender().getProfileImageUrl())
                 .receiverNickname(message4.getReceiver().getNickname())
@@ -331,6 +361,7 @@ public class MessageControllerTest {
                                         fieldWithPath("data[].messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("data[].messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("data[].senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("data[].senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
                                         fieldWithPath("data[].receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
