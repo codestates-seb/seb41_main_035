@@ -1,15 +1,43 @@
 import { ReactComponent as Rent } from '../svg/Rent.svg';
 import styled from 'styled-components';
-import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 const Item = () => {
-  const data = dummyData.posts;
+  const navigate = useNavigate();
+  const params = useParams();
+  const url = 'http://13.125.30.88';
+  const [itemData, setItemData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url + `/boards/` + [params.boardId]);
+        setItemData(response.data);
+      } catch (err) {
+        window.alert('오류가 발생했습니다.');
+        return err;
+      }
+    };
+    fetchData();
+  }, []);
+  // console.log(itemData.products[0].link);
+  const onMoveLink = () => {
+    window.location.href = {};
+  };
   return (
     <SItemContainer>
-      {data.map((item) => (
-        <div className="item_box" key={item.id}>
+      {itemData.products?.map((item) => (
+        <div
+          className="item_box"
+          key={item.productId}
+          role="presentation"
+          onClick={() => {
+            window.open = item.products?.link;
+          }}
+        >
           <div className="item_picture">
-            <Avatar />
+            <Avatar image={item.productImage} />
           </div>
           <div className="item_info">
             <div className="item_sale">
@@ -19,20 +47,17 @@ const Item = () => {
                 <span>가격</span>
               </div>
               <div className="item_info_content">
-                <span> 나이키</span>
-                <span> 나이키</span>
-                <span> 2,000원</span>
+                <span> {item.brand}</span>
+                <span> {item.productName}</span>
+                <span> {item.price}</span>
               </div>
-              {/* <div className="item_brand">브랜드 나이키</div>
-              <div className="item_name">제품명  나이키</div>
-              <div className="item_price">가격 2,000원</div> */}
             </div>
             {/* {isRent ? ( */}
             <div className="item_rent">
               <Rent />
               <div className="rent_price">
                 <p>대여가격: </p>
-                <p>1,000</p>
+                <p>{item.rentalPrice}</p>
               </div>
             </div>
             {/* ) : null} */}
@@ -54,6 +79,7 @@ const SItemContainer = styled.div`
     align-items: center;
     padding: 10px;
     background-color: #eee6ca;
+    cursor: pointer;
     .item_info {
       width: 90%;
       display: flex;

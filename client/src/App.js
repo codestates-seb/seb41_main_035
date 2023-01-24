@@ -21,12 +21,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile/:userId" element={<Profile />} />
-          <Route path="/post/" element={<PostUpload />} />
           <Route path="/postupload" element={<PostUpload />} />
-          <Route path="/postview" element={<PostView />} />
-
+          <Route path="/postview/:boardId" element={<PostView />} />
           <Route path="/google" element={<Google />} />
-
           <Route path="/category/:categoryId" element={<Category />} />
         </Routes>
         <Footer />

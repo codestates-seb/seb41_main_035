@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import {
   BsChatLeftText,
@@ -8,43 +9,50 @@ import {
 // import Comment from '../components/Comment';
 
 import Comment from '../components/Comment';
-/* eslint-disable react/prop-types */
 import Avatar from '../components/Avatar';
-import dummyData from '../db/dummyData.json';
 import Item from '../components/Item';
 
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-const BREAK_POINT_PC = 1300;
+import { token, BREAK_POINT_PC } from '../constants/index';
 
 const PostView = () => {
-  const data = dummyData.posts;
   const params = useParams();
-  console.log(params);
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-  const url = 'http://13.125.30.88/comment';
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       //postId로 변경
-  //       const response = await axios.get(url + `/post/` + [params.id]);
-
-  //       setDetailData(response.data);
-  //       console.log(response.data);
-
-  //       if (response.data.is_following) {
-  //         setIsFollowing(true);
-  //       }
-  //     } catch (err) {
-  //       window.alert('오류가 발생했습니다.');
-  //       return err;
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const url = 'http://13.125.30.88';
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url + `/boards/` + [params.boardId]);
+        setDetailData(response.data);
+        console.log(response.data);
+      } catch (err) {
+        window.alert('오류가 발생했습니다.');
+        return err;
+      }
+    };
+    fetchData();
+  }, []);
+  const onPostDelete = (url) => {
+    if (window.confirm('삭제 하시겠습니까?')) {
+      axios(url + `/boards/` + [params.boardId], {
+        method: 'DELETE',
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then((res) => {
+          if (res) {
+            location.href = '/';
+          }
+        })
+        .catch((err) => {
+          return err;
+        });
+    }
+  };
 
   const unfollow = async () => {
     const token = localStorage.getItem('accessToken');
@@ -76,27 +84,31 @@ const PostView = () => {
 
   return (
     <SWrapper>
-      <SContainer>
-        <div className="top_container">
-          <SPost>
-            <Avatar
-              className="outfit_upload"
-              size="400px"
-              image={data[0].picture}
-            />
-          </SPost>
-          <SMiddle>
-            <div className="user_info">
-              <div className="user_box">
-                <div className="user_box left">
-                  <div className="user_avatar">
-                    <Avatar image={data[0].avatar} />
-                  </div>
-                  <div className="user_info_detail">
-                    <div className="user_id">{data[0].userNickname}</div>
-                    <div className="user_boxtwo">
-                      <div className="user_tall">170cm</div>
-                      <div className="user_weight"> 55kg</div>
+      <div className="container">
+        <SContainer>
+          <div className="top_container">
+            <SPost>
+              <Avatar
+                className="outfit_upload"
+                size="400px"
+                image={detailData.userImage}
+              />
+            </SPost>
+            <SMiddle>
+              <div className="user_info">
+                <div className="user_box">
+                  <div className="user_box left">
+                    <div className="user_avatar">
+                      <Avatar image={detailData.member?.profileImageUrl} />
+                    </div>
+                    <div className="user_info_detail">
+                      <div className="user_id">
+                        {detailData.member?.nickname}
+                      </div>
+                      <div className="user_boxtwo">
+                        <div className="user_tall">170cm</div>
+                        <div className="user_weight"> 55kg</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -111,7 +123,13 @@ const PostView = () => {
                 </div>
               </div>
             </div>
-            <div className="post">{data[0].content}</div>
+            <div className="post">{detailData.content}</div>
+            <div className="edit-delete">
+                <span>Edit</span>
+                <span role="presentation" onClick={onPostDelete}>
+                  Delete
+                </span>
+              </div>
           </SMiddle>
         </div>
         <SBottom>
@@ -125,15 +143,23 @@ const PostView = () => {
 
 const SWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
-  width: 78%;
+  justify-content: center;
+  .container {
+    display: flex;
+    justify-content: flex-start;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
 `;
 
 const SContainer = styled.div`
   width: 47vw;
-  height: 700px;
+  height: 750px;
   border: 1px solid gray;
-  margin: 60px 0px;
+  margin: 60px 30px;
+  max-width: 820px;
+  background-color: #f4f1e0;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       width: 650px;
@@ -219,9 +245,16 @@ const SMiddle = styled.div`
     }
   }
   .post {
-    height: 25vh;
+    height: 28vh;
     margin-left: 10px;
     font-size: 20px;
+  }
+  .edit-delete {
+    margin: 5px;
+    text-align: right;
+    span {
+      margin-right: 10px;
+    }
   }
 `;
 const SBottom = styled.div`
