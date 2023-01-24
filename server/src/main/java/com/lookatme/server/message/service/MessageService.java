@@ -30,7 +30,7 @@ public class MessageService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Message createMessage(final MessagePostDto messagePostDto,
+    public MessageResponseDto createMessage(final MessagePostDto messagePostDto,
                                  final MemberPrincipal memberPrincipal) {
         Member sender = findValidateMember(memberPrincipal.getMemberId());
 
@@ -44,7 +44,9 @@ public class MessageService {
 
         setMessageRoom(sender, message, receiver);
 
-        return messageRepository.save(message);
+        messageRepository.save(message);
+
+        return MessageResponseDto.of(message);
     }
 
     @Transactional(readOnly = true)
@@ -97,8 +99,8 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public Message getMessage(Long messageId) {
-        return findMessageById(messageId);
+    public MessageResponseDto getMessage(Long messageId) {
+        return MessageResponseDto.of(findMessageById(messageId));
     }
 
     private void checkValidateMember(final String authMemberEmail,
