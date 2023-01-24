@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
-
+import PropTypes from 'prop-types';
 //Postupload.js에서 props로 받아온 것
 const ImageInput = ({ imgFile, setImgFile }) => {
   // const [imgFile, setImgFile] = useState([]); // 이미지 배열

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import PostUploadBar from './PostUploadBar';
 import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
+import { useState } from 'react';
 
 const PostUpload = () => {
   const defaultContent = {
