@@ -331,7 +331,7 @@ public class MessageControllerTest {
 
         List<MessageResponseDto> messageResponseDtos = List.of(messageResponseDto, messageResponseDto2);
 
-        given(messageService.getMessages(Mockito.any(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt())).willReturn(new MultiResponseDto<> (messageResponseDtos, messagePage));
+        given(messageService.getMessages(Mockito.any(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt())).willReturn(new MultiResponseDto<>(messageResponseDtos, messagePage));
 
         //when
         ResultActions actions =

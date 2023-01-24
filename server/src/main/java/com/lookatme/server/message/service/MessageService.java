@@ -31,7 +31,7 @@ public class MessageService {
 
     @Transactional
     public MessageResponseDto createMessage(final MessagePostDto messagePostDto,
-                                 final MemberPrincipal memberPrincipal) {
+                                            final MemberPrincipal memberPrincipal) {
         Member sender = findValidateMember(memberPrincipal.getMemberId());
 
         Message message = messagePostDto.toMessage();
@@ -63,14 +63,15 @@ public class MessageService {
             message.setMessageRoom(existedMessageRoom);
         } else {//새로 채팅을 시작하는 경우
             Long room = getMaxMessageRoom();
-            message.setMessageRoom( room + 1L);
+            message.setMessageRoom(room + 1L);
         }
     }
+
     @Transactional(readOnly = true)
     private Long getMaxMessageRoom() {
         return Optional.ofNullable(messageRepository.findTopByOrderByMessageRoomDesc())
                 .map(Message::getMessageRoom)
-                .orElseGet(()->0L);
+                .orElseGet(() -> 0L);
     }
 
     @Transactional(readOnly = true)

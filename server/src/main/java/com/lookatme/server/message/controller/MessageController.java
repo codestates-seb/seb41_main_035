@@ -31,9 +31,9 @@ public class MessageController {
 
     @GetMapping("/received/{memberId}")
     public ResponseEntity<MultiResponseDto> getMessages(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                                               @PathVariable("memberId") final Long memberId,
-                                                               @RequestParam("page") final int page,
-                                                               @RequestParam("size") final int size) {
+                                                        @PathVariable("memberId") final Long memberId,
+                                                        @RequestParam("page") final int page,
+                                                        @RequestParam("size") final int size) {
         return new ResponseEntity<>(messageService.getMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
     }
 
