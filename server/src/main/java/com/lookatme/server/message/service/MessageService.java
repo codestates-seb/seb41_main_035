@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,20 +42,49 @@ public class MessageService {
 
         checkMyself(sender.getMemberId(), receiver.getMemberId());
 
+        setMessageRoom(sender, message, receiver);
+
         return messageRepository.save(message);
     }
 
+    @Transactional(readOnly = true)
+    private Long checkExistedRoom(final Long senderId, final Long receiverId) {
+        return Optional.ofNullable(messageRepository.findExistedMessageRoom(senderId, receiverId))
+                .map(Message::getMessageRoom)
+                .orElse(-1L);
+    }
+
+    @Transactional
+    private void setMessageRoom(Member sender, Message message, Member receiver) {
+        Long existedMessageRoom = checkExistedRoom(sender.getMemberId(), receiver.getMemberId());
+        if (existedMessageRoom > 0L) {//기존에 해당 유저와 채팅방이 존재하는 경우
+            message.setMessageRoom(existedMessageRoom);
+        } else {//새로 채팅을 시작하는 경우
+            Long room = getMaxMessageRoom();
+            message.setMessageRoom( room + 1L);
+        }
+    }
+    @Transactional(readOnly = true)
+    private Long getMaxMessageRoom() {
+        return Optional.ofNullable(messageRepository.findTopByOrderByMessageRoomDesc())
+                .map(Message::getMessageRoom)
+                .orElseGet(()->0L);
+    }
+
+    @Transactional(readOnly = true)
     private void checkMyself(final Long senderId, final Long receiverId) {
         if (senderId.equals(receiverId)) {
             throw new MessageNotSendToSelfException();
         }
     }
 
+    @Transactional(readOnly = true)
     private Member findValidateMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     private Member findValidateMember(final String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
@@ -91,6 +121,15 @@ public class MessageService {
                 .collect(Collectors.toList());
         return new MultiResponseDto<>(messageResponseDtos, messages);
     }
+
+//    @Transactional(readOnly = true)
+//    public List<MessageResponseDto> getMessageRoomList(final MemberPrincipal memberPrincipal) {
+//        List<Message> messages = messageRepository.findMessageRoomList(memberPrincipal.getMemberId());
+//        List<MessageResponseDto> messageResponseDtos = messages.stream()
+//                .map(message -> MessageResponseDto.of(message))
+//                .collect(Collectors.toList());
+//        return messageResponseDtos;
+//    }
 
     //받은 편지 삭제
     @Transactional

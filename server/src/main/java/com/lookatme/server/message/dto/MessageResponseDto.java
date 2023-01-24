@@ -1,6 +1,5 @@
 package com.lookatme.server.message.dto;
 
-import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.message.entity.Message;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +11,7 @@ public class MessageResponseDto {
     private Long messageId;
     private String content;
     private LocalDateTime createdAt;
+    private Long messageRoom;
     private String senderNickname;
     private String senderProfileImageUrl;
     private String receiverNickname;
@@ -21,6 +21,7 @@ public class MessageResponseDto {
     public MessageResponseDto(final Long messageId,
                               final String content,
                               final LocalDateTime createdAt,
+                              final Long messageRoom,
                               final String senderNickname,
                               final String senderProfileImageUrl,
                               final String receiverNickname,
@@ -28,6 +29,7 @@ public class MessageResponseDto {
         this.messageId = messageId;
         this.content = content;
         this.createdAt = createdAt;
+        this.messageRoom = messageRoom;
         this.senderNickname = senderNickname;
         this.senderProfileImageUrl = senderProfileImageUrl;
         this.receiverNickname = receiverNickname;
@@ -39,6 +41,7 @@ public class MessageResponseDto {
                 .messageId(message.getMessageId())
                 .content(message.getContent())
                 .createdAt(message.getCreatedAt())
+                .messageRoom(message.getMessageRoom())
                 .senderNickname(message.getSender().getNickname())
                 .senderProfileImageUrl(message.getSender().getProfileImageUrl())
                 .receiverNickname(message.getReceiver().getNickname())

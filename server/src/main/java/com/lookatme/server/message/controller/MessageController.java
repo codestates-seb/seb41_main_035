@@ -2,22 +2,16 @@ package com.lookatme.server.message.controller;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.common.dto.MultiResponseDto;
-import com.lookatme.server.member.entity.Member;
-import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.message.dto.MessagePostDto;
 import com.lookatme.server.message.dto.MessageResponseDto;
-import com.lookatme.server.message.entity.Message;
 import com.lookatme.server.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +37,11 @@ public class MessageController {
                                                                @RequestParam("size") final int size) {
         return new ResponseEntity<>(messageService.getMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
     }
+
+//    @GetMapping("/room")
+////    public ResponseEntity getMessageRoom(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+////        return new ResponseEntity<>(messageService.getMessageRoomList(memberPrincipal), HttpStatus.OK);
+////    }
 
     @DeleteMapping("/received/{messageId}")
     public ResponseEntity deleteReceivedMessage(@PathVariable("messageId") Long messageId,
