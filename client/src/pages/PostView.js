@@ -7,11 +7,9 @@ import {
   BsBookmarkHeart,
 } from 'react-icons/bs';
 // import Comment from '../components/Comment';
-
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
-
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -111,32 +109,32 @@ const PostView = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="icon">
-                  <BsChatLeftText size="20" />
-                  {isFollowing ? (
-                    <BsPersonCheck size="20" onClick={unfollow} />
-                  ) : (
-                    <BsPersonPlus size="20" onClick={follow} />
-                  )}
-                  <BsBookmarkHeart size="20" />
+                  <div className="icon">
+                    <BsChatLeftText size="20" />
+                    {isFollowing ? (
+                      <BsPersonCheck size="20" onClick={unfollow} />
+                    ) : (
+                      <BsPersonPlus size="20" onClick={follow} />
+                    )}
+                    <BsBookmarkHeart size="20" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="post">{detailData.content}</div>
-            <div className="edit-delete">
+              <div className="post">{detailData.content}</div>
+              <div className="edit-delete">
                 <span>Edit</span>
                 <span role="presentation" onClick={onPostDelete}>
                   Delete
                 </span>
               </div>
-          </SMiddle>
-        </div>
-        <SBottom>
-          <Item />
-          {/* <Comment /> */}
-        </SBottom>
-      </SContainer>
+            </SMiddle>
+          </div>
+          <SBottom>
+            <Item />
+            <Comment />
+          </SBottom>
+        </SContainer>
+      </div>
     </SWrapper>
   );
 };
