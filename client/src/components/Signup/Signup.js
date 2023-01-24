@@ -39,7 +39,7 @@ function Signup(props) {
 
   const SignUpUser = async () => {
     const res = await axios.post(
-      `${backendUrl}auth/signup`,
+      `${backendUrl}members/signup`,
       {
         nickname: nickname,
         email: id,

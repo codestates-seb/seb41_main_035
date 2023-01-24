@@ -3,16 +3,13 @@ import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-
 import { useState } from 'react';
-const BREAK_POINT_PC = 1300;
-const BREAK_POINT_TABLET = 800;
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 const PostBox = ({ data }) => {
   const navigate = useNavigate();
-
-  const [good, setGood] = useState(false);
+  const [like, setLike] = useState(0);
   const onClickGood = () => {
-    setGood(!good);
+    setLike(like + 1);
   };
 
   return (
@@ -20,17 +17,18 @@ const PostBox = ({ data }) => {
       <Container>
         {/* //postData로 렌더링 */}
         {data.map((post) => (
-          <PostBoxOne
-            key={post.id}
-            onClick={() => {
-              navigate(`/postview`);
-            }}
-          >
+          <PostBoxOne key={post.boardId}>
             <div className="user-info ">
-              <div className="user-info left">
+              <div
+                className="user-info left"
+                role="presentation"
+                onClick={() => {
+                  navigate(`/members/${post.member?.memberId}`);
+                }}
+              >
                 {' '}
-                <Avatar size="25px" image={post.avatar} />
-                <div className="user-info name">{post.userNickname}</div>
+                <Avatar size="25px" image={post.member?.profileImageUrl} />
+                <div className="user-info name">{post.member?.nickname}</div>
               </div>
               <div className="user-info right">
                 <div className="user-info height">170cm</div>
@@ -38,10 +36,16 @@ const PostBox = ({ data }) => {
               </div>
             </div>
 
-            <div className="style-picture">
+            <div
+              className="style-picture"
+              role="presentation"
+              onClick={() => {
+                navigate(`/postview/${post.boardId}`);
+              }}
+            >
               <Avatar
                 size="400px"
-                image={post.picture}
+                image={post.userImage}
                 onClick={() => {
                   navigate(`/postview/${post.id}`);
                 }}
@@ -52,7 +56,7 @@ const PostBox = ({ data }) => {
               role="presentation"
               onClick={onClickGood}
             >
-              {good ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+              {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
             </div>
           </PostBoxOne>
         ))}
@@ -65,11 +69,11 @@ const SWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 300;
+  /* z-index: 300; */
 `;
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 22vw 22vw 22vw;
+  grid-template-columns: 320px 320px 320px;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       grid-template-columns: 320px 320px;
@@ -82,25 +86,39 @@ const Container = styled.div`
   }
 `;
 const PostBoxOne = styled.div`
-  height: 400px;
+  height: 390px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0px 15px 60px 15px;
   border: 2px solid #949494;
   border-radius: 5px;
-  cursor: pointer;
+
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    & {
+      height: 60vh;
+    }
+  }
+
   .user-info {
     display: flex;
     width: 90%;
-    padding-top: 8px;
-    padding-bottom: 4px;
+    padding-top: 6px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        width: 85%;
+      }
+    }
+    .left {
+      cursor: pointer;
+    }
     .right {
       color: #2e2d2a;
       font-size: 13px;
-      margin-left: 80px;
+      margin-left: 100px;
+      text-align: right;
     }
     .name {
       margin-left: 10px;
@@ -109,19 +127,16 @@ const PostBoxOne = styled.div`
     }
   }
   .style-picture {
-    width: 18vw;
+    cursor: pointer;
+    width: 258px;
     height: 300px;
     object-fit: cover;
     position: relative;
     overflow: hidden;
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-      & {
-        width: 258px;
-      }
-    }
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
-        width: 258px;
+        width: 55vw;
+        height: 400px;
       }
     }
     img {
@@ -137,9 +152,20 @@ const PostBoxOne = styled.div`
     display: flex;
     width: 90%;
     justify-content: flex-end;
-    margin-top: 8px;
+    margin: 8px 0px;
     svg {
       font-size: 20px;
+      cursor: pointer;
+      @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+        & {
+          font-size: 30px;
+        }
+      }
+    }
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        width: 85%;
+      }
     }
   }
 `;

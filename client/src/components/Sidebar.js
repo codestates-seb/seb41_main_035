@@ -27,6 +27,7 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
+      <SLeftBoard />
     </SWrapper>
   );
 };
@@ -35,20 +36,19 @@ const SList = styled.div``;
 //전체부분
 const SWrapper = styled.div`
   position: fixed;
-  /* overflow: hidden; */
   display: flex;
   width: 18%;
   justify-content: flex-end;
-  /* text-align: center; */
-  /* margin-right: auto; */
+  min-width: 110px;
 `;
 
 const SidebarBox = styled.div`
+  /* position: fixed; */
   .title {
     font-size: 20px;
     font-weight: 700;
     color: #4e4e4e;
-    padding: 40px 0px 20px 0px;
+    padding: 40px 30px 20px 0px;
     font-family: 'Gowun Batang', serif;
   }
 `;
@@ -57,11 +57,17 @@ const ItemList = styled.div`
   .items {
     font-size: 15px;
     cursor: pointer;
-    padding: 10px 0px;
+    padding: 10px 3px;
     :hover {
-      /* color: #196ba5; */
+      color: #196ba5;
       background-color: #f4f1e0;
     }
   }
+`;
+const SLeftBoard = styled.div`
+  position: fixed;
+  border-left: 2px solid gray;
+  margin: 50px 0px 0px 20px;
+  height: 400px;
 `;
 export default Sidebar;

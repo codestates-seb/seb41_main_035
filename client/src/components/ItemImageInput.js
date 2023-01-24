@@ -1,24 +1,40 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 //postuploadbar.js 에서 받아온 index,imgFile,onUploadImages 함수
-const ItemImageInput = ({ index, imgFile, onUploadImages }) => {
+const ItemImageInput = ({
+  index,
+  imgFile,
+  onUploadImages,
+  saveImagePreviewLinks,
+}) => {
   // const [iamgeFile, setIamgeFile] = useState([]); // 이미지 배열
-
+  const [fileImage, setFileImage] = useState([]);
   const onChangeImg = (e) => {
-    const imageLists = e.target.files;
-    let imageUrlLists = [...imgFile];
-
-    for (let i = 0; i < imageLists.length; i++) {
-      const currentImageUrl = URL.createObjectURL(imageLists[i]);
-      imageUrlLists.push(currentImageUrl);
+    const imageLists = e.target.files[0]; // 파일객체들
+    let imageUrlLists = [...imgFile, imageLists];
+    let imagePreLists = [];
+    // for (let i = 0; i < imageLists.length; i++) {
+    //   const currentImageUrl = URL.createObjectURL(imageLists[i]); // 이미지 미리보기 링크
+    //   imageUrlLists.push(currentImageUrl);
+    // }
+    let reader = new FileReader();
+    if (imageLists) {
+      reader.readAsDataURL(imageLists);
     }
+    reader.onloadend = () => {
+      const resultImage = reader.result;
+      imagePreLists.push(resultImage);
+      setFileImage(imagePreLists);
+      console.log(resultImage);
+    };
     //1개만 업로드 가능
     if (imageUrlLists.length > 1) {
       imageUrlLists = imageUrlLists.slice(0, 1);
     }
     onUploadImages(imageUrlLists);
+    saveImagePreviewLinks(imageUrlLists);
   };
 
   return (
@@ -37,10 +53,9 @@ const ItemImageInput = ({ index, imgFile, onUploadImages }) => {
       </div>
 
       <SImagefiles>
-        {/* <div style={{ display: 'flex' }}> */}
         <div className="image-add">
           {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
-          {imgFile?.map((img, idx) => (
+          {fileImage?.map((img, idx) => (
             <div className="image-info" key={idx}>
               <img src={img} alt="img" />
             </div>
@@ -55,6 +70,7 @@ ItemImageInput.propTypes = {
   index: PropTypes.number,
   imgFile: PropTypes.array,
   onUploadImages: PropTypes.func,
+  saveImagePreviewLinks: PropTypes.func,
 };
 
 const SWrapper = styled.div`

@@ -5,8 +5,10 @@ import Sidebar from '../components/Sidebar';
 import UserInfo from '../components/UserInfo';
 import userStore from '../store/userStore';
 import { useParams } from 'react-router-dom';
+import dummyData from '../db/dummyData.json';
 
 const Profile = () => {
+  const data = dummyData.posts;
   const params = useParams();
   const userId = params.userId;
   const userStoreId = userStore((state) => state.userId);
@@ -14,21 +16,23 @@ const Profile = () => {
   return (
     <>
       <SWrapper>
-        <Sidebar />
-        <div className="main post">
-          <UserInfo />
-          <Sline></Sline>
-          {userId == userStoreId ? (
-            <Filter>
-              <SCodi>
-                <SMyCodi>My Codi</SMyCodi>
-                <SLikeCodi>Like Codi</SLikeCodi>
-              </SCodi>
-            </Filter>
-          ) : (
-            ''
-          )}
-          <PostBox />
+        <div className="profil">
+          {/* <Sidebar /> */}
+          <div className="main post">
+            <UserInfo />
+            <Sline></Sline>
+            {userId == userStoreId ? (
+              <Filter>
+                <SCodi>
+                  <SMyCodi>My Codi</SMyCodi>
+                  <SLikeCodi>Like Codi</SLikeCodi>
+                </SCodi>
+              </Filter>
+            ) : (
+              ''
+            )}
+            <PostBox data={data} />
+          </div>
         </div>
       </SWrapper>
     </>
@@ -36,6 +40,12 @@ const Profile = () => {
 };
 const SWrapper = styled.div`
   display: flex;
+  justify-content: flex-end;
+  .profil {
+    width: 78%;
+    display: flex;
+    justify-content: flex-start;
+  }
 `;
 const Filter = styled.div`
   display: flex;

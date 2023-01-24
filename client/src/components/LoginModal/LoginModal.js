@@ -4,6 +4,9 @@ import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import Signup from '../Signup/Signup';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import memberstore from '../../store/memberstore';
+
 const backendUrl = 'http://13.125.30.88/';
 
 function LoginModal(props) {
@@ -12,7 +15,13 @@ function LoginModal(props) {
   const [signUp, setSignUp] = useState(false);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const googleLogin = () => {};
+  const { isLogin, setisLogin } = memberstore((state) => state);
+
+  const googleLogin = () => {
+    const GoogleAuthLogin =
+      'http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google';
+    window.location.href = GoogleAuthLogin;
+  };
 
   const closeButton = () => {
     // eslint-disable-next-line react/prop-types
@@ -33,7 +42,6 @@ function LoginModal(props) {
       password: password,
     });
     if (res) {
-      console.log(res.headers);
       localStorage.setItem('accessToken', res.headers.authorization);
       localStorage.setItem('refreshToken', res.headers.refresh);
       const user_id = res.data.memberId;
@@ -41,13 +49,12 @@ function LoginModal(props) {
       // eslint-disable-next-line react/prop-types
       props.onClose();
     }
-
+    setisLogin(true);
     // axios sign in
   };
 
   const goSignUp = () => {
     setSignUp(true);
-    console.log(signUp);
   };
 
   return (

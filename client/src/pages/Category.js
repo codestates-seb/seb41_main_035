@@ -18,6 +18,7 @@ const Category = () => {
       click.style.display = 'none';
     }
   };
+
   const postCate = (url) => {
     axios
       .get(url)
@@ -50,9 +51,10 @@ const Category = () => {
       postCate();
     }
   }, [category]);
+
   return (
     <SWrapper>
-      <div className="bottom">
+      <div className="category">
         <div className="main post">
           <span className="category-name">{CATEGORY_CODE[category]}</span>
           <Filter>
@@ -81,8 +83,13 @@ const Category = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  .bottom {
-    width: 75%;
+  .category {
+    width: 73%;
+    display: flex;
+    justify-content: flex-start;
+    left: 0;
+    right: 0;
+    top: 0;
   }
   .post {
     width: 80%;
@@ -99,7 +106,7 @@ const SWrapper = styled.div`
 `;
 const Filter = styled.div`
   display: flex;
-  width: 105%;
+  width: 98%;
   justify-content: space-between;
   .availability {
     margin-top: 50px;
@@ -115,6 +122,7 @@ const Filter = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
+    background-color: white;
   }
   #drop-content {
     display: flex;

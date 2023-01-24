@@ -24,4 +24,11 @@ public class BoardProduct extends BaseTimeEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    protected BoardProduct() {
+    }
+
+    public BoardProduct(Board board, Product product) {
+        this.board = board;
+        this.product = product;
+    }
 }

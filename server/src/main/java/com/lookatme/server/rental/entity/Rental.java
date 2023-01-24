@@ -1,15 +1,18 @@
 package com.lookatme.server.rental.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
+import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.product.entity.Product;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "rentals")
 public class Rental extends BaseTimeEntity {
     @Id
@@ -29,7 +32,7 @@ public class Rental extends BaseTimeEntity {
     @JoinColumn(name = "product_Id")
     private Product product;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_Id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_Id")
+    private Member member;
 }
