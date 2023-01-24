@@ -18,6 +18,7 @@ const PostView = () => {
       try {
         const response = await axios.get(url + `/boards/` + [params.boardId]);
         setDetailData(response.data);
+        console.log(response.data);
       } catch (err) {
         window.alert('오류가 발생했습니다.');
         return err;
@@ -45,67 +46,78 @@ const PostView = () => {
   };
   return (
     <SWrapper>
-      <SContainer>
-        <div className="top_container">
-          <SPost>
-            <Avatar
-              className="outfit_upload"
-              size="400px"
-              image={detailData.userImage}
-            />
-          </SPost>
-          <SMiddle>
-            <div className="user_info">
-              <div className="user_box">
-                <div className="user_box left">
-                  <div className="user_avatar">
-                    <Avatar image={detailData.member?.profileImageUrl} />
-                  </div>
-                  <div className="user_info_detail">
-                    <div className="user_id">{detailData.member?.nickname}</div>
-                    <div className="user_boxtwo">
-                      <div className="user_tall">170cm</div>
-                      <div className="user_weight"> 55kg</div>
+      <div className="container">
+        <SContainer>
+          <div className="top_container">
+            <SPost>
+              <Avatar
+                className="outfit_upload"
+                size="400px"
+                image={detailData.userImage}
+              />
+            </SPost>
+            <SMiddle>
+              <div className="user_info">
+                <div className="user_box">
+                  <div className="user_box left">
+                    <div className="user_avatar">
+                      <Avatar image={detailData.member?.profileImageUrl} />
+                    </div>
+                    <div className="user_info_detail">
+                      <div className="user_id">
+                        {detailData.member?.nickname}
+                      </div>
+                      <div className="user_boxtwo">
+                        <div className="user_tall">170cm</div>
+                        <div className="user_weight"> 55kg</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="icon">
-                  <BsChatLeftText size="20" />
-                  <BsPersonPlus size="20" />
-                  <BsBookmarkHeart size="20" />
+                  <div className="icon">
+                    <BsChatLeftText size="20" />
+                    <BsPersonPlus size="20" />
+                    <BsBookmarkHeart size="20" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="post">{detailData.content}</div>
-            <div className="edit-delete">
-              <span>Edit</span>
-              <span role="presentation" onClick={onPostDelete}>
-                Delete
-              </span>
-            </div>
-          </SMiddle>
-        </div>
-        <SBottom>
-          <Item />
-          <Comment />
-        </SBottom>
-      </SContainer>
+              <div className="post">{detailData.content}</div>
+              <div className="edit-delete">
+                <span>Edit</span>
+                <span role="presentation" onClick={onPostDelete}>
+                  Delete
+                </span>
+              </div>
+            </SMiddle>
+          </div>
+          <SBottom>
+            <Item />
+            <Comment />
+          </SBottom>
+        </SContainer>
+      </div>
     </SWrapper>
   );
 };
 
 const SWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
-  width: 78%;
+  justify-content: center;
+  .container {
+    display: flex;
+    justify-content: flex-start;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
 `;
 
 const SContainer = styled.div`
   width: 47vw;
   height: 750px;
   border: 1px solid gray;
-  margin: 60px 0px;
+  margin: 60px 30px;
   max-width: 820px;
+  background-color: #f4f1e0;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       width: 650px;

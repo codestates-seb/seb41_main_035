@@ -3,7 +3,6 @@ import axios from 'axios';
 import userStore from '../store/userStore';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
 const backendUrl = 'http://13.125.30.88/';
 
 const UserInfo = () => {
@@ -81,47 +80,87 @@ const UserInfo = () => {
     setHeight(e.target.value);
   };
 
+  const onChangeImg = async (e) => {
+    const image = e.target.files[0];
+    const token = localStorage.getItem('accessToken');
+    console.log(image);
+    const formData = new FormData();
+    formData.append('image', image);
+    for (let [key, value] of formData.entries()) {
+      // const json = JSON.stringify(value);
+      console.log(key + ':' + value);
+    }
+    const res = await axios.post(`${backendUrl}members/profile`, formData, {
+      headers: { Authorization: token },
+    });
+
+    if (res) {
+      setProfileImg(res.data.profileImageUrl);
+      setIsFixing(false);
+    }
+  };
+
   const changeWeight = (e) => {
     setWeight(e.target.value);
   };
   return (
     <SWrapper>
       <SProfileWrapper>
-        <SPicture>
-          <img style={{ height: '200px' }} src={profileImg} alt="face" />
-        </SPicture>
-        <SDetail>
-          <SName>
-            <SNick>닉네임</SNick>
+        <div className="userinfo">
+          <SPicture>
+            <img
+              style={{ height: '200px', width: '200px' }}
+              src={profileImg}
+              alt="face"
+            />
             {isFixing ? (
-              <SNickIn value={nickname} onChange={changeName}></SNickIn>
+              <input
+                type="file"
+                id="input-file"
+                // ref={upload} //참조
+                onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
+                accept="image/*" //모든 이미지 파일형식
+              />
             ) : (
-              <SNickVs>{nickname}</SNickVs>
+              ''
             )}
-          </SName>
-          <SBody>
-            <SHeight>키</SHeight>
-            {isFixing ? (
-              <SHeightIn value={height} onChange={changeHeight}></SHeightIn>
-            ) : (
-              <StallVs>{height}</StallVs>
-            )}
-          </SBody>
-          <SBody>
-            <SWeight>몸무게</SWeight>
-            {isFixing ? (
-              <SWeightIn value={weight} onChange={changeWeight}></SWeightIn>
-            ) : (
-              <SWeightVs>{weight}</SWeightVs>
-            )}
-          </SBody>
-          <SFollow>
-            <SFollows>팔로우</SFollows>
-            <SFollowz>{follow}</SFollowz>
-            <SFollower>팔로워</SFollower>
-            <SFollowers>{follower}</SFollowers>
-          </SFollow>
-        </SDetail>
+          </SPicture>
+          <SDetail>
+            <SName>
+              <SNick>닉네임</SNick>
+              {isFixing ? (
+                <SNickIn value={nickname} onChange={changeName}></SNickIn>
+              ) : (
+                <SNickVs>{nickname}</SNickVs>
+              )}
+            </SName>
+            {/* <div className="user_heightweight"> */}
+            <SBody>
+              <SHeight>키</SHeight>
+              {isFixing ? (
+                <SHeightIn value={height} onChange={changeHeight}></SHeightIn>
+              ) : (
+                <StallVs>{height}</StallVs>
+              )}
+              <SWeight>몸무게</SWeight>
+              {isFixing ? (
+                <SWeightIn value={weight} onChange={changeWeight}></SWeightIn>
+              ) : (
+                <SWeightVs>{weight}</SWeightVs>
+              )}
+            </SBody>
+            <SFollow>
+              <div className="follow">
+                <SFollows>팔로우</SFollows>
+                <SFollowz>{follow}</SFollowz>
+              </div>
+              <div className="follow">
+                <SFollower>팔로워</SFollower>
+                <SFollowers>{follower}</SFollowers>
+              </div>
+            </SFollow>
+          </SDetail>
+        </div>
         <SButton>
           {!isFixing && userStoreId == userId ? (
             <SFix onClick={fixMode}>정보수정</SFix>
@@ -137,8 +176,6 @@ const UserInfo = () => {
 
 const SWrapper = styled.div`
   width: 100%;
-  min-width: 1800px;
-
   .commentWrap {
     input {
       width: 84%;
@@ -154,18 +191,29 @@ const SWrapper = styled.div`
 
 const SProfileWrapper = styled.div`
   display: flex;
+  width: 100%;
   height: 30vh;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  .userinfo {
+    display: flex;
+    flex-grow: 6;
+    justify-content: center;
+  }
 `;
 
 const SPicture = styled.div`
-  width: 15%;
+  width: 70%;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const SDetail = styled.div`
-  width: 15%;
-  font-size: x-large;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* font-size: x-large; */
 `;
 
 const SButton = styled.div`
@@ -188,6 +236,7 @@ const SBody = styled.div`
 
 const SName = styled.div`
   display: flex;
+  font-size: x-large;
 `;
 
 const SNick = styled.div`
@@ -200,7 +249,7 @@ const SHeight = styled.div`
 
 const SHeightIn = styled.input`
   margin: 5px;
-  margin-left: 52px;
+  /* margin-left: 52px; */
 `;
 
 const SWeight = styled.div`
@@ -221,10 +270,15 @@ const SWeightIn = styled.input`
 
 const SFollows = styled.div`
   margin: 5px;
+  .follow {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const SFollowz = styled.div`
   margin: 5px;
+  text-align: center;
 `;
 
 const SFollower = styled.div`
@@ -233,6 +287,7 @@ const SFollower = styled.div`
 
 const SFollowers = styled.div`
   margin: 5px;
+  text-align: center;
 `;
 
 const SFix = styled.button`
@@ -247,7 +302,6 @@ const SSave = styled.button`
 
 const StallVs = styled.div`
   margin: 5px;
-  margin-left: 52px;
 `;
 
 const SWeightVs = styled.div`

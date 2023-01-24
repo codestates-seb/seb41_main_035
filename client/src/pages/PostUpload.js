@@ -4,8 +4,7 @@ import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
 import { useState } from 'react';
 import axios from 'axios';
-import { token } from '../constants/index';
-import { AiOutlineFrown } from 'react-icons/ai';
+import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostUpload = () => {
   const [contentList, setContentList] = useState([
@@ -157,24 +156,26 @@ const PostUpload = () => {
 };
 
 const Section = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
 `;
 const Scontainer = styled.div`
-  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const SHeader = styled.div`
-  display: flex;
-  justify-content: center;
   text-align: end;
 
   .image_upload {
     width: 44vw;
     margin: 10px 0px;
     border-bottom: 1px solid #b3b3b3;
+    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      width: 540px;
+    }
   }
   button {
     width: 3vw;
@@ -191,15 +192,15 @@ const SHeader = styled.div`
 
 const SMid = styled.form`
   display: flex;
-  justify-content: center;
   margin: 10px 0px;
   background-color: #eee6ca;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    width: 540px;
+  }
   .input_box {
-    /* width: 34vw; */
-    margin-bottom: 10px;
+    margin: 10px;
     display: flex;
     justify-content: end;
-    /* background-color: #b3b3b3; */
   }
   textarea {
     font-size: 14px;

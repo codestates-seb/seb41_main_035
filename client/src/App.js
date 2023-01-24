@@ -9,6 +9,7 @@ import PostView from './pages/PostView';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Category from './pages/Category';
+
 function App() {
   return (
     <div>
@@ -18,9 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile/:userId" element={<Profile />} />
-          <Route path="/post/" element={<PostUpload />} />
           <Route path="/postupload" element={<PostUpload />} />
-          <Route path="/postview" element={<PostView />} />
+          <Route path="/postview/:boardId" element={<PostView />} />
           <Route path="/category/:categoryId" element={<Category />} />
         </Routes>
         <Footer />

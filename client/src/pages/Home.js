@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 import axios from 'axios';
+
+import Slider from '../components/Slider';
 const Home = () => {
   const location = useLocation();
   const [data, setData] = useState([]);
@@ -25,6 +27,7 @@ const Home = () => {
     <>
       <SWrapper>
         <div className="home">
+          <Slider />
           <div className="main post">
             <Filter>
               <button className="filter button">Hot</button>
@@ -45,21 +48,22 @@ const Home = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+
   .home {
-    width: 73%;
+    width: 85%;
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     left: 0;
     right: 0;
     top: 0;
-
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       padding: 0 10px;
     }
   }
   .post {
     display: flex;
-    max-width: 1200px;
+    /* max-width: 1200px; */
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
