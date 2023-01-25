@@ -9,7 +9,6 @@ import PostView from './pages/PostView';
 import Google from './pages/Google';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-
 import Category from './pages/Category';
 
 function App() {

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-const BREAK_POINT_TABLET = 768;
+import { BREAK_POINT_TABLET } from '../constants/index';
 
 const Items = ['아우터', '상의', '하의', '원피스', '모자', '신발'];
 const links = ['outer', 'top', 'bottom', 'onepiece', 'hat', 'shoes'];
@@ -27,21 +27,25 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      <SLeftBoard />
+      {/* <SLeftBoard /> */}
     </SWrapper>
   );
 };
 
-const SList = styled.div``;
-//전체부분
 const SWrapper = styled.div`
   position: fixed;
   display: flex;
-  width: 18%;
+  width: 20%;
   justify-content: flex-end;
   min-width: 110px;
+
+  /* 768px이하일때 사이드바 없애기 */
+  /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    display: none;
+  } */
 `;
 
+//전체부분
 const SidebarBox = styled.div`
   /* position: fixed; */
   .title {
@@ -54,6 +58,7 @@ const SidebarBox = styled.div`
 `;
 const ItemList = styled.div`
   /* border-right: 2px solid black; */
+
   .items {
     font-size: 15px;
     cursor: pointer;
@@ -64,10 +69,16 @@ const ItemList = styled.div`
     }
   }
 `;
-const SLeftBoard = styled.div`
-  position: fixed;
-  border-left: 2px solid gray;
-  margin: 50px 0px 0px 20px;
-  height: 400px;
-`;
+const SList = styled.div``;
+
+//선 부분
+// const SLeftBoard = styled.div`
+//   position: fixed;
+//   border-left: 2px solid gray;
+//   margin: 50px 0px 0px 110px;
+//   height: 340px;
+//   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+//     display: none;
+//   }
+// `;
 export default Sidebar;

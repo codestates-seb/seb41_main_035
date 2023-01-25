@@ -180,22 +180,22 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  width: 44vw;
-  /* height: 16vh; */
+  /* width: 44vw; */
+  height: 16vh;
   background-color: #eee6ca;
   /* flex-direction: row; */
+
   display: flex;
-  margin: 10px;
+  justify-content: space-around;
+  align-items: baseline;
+  margin: 10px 0px; //* 추가
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-    width: 540px;
-  }
 `;
 
 const SMidle = styled.div`
   font-size: 14px;
-  margin: 10px 0px;
-  width: 20vw;
+  /* margin: 10px 0px; */
+  /* width: 350px; */
   background-color: #eee6ca;
 
   .item-top {
@@ -249,7 +249,7 @@ const SRentalcheck = styled.div`
   margin: 10px;
   background-color: #eee6ca;
   .check {
-    margin: 20px 0px;
+    margin: 10px 0px;
     display: flex;
     align-items: center;
     background-color: #eee6ca;
