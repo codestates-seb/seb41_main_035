@@ -11,5 +11,6 @@ import java.util.List;
 @Setter
 public class BoardPostDto {
     private String content;
+    private MultipartFile userImage;
     private List<ProductPostDto> products;
 }

@@ -40,4 +40,9 @@ public class Rental extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_Id")
     private Board board;
+
+    public void updateRental(String size, int rentalPrice) {
+        this.size = size;
+        this.rentalPrice = rentalPrice;
+    }
 }

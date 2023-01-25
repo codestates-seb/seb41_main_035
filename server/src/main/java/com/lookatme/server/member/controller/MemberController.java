@@ -4,7 +4,8 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.common.dto.MultiResponseDto;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
-import com.lookatme.server.file.service.FileService;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.member.service.MemberService;
@@ -108,7 +109,7 @@ public class MemberController {
     @PostMapping("/profile")
     public ResponseEntity<?> uploadProfile(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                            @RequestParam(name = "image") MultipartFile multipartFile) throws IOException {
-        String imageUrl = fileService.upload(multipartFile, "profile");
+        String imageUrl = fileService.upload(multipartFile, FileDirectory.profile);
         return new ResponseEntity<>(
                 memberService.setProfileImage(memberPrincipal.getAccount(), imageUrl),
                 HttpStatus.OK

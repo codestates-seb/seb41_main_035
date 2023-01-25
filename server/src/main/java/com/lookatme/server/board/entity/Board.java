@@ -39,8 +39,9 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
-    public int getCommentCnt() {
-        return comments.size();
+    public void updateBoard(String userImage, String content) {
+        this.userImage = userImage;
+        this.content = content;
     }
 
     public Board() {

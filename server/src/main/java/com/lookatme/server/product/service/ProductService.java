@@ -1,5 +1,10 @@
 package com.lookatme.server.product.service;
 
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
+import com.lookatme.server.product.dto.ProductPatchDto;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Brand;
 import com.lookatme.server.product.entity.Category;
@@ -8,61 +13,56 @@ import com.lookatme.server.product.mapper.ProductMapper;
 import com.lookatme.server.product.repository.BrandRepository;
 import com.lookatme.server.product.repository.CategoryRepository;
 import com.lookatme.server.product.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
+import java.io.IOException;
 
+@Transactional
+@RequiredArgsConstructor
 @Service
 public class ProductService {
 
+    private final FileService fileService;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, ProductMapper productMapper) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.brandRepository = brandRepository;
-        this.productMapper = productMapper;
-    }
-
+    /**
+     * 상품 생성
+     */
     public Product createProduct(ProductPostDto post, String itemImageUrl) {
-        return productRepository.findByProductName(post.getProductName())
-                .orElseGet(() -> {
-                    Product product = productMapper.productPostToProduct(post);
-                    Category category = findCategory(post.getCategory());
-                    Brand brand = findBrand(post.getBrand());
+        Product product = productMapper.productPostToProduct(post);
+        Category category = findCategory(post.getCategory());
+        Brand brand = findBrand(post.getBrand());
 
-                    product.setCategory(category);
-                    product.setBrand(brand);
-                    product.setProductImage(itemImageUrl);
-                    return createProduct(product);
-                });
-    }
-
-    public Product createProduct(Product product) {
-        verifyExistProduct(product.getProductId());
+        product.setCategory(category);
+        product.setBrand(brand);
+        product.setProductImage(itemImageUrl);
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product) {
-        Product findProduct = findExistedProduct(product.getProductId());
-
-        Optional.ofNullable(product.getProductName())
-                .ifPresent(productName -> findProduct.setProductName(productName));
-
-        Optional.ofNullable(product.getPrice())
-                .ifPresent(sellingPrice -> findProduct.setPrice(sellingPrice));
-
-        Optional.ofNullable(product.getLink())
-                .ifPresent(link -> findProduct.setLink(link));
-
-        return productRepository.save(findProduct);
+    /**
+     * 상품 수정
+     */
+    public Product updateProduct(ProductPatchDto patch) throws IOException {
+        Product savedProduct = findProduct(patch.getProductId());
+        String productImageUrl = savedProduct.getProductImage();
+        if (patch.getProductImage() != null) { // 상품 사진이 왔을때만 업데이트
+            productImageUrl = fileService.upload(patch.getProductImage(), FileDirectory.item);
+        }
+        savedProduct.updateProduct(
+                patch.getProductName(),
+                productImageUrl,
+                patch.getLink(),
+                patch.getPrice()
+        );
+        return savedProduct;
     }
 
     public void deleteProduct(int productId) {
@@ -82,26 +82,23 @@ public class ProductService {
     }
 
     private void verifyExistProduct(int productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-
-        if (optionalProduct.isPresent()) {
-            throw new RuntimeException("Product_ALREADY_EXIST");
-        }
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_ALREADY_EXISTS));
     }
 
     private Product findExistedProduct(int boardId) {
-        Optional<Product> optionalProduct = productRepository.findById(boardId);
-
-        return optionalProduct.orElseThrow(
-                () -> new RuntimeException("Product_NOT_FOUND")
-        );
+        return productRepository.findById(boardId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     private Product findExistedProduct(String productName) {
         return productRepository.findByProductName(productName)
-                .orElseThrow(() -> new EntityNotFoundException());
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    /**
+     * 카테고리가 있으면 기존것을 가져오고 없으면 새로 생성함
+     */
     public Category findCategory(String categoryName) {
         return categoryRepository.findByName(categoryName)
                 .orElseGet(() -> createCategory(categoryName));
@@ -112,6 +109,9 @@ public class ProductService {
         return categoryRepository.save(newCategory);
     }
 
+    /**
+     * 브랜드가 있으면 기존것을 가져오고 없으면 새로 생성함
+     */
     public Brand findBrand(String brandName) {
         return brandRepository.findByName(brandName)
                 .orElseGet(() -> createBrand(brandName));

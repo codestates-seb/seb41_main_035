@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -34,18 +35,16 @@ public class BoardController {
 
     @PostMapping
     public ResponseEntity postBoard(BoardPostDto post,
-                                    MultipartFile userImage,
                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws Exception {
-
-        // 5. 게시글 등록
-        Board boardV2 = boardService.createBoardV2(post, userImage, memberPrincipal.getMemberId());
-        return new ResponseEntity<>(boardMapper.boardToBoardResponse(boardV2), HttpStatus.OK);
+        Board board = boardService.createBoard(post, memberPrincipal.getMemberId());
+        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
-    @PatchMapping("/board-Id")
-    public ResponseEntity patchBoard(@PathVariable("board-Id") int boardId,
-                                     @Valid @RequestBody BoardPatchDto patch) {
-        Board board = boardService.updateBoard(boardMapper.boardPatchToBoard(patch));
+    @PatchMapping("/{board-Id}")
+    public ResponseEntity patchBoard(BoardPatchDto patch,
+                                     @PathVariable("board-Id") int boardId,
+                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
+        Board board = boardService.updateBoard(patch, boardId, memberPrincipal.getMemberId());
         return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
@@ -62,7 +61,6 @@ public class BoardController {
                                     @Positive @RequestParam(defaultValue = "50") int size) {
         Page<Board> findPosts = boardService.findBoards(page - 1, size);
         List<Board> boards = findPosts.getContent();
-
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boardMapper.boardsToBoardResponseDtos(boards), findPosts), HttpStatus.OK);
     }
@@ -70,14 +68,12 @@ public class BoardController {
     @DeleteMapping("/{board-Id}")
     public ResponseEntity deletePost(@PathVariable("board-Id") int boardId) {
         boardService.deleteBoard(boardId);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
     public ResponseEntity deletePosts() {
         boardService.deleteBoards();
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

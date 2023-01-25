@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
-import com.lookatme.server.file.service.FileService;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
@@ -420,7 +421,7 @@ class MemberControllerTest {
         // Given
         MockMultipartFile image = new MockMultipartFile("image", "testImage.png", "image/png", "<<png data>>".getBytes());
 
-        given(fileService.upload(any(MultipartFile.class), anyString())).willReturn("새 프로필 사진 링크");
+        given(fileService.upload(any(MultipartFile.class), any(FileDirectory.class))).willReturn("새 프로필 사진 링크");
         given(memberService.setProfileImage(any(Account.class), anyString())).willReturn(savedMemberResponse);
 
         // When
