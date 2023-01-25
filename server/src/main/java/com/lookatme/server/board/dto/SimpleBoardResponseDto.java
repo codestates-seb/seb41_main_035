@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardResponseDto {
+public class SimpleBoardResponseDto {
 
     private int boardId;
 
@@ -22,25 +22,19 @@ public class BoardResponseDto {
 
     private String content;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime updatedDate;
+    private LocalDateTime modifiedAt;
 
     private int likeCnt;
 
-    private MemberDto.ResponseWithFollow member;
-
-    private List<BoardProductsResponseDto> products;
-
-    private List<CommentResponseDtoV2> comments;
-
-    public static BoardResponseDto of(final Board board) {
-        return BoardResponseDto.builder()
+    public static SimpleBoardResponseDto of(final Board board) {
+        return SimpleBoardResponseDto.builder()
                 .boardId(board.getBoardId())
                 .userImage(board.getUserImage())
                 .content(board.getContent())
-                .createdDate(board.getCreatedDate())
-                .updatedDate(board.getUpdatedDate())
+                .createdAt(board.getCreatedDate())
+                .modifiedAt(board.getUpdatedDate())
                 .likeCnt(board.getLikeCnt())
                 .build();
     }

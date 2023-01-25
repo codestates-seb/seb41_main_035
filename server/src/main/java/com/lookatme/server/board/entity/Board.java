@@ -37,10 +37,11 @@ public class Board extends BaseTimeEntity {
     private Member member;
 
     @OneToMany(mappedBy = "board")
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
-    private Board() {
+    public Board() {
     }
+
     @Builder
     public Board(final int boardId,
                  final String userImage,

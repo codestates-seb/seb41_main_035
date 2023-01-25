@@ -29,7 +29,7 @@ public class RentalService {
         this.productRepository = productRepository;
     }
 
-    public Rental createRental(long memberId, int productId, int size, int rentalPrice) {
+    public Rental createRental(long memberId, int productId, String size, int rentalPrice) {
         Rental rental = Rental.builder()
                 .member(findMember(memberId))
                 .product(findProduct(productId))

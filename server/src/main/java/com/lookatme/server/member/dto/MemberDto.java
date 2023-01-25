@@ -72,4 +72,35 @@ public class MemberDto {
         private int followeeCnt;
     }
 
+    @Getter
+    @AllArgsConstructor
+    public static class ResponseWithFollow {
+        private long memberId;
+        private String email;
+        private OauthPlatform oauthPlatform;
+        private String nickname;
+        private String profileImageUrl;
+        private int height;
+        private int weight;
+        private int followerCnt;
+        private int followeeCnt;
+        private boolean follow;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class SimpleResponseWithFollow {
+        private long memberId;
+        private String nickname;
+        private String profileImageUrl;
+        private boolean follow;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class SimpleResponse {
+        private long memberId;
+        private String nickname;
+        private String profileImageUrl;
+    }
 }

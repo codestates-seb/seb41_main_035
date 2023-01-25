@@ -60,6 +60,7 @@ public class MessageControllerTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @WithAuthMember
     public void postMessageTest() throws Exception {
         //given
         MessagePostDto messagePostDto = MessagePostDto.builder()
@@ -151,6 +152,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithAuthMember
     public void getMessageTest() throws Exception {
         //given
         Long messageId = 1L;
@@ -392,6 +394,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithAuthMember
     public void deleteMessageByReceiverTest() throws Exception {
         //given
         Long messageId = 1L;
@@ -413,6 +416,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithAuthMember
     public void deleteMessageBySenderTest() throws Exception {
         //given
         Long messageId = 1L;

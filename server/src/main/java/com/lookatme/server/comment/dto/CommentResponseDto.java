@@ -1,6 +1,6 @@
 package com.lookatme.server.comment.dto;
 
-import com.lookatme.server.board.dto.BoardResponseDto;
+import com.lookatme.server.board.dto.SimpleBoardResponseDto;
 import com.lookatme.server.comment.entity.Comment;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class CommentResponseDto {
     private LocalDateTime updatedDate;
     private String nickname;
     private String profileImageUrl;
-    private BoardResponseDto board;
+    private SimpleBoardResponseDto board;
 
     private CommentResponseDto() {
 
@@ -28,7 +28,7 @@ public class CommentResponseDto {
                               final LocalDateTime updatedDate,
                               final String nickname,
                               final String profileImageUrl,
-                              final BoardResponseDto board) {
+                              final SimpleBoardResponseDto board) {
         this.commentId = commentId;
         this.content = content;
         this.createdDate = createdDate;
@@ -46,7 +46,7 @@ public class CommentResponseDto {
                 .updatedDate(comment.getUpdatedDate())
                 .nickname(comment.getMember().getNickname())
                 .profileImageUrl(comment.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment.getBoard()))
                 .build();
     }
 }

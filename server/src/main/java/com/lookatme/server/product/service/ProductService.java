@@ -31,7 +31,7 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Product createProduct(ProductPostDto post) {
+    public Product createProduct(ProductPostDto post, String itemImageUrl) {
         return productRepository.findByProductName(post.getProductName())
                 .orElseGet(() -> {
                     Product product = productMapper.productPostToProduct(post);
@@ -40,14 +40,13 @@ public class ProductService {
 
                     product.setCategory(category);
                     product.setBrand(brand);
-
+                    product.setProductImage(itemImageUrl);
                     return createProduct(product);
                 });
     }
 
     public Product createProduct(Product product) {
         verifyExistProduct(product.getProductId());
-
         return productRepository.save(product);
     }
 
@@ -57,8 +56,8 @@ public class ProductService {
         Optional.ofNullable(product.getProductName())
                 .ifPresent(productName -> findProduct.setProductName(productName));
 
-        Optional.ofNullable(product.getSellingPrice())
-                .ifPresent(sellingPrice -> findProduct.setSellingPrice(sellingPrice));
+        Optional.ofNullable(product.getPrice())
+                .ifPresent(sellingPrice -> findProduct.setPrice(sellingPrice));
 
         Optional.ofNullable(product.getLink())
                 .ifPresent(link -> findProduct.setLink(link));
