@@ -28,5 +28,5 @@ public class BoardListResponseDto {
 
     private int commentCnt;
 
-    private MemberDto.SimpleResponse member;
+    private MemberDto.Response member;
 }
