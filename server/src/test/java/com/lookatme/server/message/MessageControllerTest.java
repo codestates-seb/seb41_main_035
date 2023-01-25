@@ -102,8 +102,10 @@ public class MessageControllerTest {
                 .content(message.getContent())
                 .createdAt(message.getCreatedAt())
                 .messageRoom(message.getMessageRoom())
+                .senderId(message.getSender().getMemberId())
                 .senderNickname(message.getSender().getNickname())
                 .senderProfileImageUrl(message.getSender().getProfileImageUrl())
+                .receiverId(message.getReceiver().getMemberId())
                 .receiverNickname(message.getReceiver().getNickname())
                 .receiverProfileImageUrl(message.getReceiver().getProfileImageUrl())
                 .build();
@@ -137,8 +139,10 @@ public class MessageControllerTest {
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
+                                        fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
+                                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("메시지 수신자 식별자"),
                                         fieldWithPath("receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
                                         fieldWithPath("receiverProfileImageUrl").type(JsonFieldType.STRING).description("메시지 수신자 프로필 사진 링크")
                                 )
@@ -184,8 +188,10 @@ public class MessageControllerTest {
                 .content(message.getContent())
                 .createdAt(message.getCreatedAt())
                 .messageRoom(message.getMessageRoom())
+                .senderId(message.getSender().getMemberId())
                 .senderNickname(message.getSender().getNickname())
                 .senderProfileImageUrl(message.getSender().getProfileImageUrl())
+                .receiverId(message.getReceiver().getMemberId())
                 .receiverNickname(message.getReceiver().getNickname())
                 .receiverProfileImageUrl(message.getReceiver().getProfileImageUrl())
                 .build();
@@ -215,8 +221,10 @@ public class MessageControllerTest {
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
+                                        fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
+                                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("메시지 수신자 식별자"),
                                         fieldWithPath("receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
                                         fieldWithPath("receiverProfileImageUrl").type(JsonFieldType.STRING).description("메시지 수신자 프로필 사진 링크")
                                 )
@@ -312,8 +320,10 @@ public class MessageControllerTest {
                 .content(message3.getContent())
                 .createdAt(message3.getCreatedAt())
                 .messageRoom(message3.getMessageRoom())
+                .senderId(message3.getSender().getMemberId())
                 .senderNickname(message3.getSender().getNickname())
                 .senderProfileImageUrl(message3.getSender().getProfileImageUrl())
+                .receiverId(message3.getReceiver().getMemberId())
                 .receiverNickname(message3.getReceiver().getNickname())
                 .receiverProfileImageUrl(message3.getReceiver().getProfileImageUrl())
                 .build();
@@ -323,8 +333,10 @@ public class MessageControllerTest {
                 .content(message4.getContent())
                 .createdAt(message4.getCreatedAt())
                 .messageRoom(message4.getMessageRoom())
+                .senderId(message4.getSender().getMemberId())
                 .senderNickname(message4.getSender().getNickname())
                 .senderProfileImageUrl(message4.getSender().getProfileImageUrl())
+                .receiverId(message4.getReceiver().getMemberId())
                 .receiverNickname(message4.getReceiver().getNickname())
                 .receiverProfileImageUrl(message4.getReceiver().getProfileImageUrl())
                 .build();
@@ -362,8 +374,10 @@ public class MessageControllerTest {
                                         fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("data[].messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
+                                        fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("data[].senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
                                         fieldWithPath("data[].senderProfileImageUrl").type(JsonFieldType.STRING).description("메시지 발신자 프로필 사진 링크"),
+                                        fieldWithPath("data[].receiverId").type(JsonFieldType.NUMBER).description("메시지 수신자 식별자"),
                                         fieldWithPath("data[].receiverNickname").type(JsonFieldType.STRING).description("메시지 수신자 닉네임"),
                                         fieldWithPath("data[].receiverProfileImageUrl").type(JsonFieldType.STRING).description("메시지 수신자 프로필 사진 링크"),
                                         fieldWithPath("pageInfoDto").type(JsonFieldType.OBJECT).description("페이지 정보"),
