@@ -47,15 +47,13 @@ public class BoardService {
         // 1. 게시글 저장
         Board board = mapper.boardPostToBoard(post);
         board.setMember(findMember(memberId));
-//        String userImageUrl = fileService.upload(post.getUserImage(), "post");
-        String userImageUrl = "게시글 사진 주소";
+        String userImageUrl = fileService.upload(post.getUserImage(), FileDirectory.post);
         board.setUserImage(userImageUrl);
         Board savedBoard = boardRepository.save(board);
 
         // 2. 게시글 상품 저장
         for (ProductPostDto postProduct : post.getProducts()) {
-            String itemImageUrl = "상품 사진 주소";
-//            String itemImageUrl = fileService.upload(postProduct.getProductImage(), "item");
+            String itemImageUrl = fileService.upload(postProduct.getProductImage(), FileDirectory.item);
             Product product = productService.createProduct(postProduct, itemImageUrl);
             board.getBoardProducts().add(new BoardProduct(board, product));
 
