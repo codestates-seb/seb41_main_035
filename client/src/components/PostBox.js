@@ -70,6 +70,7 @@ const SWrapper = styled.div`
   justify-content: center;
   align-items: center;
   /* z-index: 300; */
+
 `;
 const Container = styled.div`
   display: grid;

@@ -10,6 +10,7 @@ import {
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
+
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -51,7 +52,6 @@ const PostView = () => {
         });
     }
   };
-
   const unfollow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
@@ -110,14 +110,14 @@ const PostView = () => {
                     </div>
                   </div>
                   <div className="icon">
-                    <BsChatLeftText size="20" />
-                    {isFollowing ? (
-                      <BsPersonCheck size="20" onClick={unfollow} />
-                    ) : (
-                      <BsPersonPlus size="20" onClick={follow} />
-                    )}
-                    <BsBookmarkHeart size="20" />
-                  </div>
+                  <BsChatLeftText size="20" />
+                  {isFollowing ? (
+                    <BsPersonCheck size="20" onClick={unfollow} />
+                  ) : (
+                    <BsPersonPlus size="20" onClick={follow} />
+                  )}
+                  <BsBookmarkHeart size="20" />
+                </div>
                 </div>
               </div>
               <div className="post">{detailData.content}</div>

@@ -101,13 +101,44 @@ const UserInfo = () => {
   return (
     <SWrapper>
       <SProfileWrapper>
-        <div className="userinfo">
-          <SPicture>
-            <img
-              style={{ height: '200px', width: '200px' }}
-              src={profileImg}
-              alt="face"
+        <SPicture>
+          <img
+            style={{ height: '200px', width: '200px' }}
+            src={profileImg}
+            alt="face"
+          />
+          {isFixing ? (
+            <input
+              type="file"
+              id="input-file"
+              // ref={upload} //참조
+              onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
+              accept="image/*" //모든 이미지 파일형식
             />
+          ) : (
+            ''
+          )}
+        </SPicture>
+        <SDetail>
+          <SName>
+            <SNick>닉네임</SNick>
+            {isFixing ? (
+              <SNickIn value={nickname} onChange={changeName}></SNickIn>
+            ) : (
+              <SNickVs>{nickname}</SNickVs>
+            )}
+          </SName>
+          <SBody>
+            <SHeight>키</SHeight>
+            {isFixing ? (
+              <SHeightIn value={height} onChange={changeHeight}></SHeightIn>
+            ) : (
+              <StallVs>{height}</StallVs>
+            )}
+          </SBody>
+          <SBody>
+            <SWeight>몸무게</SWeight>
+
             {isFixing ? (
               <input
                 type="file"
