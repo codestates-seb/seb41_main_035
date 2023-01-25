@@ -7,9 +7,9 @@ import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.file.service.FileService;
-import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.product.service.ProductService;
@@ -23,23 +23,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class BoardService {
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final FileService fileService;
+    private final FollowService followService;
     private final RentalService rentalService;
     private final ProductService productService;
 
-    @Transactional
     public Board createBoard(Board board, long memberId, List<Product> products) {
         verifyExistBoard(board.getBoardId());
         Member member = findMember(memberId);
@@ -53,7 +52,6 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    @Transactional
     public Board createBoardV2(BoardPostDto post, MultipartFile userImage, long memberId) throws IOException {
         Member member = findMember(memberId);
         Board board = new Board();
@@ -117,20 +115,12 @@ public class BoardService {
         boardRepository.deleteAll();
     }
 
-    @Transactional(readOnly = true)
     public Board findBoard(int boardId, long loginMemberId) {
-        Board board = boardRepository.findByBoardId(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
-
-        if (loginMemberId != -1) {
-            Member loginMember = findMember(loginMemberId);
-            Member member = board.getMember();
-            Set<Follow> followers = member.getFollowers();
-            for (Follow follower : followers) {
-                if (follower.getFrom().equals(loginMember)) {
-                    member.setFollowMemberStatus();
-                    break;
-                }
+        Board board = findExistedBoard(boardId);
+        Member writer = board.getMember();
+        if(loginMemberId != -1) {
+            if (followService.isFollowee(loginMemberId, writer.getMemberId())) {
+                writer.setStatusToFollowingMember();
             }
         }
         return board;
