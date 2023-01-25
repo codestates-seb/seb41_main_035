@@ -25,8 +25,8 @@ const Swrapper = styled.div`
 
   .plus-btn {
     background-color: #d9d4a6;
-    width: 4.2vw;
-    height: 3vh;
+    width: 70px;
+    height: 30px;
     margin: 20px;
     color: #ffffff;
     border: none;

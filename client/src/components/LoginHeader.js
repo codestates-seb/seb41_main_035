@@ -13,7 +13,6 @@ import axios from 'axios';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 const backendUrl = 'http://13.125.30.88/';
 
-
 const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
@@ -60,7 +59,7 @@ const LoginHeader = () => {
               </p>
             </div>
             <SearchBox />
-            {!isLogin ? (
+                       {!isLogin ? (
               <div className="right zone">
                 <button className="login button" onClick={onClickButton}>
                   Log in
@@ -121,7 +120,8 @@ const SHeader = styled.div`
   .header-container {
     display: flex;
     width: 100%;
-    max-width: 1250px;
+    /* 1250에서 1400으로 변경 */
+    max-width: 1400px;
     align-items: center;
     justify-content: space-between;
   }

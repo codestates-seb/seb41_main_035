@@ -158,6 +158,12 @@ const PostUpload = () => {
 const Section = styled.div`
   display: flex;
   justify-content: center;
+  margin-left: 165px;
+  min-width: 500px;
+
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    margin-left: 0px;
+  }
 `;
 const Scontainer = styled.div`
   display: flex;
@@ -167,50 +173,62 @@ const Scontainer = styled.div`
 `;
 
 const SHeader = styled.div`
-  text-align: end;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  border-bottom: 1px solid #b3b3b3;
+  margin: 10px;
 
   .image_upload {
-    width: 44vw;
-    margin: 10px 0px;
-    border-bottom: 1px solid #b3b3b3;
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    /* width: 44vw; */
+    /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       width: 540px;
-    }
+    } */
   }
   button {
-    width: 3vw;
-    height: 3vh;
+    width: 50px;
+    height: 30px;
     margin: 15px;
     background-color: #d9d4a6;
     color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
   }
 `;
 
 const SMid = styled.form`
   display: flex;
+  width: 100%; //* 추가
   margin: 10px 0px;
   background-color: #eee6ca;
-  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+  /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     width: 540px;
-  }
+  } */
   .input_box {
+    width: 80%; //* 추가
     margin: 10px;
     display: flex;
-    justify-content: end;
+    /* justify-content: end; */
+    align-content: center;
+    flex-wrap: wrap;
   }
   textarea {
     font-size: 14px;
     box-sizing: border-box;
-    min-height: 25vh;
-    width: 28vw;
+    height: 33vh;
+    width: 100%; //* 추가
+    /* width: 28vw; */
     border: none;
     border-radius: 5px;
     background-color: #ffffff;
     resize: none; /* 사용자가 텍스트사이즈 임의 변경 불가 */
+
+    /* 1200px보다 작은화면에서는 아래와 같이 보이게 */
+    /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      width: 350px;
+    } */
   }
 `;
 export default PostUpload;

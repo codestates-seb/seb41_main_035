@@ -81,8 +81,8 @@ const SWrapper = styled.div`
   }
   //파일 업로드버튼
   .btn-upload {
-    width: 5vw;
-    height: 3vh;
+    width: 85px;
+    height: 30px;
     /* padding: 7px 14px; */
     background-color: #d9d4a6;
     border-radius: 4px;
@@ -105,9 +105,9 @@ const SImagefiles = styled.div`
     background-color: #eee6ca;
   }
   img {
-    width: 4.5vw;
-    height: 8vh;
-    margin-left: 14px;
+    width: 85px;
+    height: 88px;
+    margin-left: 12px;
   }
 `;
 export default ItemImageInput;
