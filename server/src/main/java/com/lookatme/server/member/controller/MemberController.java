@@ -6,6 +6,7 @@ import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.member.dto.MemberDto;
+import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FollowService followService;
     private final FileService fileService;
 
     // 회원 단일 조회
@@ -46,7 +48,7 @@ public class MemberController {
             if (memberPrincipal == null) {
                 throw new ErrorLogicException(ErrorCode.AUTHENTICATION_FAILED);
             }
-            pageMembers = memberService.findFollowers(memberPrincipal.getAccount(), tab, page - 1, size);
+            pageMembers = followService.findFollows(memberPrincipal.getAccount(), tab, page - 1, size);
         } else {
             pageMembers = memberService.findMembers(page - 1, size);
         }
@@ -92,10 +94,10 @@ public class MemberController {
                                     @RequestParam(name = "op") long opMemberId) {
         switch (type) {
             case "up":
-                memberService.followMember(memberPrincipal.getAccount(), opMemberId);
+                followService.follow(memberPrincipal.getMemberId(), opMemberId);
                 break;
             case "down":
-                memberService.unfollowMember(memberPrincipal.getAccount(), opMemberId);
+                followService.unFollow(memberPrincipal.getMemberId(), opMemberId);
                 break;
             default:
                 throw new IllegalArgumentException();

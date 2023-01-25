@@ -8,12 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-
     boolean existsByFromAndTo(Member member, Member opponent);
+
+    boolean existsByFrom_MemberIdAndTo_MemberId(long memberId, long opponentMemberId);
 
     Follow findByFromAndTo(Member member, Member opponent);
 
-    boolean existsByFrom_MemberIdAndTo_MemberId(long memberId, long opponentMemberId);
+    Follow findByFrom_MemberIdAndTo_MemberId(long memberId, long opponentId);
 
     List<Follow> findByFrom_Account(Account account);
 

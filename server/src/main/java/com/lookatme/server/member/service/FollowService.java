@@ -2,11 +2,16 @@ package com.lookatme.server.member.service;
 
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.mapper.MemberMapper;
 import com.lookatme.server.member.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +24,27 @@ import java.util.stream.Collectors;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final MemberMapper mapper;
 
-    public void follow(Member member, Member opponent) {
-        if (followRepository.existsByFromAndTo(member, opponent)) {
+    public void follow(long memberId, long opponentId) {
+        if (followRepository.existsByFrom_MemberIdAndTo_MemberId(memberId, opponentId)) {
             throw new ErrorLogicException(ErrorCode.MEMBER_ALREADY_FOLLOW); // 이미 팔로우 한 회원
         }
-        if (member.equals(opponent)) {
+        if (memberId == opponentId) {
             throw new ErrorLogicException(ErrorCode.MEMBER_SELF_FOLLOW);
         }
+        Member member = getEmptyMember(memberId);
+        Member opponent = getEmptyMember(opponentId);
 
         Follow follow = new Follow(member, opponent); // follower = 팔로우 하는 사람 / followee = 팔로우 눌린 상대
         followRepository.save(follow);
     }
 
-    public void unFollow(Member member, Member opponent) {
-        if (!followRepository.existsByFromAndTo(member, opponent)) {
+    public void unFollow(long memberId, long opponentId) {
+        if (!followRepository.existsByFrom_MemberIdAndTo_MemberId(memberId, opponentId)) {
             throw new ErrorLogicException(ErrorCode.MEMBER_NOT_FOLLOW); // 팔로우 되어있지 않은 회원
         }
-        Follow follow = followRepository.findByFromAndTo(member, opponent);
+        Follow follow = followRepository.findByFrom_MemberIdAndTo_MemberId(memberId, opponentId);
         followRepository.delete(follow);
     }
 
@@ -45,13 +53,31 @@ public class FollowService {
         return followRepository.existsByFrom_MemberIdAndTo_MemberId(memberId, opponentMemberId);
     }
 
-    public List<Member> findFolloweeList(Account account) {
-        return followRepository.findByFrom_Account(account).stream()
-                .map(Follow::getTo).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<MemberDto.Response> findFollows(Account account, String tab, int page, int size) {
+        List<Member> memberList;
+        switch (tab) {
+            case "followee":
+                memberList = followRepository.findByFrom_Account(account).stream()
+                        .map(Follow::getTo).collect(Collectors.toList());
+                break;
+            case "follower":
+                memberList = followRepository.findByTo_Account(account).stream()
+                        .map(Follow::getFrom).collect(Collectors.toList());
+                break;
+            default:
+                throw new ErrorLogicException(ErrorCode.BAD_REQUEST);
+        }
+        List<MemberDto.Response> memberResponseList = mapper.memberListToMemberResponseList(memberList);
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), memberResponseList.size());
+        return new PageImpl<>(memberResponseList.subList(start, end), pageRequest, memberResponseList.size());
     }
 
-    public List<Member> findFollowerList(Account account) {
-        return followRepository.findByTo_Account(account).stream()
-                .map(Follow::getFrom).collect(Collectors.toList());
+    private Member getEmptyMember(long memberId) {
+        return Member.builder()
+                .memberId(memberId).build();
     }
 }

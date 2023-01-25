@@ -9,6 +9,7 @@ import com.lookatme.server.board.entity.Board.BoardBuilder;
 import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.comment.dto.CommentResponseDtoV2;
 import com.lookatme.server.comment.entity.Comment;
+import com.lookatme.server.member.dto.MemberDto.Response;
 import com.lookatme.server.member.dto.MemberDto.ResponseWithFollow;
 import com.lookatme.server.member.dto.MemberDto.SimpleResponse;
 import com.lookatme.server.member.entity.Member;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-25T13:49:51+0900",
+    date = "2023-01-25T15:33:01+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -217,6 +218,36 @@ public class BoardMapperImpl implements BoardMapper {
         return list1;
     }
 
+    protected Response memberToResponse(Member member) {
+        if ( member == null ) {
+            return null;
+        }
+
+        long memberId = 0L;
+        String email = null;
+        OauthPlatform oauthPlatform = null;
+        String nickname = null;
+        String profileImageUrl = null;
+        int height = 0;
+        int weight = 0;
+        int followerCnt = 0;
+        int followeeCnt = 0;
+
+        memberId = member.getMemberId();
+        email = member.getEmail();
+        oauthPlatform = member.getOauthPlatform();
+        nickname = member.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
+        height = member.getHeight();
+        weight = member.getWeight();
+        followerCnt = member.getFollowerCnt();
+        followeeCnt = member.getFolloweeCnt();
+
+        Response response = new Response( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt );
+
+        return response;
+    }
+
     protected BoardListResponseDto boardToBoardListResponseDto(Board board) {
         if ( board == null ) {
             return null;
@@ -231,7 +262,7 @@ public class BoardMapperImpl implements BoardMapper {
         boardListResponseDto.setUpdatedDate( board.getUpdatedDate() );
         boardListResponseDto.setLikeCnt( board.getLikeCnt() );
         boardListResponseDto.setCommentCnt( board.getCommentCnt() );
-        boardListResponseDto.setMember( memberToSimpleResponse( board.getMember() ) );
+        boardListResponseDto.setMember( memberToResponse( board.getMember() ) );
 
         return boardListResponseDto;
     }

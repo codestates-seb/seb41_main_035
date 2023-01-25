@@ -129,7 +129,7 @@ public class Member extends BaseTimeEntity {
         return followees.size();
     }
 
-    public void setFollowMemberStatus() {
+    public void setStatusToFollowingMember() {
         this.follow = true;
     }
 

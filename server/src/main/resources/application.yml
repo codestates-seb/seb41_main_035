@@ -33,7 +33,7 @@ spring:
   servlet:
     multipart:
       max-file-size: 3MB
-      max-request-size: 3MB
+      max-request-size: 25MB
   sql:
     init:
       mode: embedded
@@ -43,7 +43,7 @@ server:
       charset: UTF-8
 jwt:
   secret-key: qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123qwe123
-  access-token-expiration-minutes: 30
+  access-token-expiration-minutes: 360
   refresh-token-expiration-minutes: 360
 cloud:
   aws:

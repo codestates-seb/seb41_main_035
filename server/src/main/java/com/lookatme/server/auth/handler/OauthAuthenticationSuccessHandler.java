@@ -86,7 +86,6 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return nickname;
     }
 
-    // TODO: 추후 프론트엔드랑 맞춰야함
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
@@ -95,8 +94,9 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com")
-                .path("/")
+                .host("localhost")
+                .port(3000)
+                .path("/google")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
