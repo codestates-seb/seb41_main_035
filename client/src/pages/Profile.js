@@ -28,7 +28,7 @@ const Profile = () => {
           ) : (
             ''
           )}
-          <PostBox />
+          {/* <PostBox /> */}
         </div>
       </SWrapper>
     </>
