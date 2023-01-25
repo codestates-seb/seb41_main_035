@@ -3,7 +3,7 @@ package com.lookatme.server.board.service;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.repository.BoardRepository;
-import com.lookatme.server.entity.BoardProduct;
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.file.service.FileService;
@@ -12,10 +12,10 @@ import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
-import com.lookatme.server.product.repository.ProductRepository;
 import com.lookatme.server.product.service.ProductService;
 import com.lookatme.server.rental.entity.Rental;
 import com.lookatme.server.rental.service.RentalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,24 +29,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Service
 public class BoardService {
+
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
-    private final ProductRepository productRepository;
-
     private final FileService fileService;
     private final RentalService rentalService;
     private final ProductService productService;
-
-    public BoardService(MemberRepository memberRepository, BoardRepository boardRepository, ProductRepository productRepository, FileService fileService, RentalService rentalService, ProductService productService) {
-        this.memberRepository = memberRepository;
-        this.boardRepository = boardRepository;
-        this.productRepository = productRepository;
-        this.fileService = fileService;
-        this.rentalService = rentalService;
-        this.productService = productService;
-    }
 
     @Transactional
     public Board createBoard(Board board, long memberId, List<Product> products) {
@@ -69,6 +60,11 @@ public class BoardService {
         board.setMember(member);
         board.setContent(post.getContent());
 
+        // 1. 게시글 사진 업로드
+        String userImageUrl = fileService.upload(userImage, "post");
+        board.setUserImage(userImageUrl);
+        Board savedBoard = boardRepository.save(board);
+
         List<ProductPostDto> postProducts = post.getProducts();
 
         for (int i = 0; i < postProducts.size(); i++) {
@@ -85,18 +81,14 @@ public class BoardService {
                 Rental rental = rentalService.createRental(
                         memberId,
                         product.getProductId(),
+                        board,
                         postDto.getSize(),
                         postDto.getRentalPrice()
                 );
                 product.getRentals().add(rental);
             }
         }
-
-        // 1. 게시글 사진 업로드
-        String userImageUrl = fileService.upload(userImage, "post");
-        board.setUserImage(userImageUrl);
-
-        return boardRepository.save(board);
+        return savedBoard;
     }
 
     public Board updateBoard(Board board) {

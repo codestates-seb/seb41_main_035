@@ -39,7 +39,7 @@ public class BoardController {
 
         // 5. 게시글 등록
         Board boardV2 = boardService.createBoardV2(post, userImage, memberPrincipal.getMemberId());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(boardMapper.boardToBoardResponse(boardV2), HttpStatus.OK);
     }
 
     @PatchMapping("/board-Id")

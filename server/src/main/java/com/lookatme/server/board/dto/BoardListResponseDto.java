@@ -1,18 +1,18 @@
 package com.lookatme.server.board.dto;
 
-import com.lookatme.server.comment.dto.CommentResponseDtoV2;
 import com.lookatme.server.member.dto.MemberDto;
-import com.lookatme.server.product.dto.BoardProductsResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardResponseDto {
+public class BoardListResponseDto {
 
     private int boardId;
 
@@ -26,9 +26,7 @@ public class BoardResponseDto {
 
     private int likeCnt;
 
-    private MemberDto.ResponseWithFollow member;
+    private int commentCnt;
 
-    private List<BoardProductsResponseDto> products;
-
-    private List<CommentResponseDtoV2> comments;
+    private MemberDto.SimpleResponse member;
 }

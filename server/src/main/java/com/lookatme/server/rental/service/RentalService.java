@@ -1,5 +1,6 @@
 package com.lookatme.server.rental.service;
 
+import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.entity.Member;
@@ -29,10 +30,11 @@ public class RentalService {
         this.productRepository = productRepository;
     }
 
-    public Rental createRental(long memberId, int productId, String size, int rentalPrice) {
+    public Rental createRental(long memberId, int productId, Board board, String size, int rentalPrice) {
         Rental rental = Rental.builder()
                 .member(findMember(memberId))
                 .product(findProduct(productId))
+                .board(board)
                 .rental(false)
                 .size(size)
                 .rentalPrice(rentalPrice).build();
