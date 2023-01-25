@@ -13,10 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class RentalService {
 
@@ -64,17 +65,14 @@ public class RentalService {
     }
 
     public void deleteRental(int rentalId) {
-
         rentalRepository.delete(findExistedRental(rentalId));
     }
 
     public void deleteRentals() {
-
         rentalRepository.deleteAll();
     }
 
     public Rental findRental(int rentalId) {
-
         return findExistedRental(rentalId);
     }
 
@@ -83,19 +81,13 @@ public class RentalService {
     }
 
     private void verifyExistRental(int rentalId) {
-        Optional<Rental> optionalPost = rentalRepository.findById(rentalId);
-
-        if (optionalPost.isPresent()) {
-            throw new RuntimeException("Rental_ALREADY_EXIST");
-        }
+        rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.RENTAL_ALREADY_EXISTS));
     }
 
     private Rental findExistedRental(int rentalId) {
-        Optional<Rental> optionalPost = rentalRepository.findById(rentalId);
-
-        return optionalPost.orElseThrow(
-                () -> new RuntimeException("Rental_NOT_FOUND")
-        );
+        return rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.RENTAL_NOT_FOUND));
     }
 
     private Member findMember(long memberId) {
@@ -105,6 +97,6 @@ public class RentalService {
 
     private Product findProduct(int productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException());
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

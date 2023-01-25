@@ -6,6 +6,7 @@ import com.lookatme.server.board.repository.BoardRepository;
 import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.exception.board.BoardNotFoundException;
 import com.lookatme.server.file.service.FileService;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -39,49 +39,31 @@ public class BoardService {
     private final RentalService rentalService;
     private final ProductService productService;
 
-    public Board createBoard(Board board, long memberId, List<Product> products) {
-        verifyExistBoard(board.getBoardId());
-        Member member = findMember(memberId);
-        board.setMember(member);
-
-        List<BoardProduct> boardProducts = board.getBoardProducts();
-        for (Product product : products) {
-            boardProducts.add(new BoardProduct(board, product));
-        }
-
-        return boardRepository.save(board);
-    }
-
-    public Board createBoardV2(BoardPostDto post, MultipartFile userImage, long memberId) throws IOException {
-        Member member = findMember(memberId);
+    public Board createBoard(BoardPostDto post, MultipartFile userImage, long memberId) throws IOException {
+        // 1. 게시글 저장
         Board board = new Board();
-        board.setMember(member);
+        board.setMember(findMember(memberId));
         board.setContent(post.getContent());
-
-        // 1. 게시글 사진 업로드
-        String userImageUrl = fileService.upload(userImage, "post");
+//        String userImageUrl = fileService.upload(userImage, "post");
+        String userImageUrl = "게시글 사진 주소";
         board.setUserImage(userImageUrl);
         Board savedBoard = boardRepository.save(board);
 
-        List<ProductPostDto> postProducts = post.getProducts();
-
-        for (int i = 0; i < postProducts.size(); i++) {
-            // 2. 상품 사진 업로드
-            ProductPostDto postDto = postProducts.get(i);
-            String itemImageUrl = fileService.upload(postDto.getProductImage(), "item");
-
-            // 3. 상품 등록
-            Product product = productService.createProduct(postDto, itemImageUrl);
+        // 2. 게시글 상품 저장
+        for (ProductPostDto postProduct : post.getProducts()) {
+            String itemImageUrl = "상품 사진 주소";
+//            String itemImageUrl = fileService.upload(postProduct.getProductImage(), "item");
+            Product product = productService.createProduct(postProduct, itemImageUrl);
             board.getBoardProducts().add(new BoardProduct(board, product));
 
-            if (postDto.isRental()) {
-                // 4. 렌탈 등록
+            // 3. 렌탈 가능한 경우 렌탈 정보 저장
+            if (postProduct.isRental()) {
                 Rental rental = rentalService.createRental(
                         memberId,
                         product.getProductId(),
                         board,
-                        postDto.getSize(),
-                        postDto.getRentalPrice()
+                        postProduct.getSize(),
+                        postProduct.getRentalPrice()
                 );
                 product.getRentals().add(rental);
             }
@@ -101,17 +83,14 @@ public class BoardService {
         Optional.ofNullable(board.getLikeCnt())
                 .ifPresent(like -> findBoard.setLikeCnt(like));
 
-
         return boardRepository.save(findBoard);
     }
 
     public void deleteBoard(int boardId) {
-
         boardRepository.delete(findExistedBoard(boardId));
     }
 
     public void deleteBoards() {
-
         boardRepository.deleteAll();
     }
 
@@ -130,18 +109,9 @@ public class BoardService {
         return boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
     }
 
-    private void verifyExistBoard(int boardId) {
-        Optional<Board> optionalBoard = boardRepository.findById(boardId);
-        if (optionalBoard.isPresent()) {
-            throw new RuntimeException("Board_ALREADY_EXIST");
-        }
-    }
-
     private Board findExistedBoard(int boardId) {
-        Optional<Board> optionalBoard = boardRepository.findById(boardId);
-        return optionalBoard.orElseThrow(
-                () -> new RuntimeException("Board_NOT_FOUND")
-        );
+        return boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
     }
 
     private Member findMember(long memberId) {

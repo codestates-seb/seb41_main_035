@@ -1,5 +1,7 @@
 package com.lookatme.server.product.service;
 
+import com.lookatme.server.exception.ErrorCode;
+import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Brand;
 import com.lookatme.server.product.entity.Category;
@@ -12,10 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -31,22 +34,17 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
+    /**
+     * 상품 생성
+     */
     public Product createProduct(ProductPostDto post, String itemImageUrl) {
-        return productRepository.findByProductName(post.getProductName())
-                .orElseGet(() -> {
-                    Product product = productMapper.productPostToProduct(post);
-                    Category category = findCategory(post.getCategory());
-                    Brand brand = findBrand(post.getBrand());
+        Product product = productMapper.productPostToProduct(post);
+        Category category = findCategory(post.getCategory());
+        Brand brand = findBrand(post.getBrand());
 
-                    product.setCategory(category);
-                    product.setBrand(brand);
-                    product.setProductImage(itemImageUrl);
-                    return createProduct(product);
-                });
-    }
-
-    public Product createProduct(Product product) {
-        verifyExistProduct(product.getProductId());
+        product.setCategory(category);
+        product.setBrand(brand);
+        product.setProductImage(itemImageUrl);
         return productRepository.save(product);
     }
 
@@ -82,26 +80,23 @@ public class ProductService {
     }
 
     private void verifyExistProduct(int productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-
-        if (optionalProduct.isPresent()) {
-            throw new RuntimeException("Product_ALREADY_EXIST");
-        }
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_ALREADY_EXISTS));
     }
 
     private Product findExistedProduct(int boardId) {
-        Optional<Product> optionalProduct = productRepository.findById(boardId);
-
-        return optionalProduct.orElseThrow(
-                () -> new RuntimeException("Product_NOT_FOUND")
-        );
+        return productRepository.findById(boardId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     private Product findExistedProduct(String productName) {
         return productRepository.findByProductName(productName)
-                .orElseThrow(() -> new EntityNotFoundException());
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    /**
+     * 카테고리가 있으면 기존것을 가져오고 없으면 새로 생성함
+     */
     public Category findCategory(String categoryName) {
         return categoryRepository.findByName(categoryName)
                 .orElseGet(() -> createCategory(categoryName));
@@ -112,6 +107,9 @@ public class ProductService {
         return categoryRepository.save(newCategory);
     }
 
+    /**
+     * 브랜드가 있으면 기존것을 가져오고 없으면 새로 생성함
+     */
     public Brand findBrand(String brandName) {
         return brandRepository.findByName(brandName)
                 .orElseGet(() -> createBrand(brandName));
