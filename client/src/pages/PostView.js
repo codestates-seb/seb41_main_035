@@ -110,14 +110,14 @@ const PostView = () => {
                     </div>
                   </div>
                   <div className="icon">
-                  <BsChatLeftText size="20" />
-                  {isFollowing ? (
-                    <BsPersonCheck size="20" onClick={unfollow} />
-                  ) : (
-                    <BsPersonPlus size="20" onClick={follow} />
-                  )}
-                  <BsBookmarkHeart size="20" />
-                </div>
+                    <BsChatLeftText size="20" />
+                    {isFollowing ? (
+                      <BsPersonCheck size="20" onClick={unfollow} />
+                    ) : (
+                      <BsPersonPlus size="20" onClick={follow} />
+                    )}
+                    <BsBookmarkHeart size="20" />
+                  </div>
                 </div>
               </div>
               <div className="post">{detailData.content}</div>
