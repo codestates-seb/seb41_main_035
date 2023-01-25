@@ -13,7 +13,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,18 +61,21 @@ public class Member extends BaseTimeEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE) // Member를 제거할 때 Follow도 같이 제거
-    private List<Follow> followees = new ArrayList<>(); // 내가 팔로우 한 사람
-
-    @OneToMany(mappedBy = "to", cascade = CascadeType.REMOVE)
-    private List<Follow> followers = new ArrayList<>(); // 나를 팔로우하는 사람
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
     private LocalDateTime updatedDate;
+
+    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE) // Member를 제거할 때 Follow도 같이 제거
+    private Set<Follow> followees = new HashSet<>(); // 내가 팔로우 한 사람
+
+    @OneToMany(mappedBy = "to", cascade = CascadeType.REMOVE)
+    private Set<Follow> followers = new HashSet<>(); // 나를 팔로우하는 사람
+
+    @Transient
+    private boolean follow; // 로그인 한 사용자가 팔로우 한 회원인지 유무 체크
 
     @Builder
     public Member(long memberId, Account account, String password, String nickname, int height, int weight, String profileImageUrl) {
@@ -116,6 +121,18 @@ public class Member extends BaseTimeEntity {
         loginTryCnt = 0;
     }
 
+    public int getFollowerCnt() {
+        return followers.size();
+    }
+
+    public int getFolloweeCnt() {
+        return followees.size();
+    }
+
+    public void setFollowMemberStatus() {
+        this.follow = true;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -126,14 +143,6 @@ public class Member extends BaseTimeEntity {
 
     public OauthPlatform getOauthPlatform() {
         return account.oauthPlatform;
-    }
-
-    public int getFollowerCnt() {
-        return followers.size();
-    }
-
-    public int getFolloweeCnt() {
-        return followees.size();
     }
 
     public String getUniqueKey() {

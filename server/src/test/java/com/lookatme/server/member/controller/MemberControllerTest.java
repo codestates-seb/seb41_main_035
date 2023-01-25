@@ -40,8 +40,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -100,7 +99,8 @@ class MemberControllerTest {
     @Test
     void getMemberTest() throws Exception {
         // Given
-        given(memberService.findMember(savedMember.getMemberId())).willReturn(savedMemberResponse);
+        MemberDto.ResponseWithFollow response = mapper.memberToMemberResponseWithFollow(savedMember);
+        given(memberService.findMember(savedMember.getMemberId())).willReturn(response);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -127,7 +127,8 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("follow").type(BOOLEAN).description("팔로우 유무")
                                 )
                         )
                 ));

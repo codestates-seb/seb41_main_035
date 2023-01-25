@@ -3,7 +3,19 @@ package com.lookatme.server.board.mapper;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
+import com.lookatme.server.board.dto.BoardResponseDto.BoardResponseDtoBuilder;
 import com.lookatme.server.board.entity.Board;
+import com.lookatme.server.board.entity.Board.BoardBuilder;
+import com.lookatme.server.comment.dto.CommentResponseDtoV2;
+import com.lookatme.server.comment.entity.Comment;
+import com.lookatme.server.entity.BoardProduct;
+import com.lookatme.server.member.dto.MemberDto.ResponseWithFollow;
+import com.lookatme.server.member.dto.MemberDto.SimpleResponse;
+import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.OauthPlatform;
+import com.lookatme.server.product.dto.BoardProductsResponseDto;
+import com.lookatme.server.rental.dto.RentalResponseDto;
+import com.lookatme.server.rental.entity.Rental;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -11,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-20T16:24:05+0900",
+    date = "2023-01-25T11:44:15+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -23,11 +35,11 @@ public class BoardMapperImpl implements BoardMapper {
             return null;
         }
 
-        Board board = new Board();
+        BoardBuilder board = Board.builder();
 
-        board.setContent( post.getContent() );
+        board.content( post.getContent() );
 
-        return board;
+        return board.build();
     }
 
     @Override
@@ -36,13 +48,13 @@ public class BoardMapperImpl implements BoardMapper {
             return null;
         }
 
-        Board board = new Board();
+        BoardBuilder board = Board.builder();
 
-        board.setBoardId( patch.getBoardId() );
-        board.setUserImage( patch.getUserImage() );
-        board.setContent( patch.getContent() );
+        board.boardId( patch.getBoardId() );
+        board.userImage( patch.getUserImage() );
+        board.content( patch.getContent() );
 
-        return board;
+        return board.build();
     }
 
     @Override
@@ -51,14 +63,19 @@ public class BoardMapperImpl implements BoardMapper {
             return null;
         }
 
-        BoardResponseDto boardResponseDto = new BoardResponseDto();
+        BoardResponseDtoBuilder boardResponseDto = BoardResponseDto.builder();
 
-        boardResponseDto.setBoardId( board.getBoardId() );
-        boardResponseDto.setUserImage( board.getUserImage() );
-        boardResponseDto.setContent( board.getContent() );
-        boardResponseDto.setLikeCnt( board.getLikeCnt() );
+        boardResponseDto.products( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
+        boardResponseDto.boardId( board.getBoardId() );
+        boardResponseDto.userImage( board.getUserImage() );
+        boardResponseDto.content( board.getContent() );
+        boardResponseDto.createdDate( board.getCreatedDate() );
+        boardResponseDto.updatedDate( board.getUpdatedDate() );
+        boardResponseDto.likeCnt( board.getLikeCnt() );
+        boardResponseDto.member( memberToResponseWithFollow( board.getMember() ) );
+        boardResponseDto.comments( commentListToCommentResponseDtoV2List( board.getComments() ) );
 
-        return boardResponseDto;
+        return boardResponseDto.build();
     }
 
     @Override
@@ -73,5 +90,143 @@ public class BoardMapperImpl implements BoardMapper {
         }
 
         return list;
+    }
+
+    protected RentalResponseDto rentalToRentalResponseDto(Rental rental) {
+        if ( rental == null ) {
+            return null;
+        }
+
+        RentalResponseDto rentalResponseDto = new RentalResponseDto();
+
+        rentalResponseDto.setRentalId( rental.getRentalId() );
+        rentalResponseDto.setSize( rental.getSize() );
+        rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
+
+        return rentalResponseDto;
+    }
+
+    protected List<RentalResponseDto> rentalListToRentalResponseDtoList(List<Rental> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<RentalResponseDto> list1 = new ArrayList<RentalResponseDto>( list.size() );
+        for ( Rental rental : list ) {
+            list1.add( rentalToRentalResponseDto( rental ) );
+        }
+
+        return list1;
+    }
+
+    protected BoardProductsResponseDto boardProductToBoardProductsResponseDto(BoardProduct boardProduct) {
+        if ( boardProduct == null ) {
+            return null;
+        }
+
+        BoardProductsResponseDto boardProductsResponseDto = new BoardProductsResponseDto();
+
+        boardProductsResponseDto.setProductId( boardProduct.getProductId() );
+        boardProductsResponseDto.setProductName( boardProduct.getProductName() );
+        boardProductsResponseDto.setProductImage( boardProduct.getProductImage() );
+        boardProductsResponseDto.setLink( boardProduct.getLink() );
+        boardProductsResponseDto.setCategory( boardProduct.getCategory() );
+        boardProductsResponseDto.setBrand( boardProduct.getBrand() );
+        boardProductsResponseDto.setPrice( boardProduct.getPrice() );
+        boardProductsResponseDto.setRentals( rentalListToRentalResponseDtoList( boardProduct.getRentals() ) );
+
+        return boardProductsResponseDto;
+    }
+
+    protected List<BoardProductsResponseDto> boardProductListToBoardProductsResponseDtoList(List<BoardProduct> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<BoardProductsResponseDto> list1 = new ArrayList<BoardProductsResponseDto>( list.size() );
+        for ( BoardProduct boardProduct : list ) {
+            list1.add( boardProductToBoardProductsResponseDto( boardProduct ) );
+        }
+
+        return list1;
+    }
+
+    protected ResponseWithFollow memberToResponseWithFollow(Member member) {
+        if ( member == null ) {
+            return null;
+        }
+
+        long memberId = 0L;
+        String email = null;
+        OauthPlatform oauthPlatform = null;
+        String nickname = null;
+        String profileImageUrl = null;
+        int height = 0;
+        int weight = 0;
+        int followerCnt = 0;
+        int followeeCnt = 0;
+        boolean follow = false;
+
+        memberId = member.getMemberId();
+        email = member.getEmail();
+        oauthPlatform = member.getOauthPlatform();
+        nickname = member.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
+        height = member.getHeight();
+        weight = member.getWeight();
+        followerCnt = member.getFollowerCnt();
+        followeeCnt = member.getFolloweeCnt();
+        follow = member.isFollow();
+
+        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow );
+
+        return responseWithFollow;
+    }
+
+    protected SimpleResponse memberToSimpleResponse(Member member) {
+        if ( member == null ) {
+            return null;
+        }
+
+        long memberId = 0L;
+        String nickname = null;
+        String profileImageUrl = null;
+
+        memberId = member.getMemberId();
+        nickname = member.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
+
+        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl );
+
+        return simpleResponse;
+    }
+
+    protected CommentResponseDtoV2 commentToCommentResponseDtoV2(Comment comment) {
+        if ( comment == null ) {
+            return null;
+        }
+
+        CommentResponseDtoV2 commentResponseDtoV2 = new CommentResponseDtoV2();
+
+        commentResponseDtoV2.setCommentId( comment.getCommentId() );
+        commentResponseDtoV2.setContent( comment.getContent() );
+        commentResponseDtoV2.setCreatedDate( comment.getCreatedDate() );
+        commentResponseDtoV2.setUpdatedDate( comment.getUpdatedDate() );
+        commentResponseDtoV2.setMember( memberToSimpleResponse( comment.getMember() ) );
+
+        return commentResponseDtoV2;
+    }
+
+    protected List<CommentResponseDtoV2> commentListToCommentResponseDtoV2List(List<Comment> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<CommentResponseDtoV2> list1 = new ArrayList<CommentResponseDtoV2>( list.size() );
+        for ( Comment comment : list ) {
+            list1.add( commentToCommentResponseDtoV2( comment ) );
+        }
+
+        return list1;
     }
 }

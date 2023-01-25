@@ -5,6 +5,7 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
 import com.lookatme.server.board.dto.BoardResponseDto;
+import com.lookatme.server.board.dto.SimpleBoardResponseDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.comment.controller.CommentController;
 import com.lookatme.server.comment.dto.CommentPatchDto;
@@ -111,7 +112,7 @@ public class CommentControllerTest {
                 .updatedDate(comment.getUpdatedDate())
                 .nickname(comment.getMember().getNickname())
                 .profileImageUrl(comment.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment.getBoard()))
                 .build();
 
         given(commentService.createComment(Mockito.any(CommentPostDto.class), Mockito.any())).willReturn(commentResponseDto);
@@ -202,7 +203,7 @@ public class CommentControllerTest {
                 .updatedDate(comment.getUpdatedDate())
                 .nickname(comment.getMember().getNickname())
                 .profileImageUrl(comment.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment.getBoard()))
                 .build();
 
         given(commentService.editComment(Mockito.anyLong(), Mockito.any(CommentPatchDto.class), Mockito.any())).willReturn(commentResponseDto);
@@ -289,7 +290,7 @@ public class CommentControllerTest {
                 .updatedDate(comment.getUpdatedDate())
                 .nickname(comment.getMember().getNickname())
                 .profileImageUrl(comment.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment.getBoard()))
                 .build();
 
         given(commentService.findComment(Mockito.anyLong())).willReturn(commentResponseDto);
@@ -381,7 +382,7 @@ public class CommentControllerTest {
                 .updatedDate(comment1.getUpdatedDate())
                 .nickname(comment1.getMember().getNickname())
                 .profileImageUrl(comment1.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment1.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment1.getBoard()))
                 .build();
 
         CommentResponseDto commentResponseDto2 = CommentResponseDto.builder()
@@ -391,7 +392,7 @@ public class CommentControllerTest {
                 .updatedDate(comment2.getUpdatedDate())
                 .nickname(comment2.getMember().getNickname())
                 .profileImageUrl(comment2.getMember().getProfileImageUrl())
-                .board(BoardResponseDto.of(comment2.getBoard()))
+                .board(SimpleBoardResponseDto.of(comment2.getBoard()))
                 .build();
 
         List<CommentResponseDto> commentResponseDtos = List.of(commentResponseDto1, commentResponseDto2);

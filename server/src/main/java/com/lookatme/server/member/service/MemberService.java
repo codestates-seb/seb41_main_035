@@ -36,10 +36,10 @@ public class MemberService {
     private final MemberMapper mapper;
 
     // ** 메서드 오버로딩 **
-    public MemberDto.Response findMember(long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public MemberDto.ResponseWithFollow findMember(long memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
-        return mapper.memberToMemberResponse(member);
+        return mapper.memberToMemberResponseWithFollow(member);
     }
 
     public Page<MemberDto.Response> findMembers(int page, int size) {

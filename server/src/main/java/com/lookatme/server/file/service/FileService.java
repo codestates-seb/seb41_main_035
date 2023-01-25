@@ -70,6 +70,7 @@ public class FileService {
     private String imageTypeCheck(MultipartFile file) {
         String fileType = file.getContentType();
         if (!fileType.startsWith("image")) {
+            log.error(">> 파일 타입: {}", fileType);
             throw new ErrorLogicException(ErrorCode.FILE_TYPE_NOT_SUPPORTED);
         }
         switch (fileType) {
