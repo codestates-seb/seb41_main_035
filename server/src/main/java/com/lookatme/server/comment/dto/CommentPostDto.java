@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class CommentPostDto {
     @NotBlank
+    private String boardId;
+
+    @NotBlank
     private String content;
 
     private CommentPostDto() {
@@ -16,7 +19,9 @@ public class CommentPostDto {
     }
 
     @Builder
-    public CommentPostDto(final String content){
+    public CommentPostDto(final String boardId,
+                          final String content) {
+        this.boardId = boardId;
         this.content = content;
     }
 
