@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -74,6 +75,15 @@ public class FollowService {
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), memberResponseList.size());
         return new PageImpl<>(memberResponseList.subList(start, end), pageRequest, memberResponseList.size());
+    }
+
+    /**
+     * memberId 회원이 현재 팔로우 중인 회원 id set 반환 (중복 X)
+     */
+    public Set<Long> getFollowMemberIdSet(long memberId) {
+        return followRepository.findByFrom_MemberId(memberId).stream()
+                .map(follow -> follow.getTo().getMemberId())
+                .collect(Collectors.toSet());
     }
 
     private Member getEmptyMember(long memberId) {

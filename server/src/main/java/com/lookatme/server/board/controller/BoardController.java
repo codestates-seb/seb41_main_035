@@ -58,8 +58,10 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity getBoards(@Positive @RequestParam(defaultValue = "1") int page,
-                                    @Positive @RequestParam(defaultValue = "50") int size) {
-        Page<Board> findPosts = boardService.findBoards(page - 1, size);
+                                    @Positive @RequestParam(defaultValue = "50") int size,
+                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+        Page<Board> findPosts = boardService.findBoards(page - 1, size, loginMemberId);
         List<Board> boards = findPosts.getContent();
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boardMapper.boardsToBoardResponseDtos(boards), findPosts), HttpStatus.OK);
