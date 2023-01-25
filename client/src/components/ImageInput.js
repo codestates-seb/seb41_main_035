@@ -68,6 +68,7 @@ ImageInput.propTypes = {
 
 const SWrapper = styled.div`
   width: 15vw;
+  height: 40vh;
   .image-upload {
     margin: 10px;
   }
@@ -76,8 +77,8 @@ const SWrapper = styled.div`
   }
   //파일 업로드버튼
   .btn-upload {
-    width: 3.5vw;
-    height: 3vh;
+    width: 65px;
+    height: 30px;
     /* padding: 7px 14px; */
     background-color: #d9d4a6;
     border-radius: 4px;
@@ -89,9 +90,9 @@ const SWrapper = styled.div`
     cursor: pointer;
   }
   img {
-    width: 12vw;
-    height: 26vh;
-    margin: 20px 3px;
+    width: 11vw;
+    height: 28vh;
+    margin: 20px 0px 20px 5px;
   }
 `;
 
