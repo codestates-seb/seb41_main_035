@@ -23,12 +23,14 @@ import com.lookatme.server.rental.entity.Rental;
 import com.lookatme.server.rental.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional
@@ -127,7 +129,24 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Page<Board> findBoards(int page, int size) {
-        return boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        return findBoards(page, size, -1); // 팔로우 유무 체크하지 않음
+    }
+
+    public Page<Board> findBoards(int page, int size, long memberId) {
+        Page<Board> boardPage = boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        if (memberId != -1) {
+            Set<Long> followMemberIdList = followService.getFollowMemberIdSet(memberId); // 현재 로그인 한 회원이 팔로우 중인 회원 id list
+            boardPage.getContent().stream()
+                    .map(Board::getMember)
+                    .forEach(member -> {
+                        if (followMemberIdList.contains(member.getMemberId())) {
+                            member.setStatusToFollowingMember();
+                        }
+                    });
+            return new PageImpl<>(boardPage.getContent(), boardPage.getPageable(), boardPage.getTotalElements());
+        } else {
+            return boardPage;
+        }
     }
 
     private Member findMember(long memberId) {

@@ -121,6 +121,10 @@ public class Member extends BaseTimeEntity {
         loginTryCnt = 0;
     }
 
+    public boolean isFollow() {
+        return follow;
+    }
+
     public int getFollowerCnt() {
         return followers.size();
     }
