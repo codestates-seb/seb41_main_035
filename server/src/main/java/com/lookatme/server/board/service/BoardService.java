@@ -1,19 +1,24 @@
 package com.lookatme.server.board.service;
 
+import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.entity.Board;
+import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.repository.BoardRepository;
 import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.exception.board.BoardNotFoundException;
-import com.lookatme.server.file.service.FileService;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.member.service.FollowService;
+import com.lookatme.server.product.dto.ProductPatchDto;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.product.service.ProductService;
+import com.lookatme.server.rental.dto.RentalPatchDto;
 import com.lookatme.server.rental.entity.Rental;
 import com.lookatme.server.rental.service.RentalService;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +27,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class BoardService {
 
+    private final BoardMapper mapper;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final FileService fileService;
@@ -39,12 +43,11 @@ public class BoardService {
     private final RentalService rentalService;
     private final ProductService productService;
 
-    public Board createBoard(BoardPostDto post, MultipartFile userImage, long memberId) throws IOException {
+    public Board createBoard(BoardPostDto post, long memberId) throws IOException {
         // 1. 게시글 저장
-        Board board = new Board();
+        Board board = mapper.boardPostToBoard(post);
         board.setMember(findMember(memberId));
-        board.setContent(post.getContent());
-//        String userImageUrl = fileService.upload(userImage, "post");
+//        String userImageUrl = fileService.upload(post.getUserImage(), "post");
         String userImageUrl = "게시글 사진 주소";
         board.setUserImage(userImageUrl);
         Board savedBoard = boardRepository.save(board);
@@ -71,33 +74,52 @@ public class BoardService {
         return savedBoard;
     }
 
-    public Board updateBoard(Board board) {
-        Board findBoard = findExistedBoard(board.getBoardId());
-
-        Optional.ofNullable(board.getUserImage())
-                .ifPresent(userImage -> findBoard.setUserImage(userImage));
-
-        Optional.ofNullable(board.getContent())
-                .ifPresent(content -> findBoard.setContent(content));
-
-        Optional.ofNullable(board.getLikeCnt())
-                .ifPresent(like -> findBoard.setLikeCnt(like));
-
-        return boardRepository.save(findBoard);
+    public Board updateBoard(BoardPatchDto patch, int boardId, long memberId) throws IOException {
+        Board savedBoard = findBoard(boardId);
+        // 로그인 한 작성자가 아니면 수정할 수 없음
+        if (savedBoard.getMember().getMemberId() != memberId) {
+            throw new ErrorLogicException(ErrorCode.FORBIDDEN);
+        }
+        String userImageUrl = savedBoard.getUserImage();
+        // userImage가 없으면 수정하지 않음
+        if (patch.getUserImage() != null) {
+            userImageUrl = fileService.upload(patch.getUserImage(), FileDirectory.post);
+        }
+        savedBoard.updateBoard(userImageUrl, patch.getContent());
+        for (ProductPatchDto product : patch.getProducts()) {
+            productService.updateProduct(product);
+            if (product.isRental()) { // 렌탈 정보가 있으면 업데이트
+                rentalService.updateRental(
+                        new RentalPatchDto(
+                                product.getRentalId(),
+                                product.getRentalPrice(),
+                                product.getSize()
+                        )
+                );
+            }
+        }
+        return savedBoard;
     }
 
     public void deleteBoard(int boardId) {
-        boardRepository.delete(findExistedBoard(boardId));
+        boardRepository.delete(findBoard(boardId));
     }
 
     public void deleteBoards() {
         boardRepository.deleteAll();
     }
 
+    @Transactional(readOnly = true)
+    public Board findBoard(int boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
     public Board findBoard(int boardId, long loginMemberId) {
-        Board board = findExistedBoard(boardId);
+        Board board = findBoard(boardId);
         Member writer = board.getMember();
-        if(loginMemberId != -1) {
+        if (loginMemberId != -1) {
             if (followService.isFollowee(loginMemberId, writer.getMemberId())) {
                 writer.setStatusToFollowingMember();
             }
@@ -105,13 +127,9 @@ public class BoardService {
         return board;
     }
 
+    @Transactional(readOnly = true)
     public Page<Board> findBoards(int page, int size) {
         return boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
-    }
-
-    private Board findExistedBoard(int boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(BoardNotFoundException::new);
     }
 
     private Member findMember(long memberId) {

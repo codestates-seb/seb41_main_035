@@ -45,4 +45,10 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    public void updateProduct(String productName, String productImage, String link, int price) {
+        this.productName = productName;
+        this.productImage = productImage;
+        this.link = link;
+        this.price = price;
+    }
 }

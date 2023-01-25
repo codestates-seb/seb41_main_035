@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -34,16 +35,16 @@ public class BoardController {
 
     @PostMapping
     public ResponseEntity postBoard(BoardPostDto post,
-                                    MultipartFile userImage,
                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws Exception {
-        Board board = boardService.createBoard(post, userImage, memberPrincipal.getMemberId());
+        Board board = boardService.createBoard(post, memberPrincipal.getMemberId());
         return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
-    @PatchMapping("/board-Id")
-    public ResponseEntity patchBoard(@PathVariable("board-Id") int boardId,
-                                     @Valid @RequestBody BoardPatchDto patch) {
-        Board board = boardService.updateBoard(boardMapper.boardPatchToBoard(patch));
+    @PatchMapping("/{board-Id}")
+    public ResponseEntity patchBoard(BoardPatchDto patch,
+                                     @PathVariable("board-Id") int boardId,
+                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
+        Board board = boardService.updateBoard(patch, boardId, memberPrincipal.getMemberId());
         return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
