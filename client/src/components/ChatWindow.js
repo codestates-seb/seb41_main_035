@@ -48,12 +48,12 @@ export const SModalBack = styled.div`
   background-color: rgba(0, 0, 0, 0);
   position: fixed;
   top: 0;
-  /* overflow: hidden; */
 `;
 const SWrapper = styled.div`
   position: fixed;
   overflow: hidden;
-  top: 10%;
+  width: 100%;
+  top: 5%;
   background-color: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
@@ -79,6 +79,7 @@ const SWrapper = styled.div`
       display: flex;
       align-items: center;
       width: 80%;
+      margin-top: 10px;
       font-size: 30px;
       justify-content: space-between;
       background-color: #cadde5;
@@ -126,20 +127,22 @@ const SContent = styled.div`
 `;
 const SInputContent = styled.div`
   width: 80%;
-  height: 8vh;
+  height: 6vh;
   background-color: #f4f1e0;
   margin-bottom: 30px;
   display: flex;
   textarea {
     border: none;
     resize: none;
+    background-color: #f4f1e0;
+    font-size: 20px;
     &:focus {
       outline: none;
     }
   }
   svg {
     font-size: 40px;
-    margin: 15px 0px 0px 20px;
+    margin: 8px 10px 0px 20px;
     transform: rotate(90deg);
   }
 `;

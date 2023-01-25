@@ -3,19 +3,16 @@ import { useState } from 'react';
 import LoginModal from './LoginModal/LoginModal';
 import { BsPersonCircle, BsPencilSquare } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
+import { GoThreeBars } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
 import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
-
 import memberstore from '../store/memberstore';
 import axios from 'axios';
-
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 const backendUrl = 'http://13.125.30.88/';
 
-const BREAK_POINT_PC = 1250;
-
-const BREAK_POINT_TABLET = 768;
 
 const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
@@ -53,46 +50,40 @@ const LoginHeader = () => {
       <SWrapper>
         <SHeader>
           <div className="header-container">
-            {/* <Avatar
-            image="스크린샷 2023-01-13 오후 4.47.01 1.png"
-            size="54px"
-          /> */}
-
-            <p
-              className="title"
-              role="presentation"
-              onClick={() => navigate(`/`)}
-            >
-              Look at me
-            </p>
-
+            <div className="title-name">
+              <p
+                className="title"
+                role="presentation"
+                onClick={() => navigate(`/`)}
+              >
+                Look at me
+              </p>
+            </div>
             <SearchBox />
-
-            <div className="right zone">
-              {!isLogin ? (
+                       {!isLogin ? (
+              <div className="right zone">
                 <button className="login button" onClick={onClickButton}>
                   Log in
                 </button>
-              ) : (
-                <div className="right zone">
-                  <BsPersonCircle
-                    onClick={() => navigate(`/profile/${userId}`)}
-                    size="30"
-                  />
-                  <BsPencilSquare
-                    size="30"
-                    role="presentation"
-                    onClick={() => navigate(`/postupload`)}
-                  />
-                  <AiOutlineMessage size="30" onClick={onChatOpen} />
-                  <button className="logout button" onClick={Logout}>
-                    Log out
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* )} */}
+              </div>
+            ) : (
+              <div className="right zone">
+                <BsPersonCircle
+                  onClick={() => navigate(`/profile/${userId}`)}
+                  size="30"
+                />
+                <BsPencilSquare
+                  size="30"
+                  role="presentation"
+                  onClick={() => navigate(`/postupload`)}
+                />
+                <AiOutlineMessage size="30" onClick={onChatOpen} />
+                <button className="logout button" onClick={Logout}>
+                  Log out
+                </button>
+              </div>
+            )}
+            <GoThreeBars className="menu-bar" />
           </div>
         </SHeader>
         {isOpen && (
@@ -109,26 +100,28 @@ const LoginHeader = () => {
   );
 };
 const SWrapper = styled.div`
+  height: 12vh;
+  z-index: 300;
   position: sticky;
-  top: 0;
-  z-index: 5;
-  justify-content: center;
-  display: flex;
 `;
 const SHeader = styled.div`
-  width: 100%;
   height: 12vh;
-  border: 3px solid #196ba5;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-bottom: 3px solid #196ba5;
+  background-color: #fff;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    padding: 0 10px;
+  }
   .header-container {
     display: flex;
-    width: 76%;
-    height: 12vh;
+    width: 100%;
+    max-width: 1250px;
     align-items: center;
     justify-content: space-between;
   }
@@ -136,31 +129,17 @@ const SHeader = styled.div`
     flex-grow: 4;
     height: 12vh;
     display: flex;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
   }
   .title {
     font-size: 40px;
     cursor: pointer;
-    width: 70%;
     font-family: 'Song Myung', serif;
     color: #196ba5;
-    margin-top: 48px;
-
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-      & {
-        font-size: 30px;
-        margin-top: 55px;
-      }
-    }
-    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-      & {
-        grid-template-columns: 320px;
-      }
-    }
   }
 
   .right {
-    flex-grow: 2;
+    flex-grow: 4;
     display: flex;
     justify-content: flex-end;
     margin-right: 20px;
@@ -171,16 +150,42 @@ const SHeader = styled.div`
       padding: 0 15px;
     }
     button {
-      width: 6vw;
+      width: 70px;
       height: 30px;
       font-size: 17px;
       border: none;
-      color: darkgray;
+      color: #5f6060;
       cursor: pointer;
+      background-color: white;
+    }
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        display: none;
+      }
     }
   }
   .autocomplete-wrapper {
     flex-grow: 0;
+    margin-left: auto;
+    margin-right: auto;
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        display: none;
+      }
+    }
+  }
+  .menu-bar {
+    display: none;
+    margin-left: auto;
+    align-items: center;
+    margin-top: 35px;
+    font-size: 35px;
+    color: #196ba5;
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        display: flex;
+      }
+    }
   }
 `;
 

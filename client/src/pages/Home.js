@@ -1,27 +1,33 @@
 import styled from 'styled-components';
 import PostBox from '../components/PostBox';
-import dummyData from '../db/dummyData.json';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-const BREAK_POINT_TABLET = 800;
-const BREAK_POINT_PC = 1300;
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import axios from 'axios';
+
+import Slider from '../components/Slider';
 const Home = () => {
   const location = useLocation();
-  const dummy = dummyData.posts;
   const [data, setData] = useState([]);
-  console.log(location);
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (location.pathname === '/') {
-      // postCate();
-      setData(dummy);
-      console.log(dummy);
-    }
+    const fetchData = async () => {
+      try {
+        if (location.pathname === '/') {
+          const response = await axios.get(`http://13.125.30.88/boards`);
+          setData(response.data.data);
+        }
+      } catch {
+        window.alert('오류가 발생했습니다.');
+      }
+    };
+    fetchData();
   }, [location.pathname]);
   return (
     <>
       <SWrapper>
         <div className="home">
+          <Slider />
           <div className="main post">
             <Filter>
               <button className="filter button">Hot</button>
@@ -42,14 +48,24 @@ const Home = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+
   .home {
-    width: 75%;
-  }
-  .post {
-    width: 80%;
+    width: 85%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    left: 0;
+    right: 0;
+    top: 0;
+    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      padding: 0 10px;
+    }
+  }
+  .post {
+    display: flex;
+    /* max-width: 1200px; */
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
   }
 `;
@@ -64,21 +80,27 @@ const Filter = styled.div`
     width: 130px;
     height: 50px;
     border: none;
-    color: #196ba5;
+    background-color: white;
     cursor: pointer;
-    /* font-family: 'Gowun Batang', serif; */
     font-family: 'Song Myung', serif;
-    /* font-family: 'Source Sans Pro', sans-serif; */
-    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-      & {
-        margin: 25px 0px;
-        font-size: 1rem;
-      }
+    &:focus {
+      border: 2px solid #1a6aa4;
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
     }
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
+        width: 80px;
+        margin: 25px 3px;
+        font-size: 1.3rem;
+      }
+    }
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        width: 60px;
         margin: 25px 0px;
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
     }
   }

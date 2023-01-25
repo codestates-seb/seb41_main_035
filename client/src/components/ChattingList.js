@@ -2,11 +2,13 @@
 import styled from 'styled-components';
 import dummyData from '../db/dummyData.json';
 import Avatar from './Avatar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import ChatWindow from './ChatWindow';
+import axios from 'axios';
 const ChattingList = ({ onChatOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [chatData, setChatDat] = useState([]);
   const onChatWindow = () => {
     setIsOpen((prev) => !prev);
   };
@@ -53,8 +55,8 @@ export const SModalBack = styled.div`
 `;
 const SWrapper = styled.div`
   position: fixed;
-  overflow: hidden;
-  top: 10%;
+  width: 100%;
+  top: 5%;
   background-color: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
@@ -63,9 +65,9 @@ const SWrapper = styled.div`
   .close-container {
     margin-top: 30px;
     background-color: rgba(0, 0, 0, 0);
-    transform: translate(700%, 10%);
     font-size: 30px;
     cursor: pointer;
+    transform: translate(700%, 10%);
   }
   p {
     margin-left: 40px;

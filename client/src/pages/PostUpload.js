@@ -3,37 +3,118 @@ import PostUploadBar from './PostUploadBar';
 import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
 import { useState } from 'react';
-
-const defaultContent = {
-  images: [],
-  brandName: '',
-  itemName: '',
-  itemSize: '',
-  itemPrice: '',
-  itemSite: '',
-  rentalCheck: false,
-  rentalPrice: '',
-};
+import axios from 'axios';
+import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostUpload = () => {
   const [contentList, setContentList] = useState([
-    defaultContent,
-    defaultContent,
-  ]); // PostUploadBar에 전달 , defaultContent기본값 2개뜨게끔
+    {
+      productImage: [],
+      brand: '',
+      productName: '',
+      size: '',
+      price: '',
+      link: '',
+      rental: false,
+      rentalPrice: '',
+      category: '아우터',
+    },
+    {
+      productImage: [],
+      brand: '',
+      productName: '',
+      size: '',
+      price: '',
+      link: '',
+      rental: false,
+      rentalPrice: '',
+      category: '아우터',
+    },
+  ]); // PostUploadBar에 전달 , defaultContent기본값 1개뜨게끔
   const [inputContent, setInputContent] = useState(); // textarea 입력값저장
   const [imgFile, setImgFile] = useState([]); // 업로드한 이미지 배열저장
+  console.log('contentList', contentList);
 
   const onChangeItem = (index, key, value) => {
     setContentList((preContentList) => {
       const newContentList = preContentList;
-      newContentList[index][key] = value;
+
+      if (key === 'productImage') {
+        newContentList[index][key].push(...value); // 여기서의 value는 배열
+      } else {
+        newContentList[index][key] = value;
+      }
+      console.log('newContentList', newContentList);
       return newContentList;
     });
+  };
+  const onPost = () => {
+    let formData = new FormData();
+    formData.append('userImage', imgFile[0]); //메인 사진
+    formData.append('content', JSON.stringify(inputContent)); //게시글
+    for (let i = 0; i < contentList.length; i++) {
+      formData.append(
+        'products[' + i + '].productImage',
+        contentList[i].productImage[0]
+      );
+      console.log(contentList[i].productImage);
+      formData.append('products[' + i + '].brand', contentList[i].brand);
+      formData.append(
+        'products[' + i + '].productName',
+        contentList[i].productName
+      );
+      formData.append('products[' + i + '].size', contentList[i].size);
+      formData.append('products[' + i + '].price', contentList[i].price);
+      formData.append('products[' + i + '].link', contentList[i].link);
+      formData.append('products[' + i + '].rental', contentList[i].rental);
+      formData.append(
+        'products[' + i + '].rentalPrice',
+        contentList[i].rentalPrice
+      );
+      formData.append('products[' + i + '].category', contentList[i].category);
+    }
+    if (!inputContent) {
+      alert('게시글을 입력해주세요.');
+      return;
+    } else {
+      axios
+        .post('http://13.125.30.88/boards', formData, {
+          headers: {
+            Authorization: token,
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => {
+          if (res) {
+            location.href = '/postview';
+          }
+          console.log(res.data);
+        })
+        .catch((err) => {
+          return err;
+        });
+    }
+    for (let [key, value] of formData.entries()) {
+      console.log(key + ':' + value);
+    }
   };
 
   //plusButton클릭시 호출
   const addContent = () => {
-    setContentList((prev) => [...prev, defaultContent]);
+    setContentList((prev) => [
+      ...prev,
+      {
+        productImage: [],
+        brand: '',
+        productName: '',
+        size: '',
+        price: '',
+        link: '',
+        rental: false,
+        rentalPrice: '',
+        category: '아우터',
+      },
+    ]);
   };
 
   return (
@@ -41,7 +122,9 @@ const PostUpload = () => {
       <Scontainer>
         <SHeader>
           <div className="image_upload">
-            <button type="submit">완료</button>
+            <button type="submit" onClick={onPost}>
+              완료
+            </button>
           </div>
         </SHeader>
 
@@ -73,23 +156,26 @@ const PostUpload = () => {
 };
 
 const Section = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
 `;
 const Scontainer = styled.div`
-  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const SHeader = styled.div`
-  display: flex;
-  justify-content: center;
   text-align: end;
+
   .image_upload {
     width: 44vw;
     margin: 10px 0px;
     border-bottom: 1px solid #b3b3b3;
+    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      width: 540px;
+    }
   }
   button {
     width: 3vw;
@@ -104,16 +190,17 @@ const SHeader = styled.div`
   }
 `;
 
-const SMid = styled.div`
+const SMid = styled.form`
   display: flex;
-  justify-content: center;
   margin: 10px 0px;
+  background-color: #eee6ca;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    width: 540px;
+  }
   .input_box {
-    /* width: 34vw; */
-    margin-bottom: 10px;
+    margin: 10px;
     display: flex;
     justify-content: end;
-    /* background-color: #b3b3b3; */
   }
   textarea {
     font-size: 14px;

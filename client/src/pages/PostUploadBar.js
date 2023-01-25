@@ -3,10 +3,9 @@ import styled from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import ItemImageInput from '../components/ItemImageInput';
 import PropTypes from 'prop-types';
-
+import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 const PostUploadBar = ({ index, onChangeItem }) => {
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
-
   const [brandname, setBrandname] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemSize, setItemSize] = useState('');
@@ -14,40 +13,54 @@ const PostUploadBar = ({ index, onChangeItem }) => {
   const [itemSite, setItemSite] = useState('');
   const [rentalCheck, setRentalCheck] = useState(false);
   const [rentalPrice, setRentalPrice] = useState('');
+  //-----추가부분 드롭다운.-----------
+  const [itemDropdown, setItemDropdown] = useState('');
+
+  // 미리보기 이미지를 저장
+  const saveImagePreviewLinks = (imageUrlLists) => {
+    setImgFile(imageUrlLists);
+  };
 
   // 이미지 업데이트 함수
-  const onUploadImages = (imageUrlLists) => {
-    setImgFile(imageUrlLists);
-    onChangeItem(index, 'images', imageUrlLists); //상위 컴포넌트인 PostUpload의 contentList State가 업데이트
+  const onUploadImages = (imageFileList) => {
+    //서버에 전달할 File 객체를 저장
+    setImgFile(imageFileList);
+    onChangeItem(index, 'productImage', imageFileList); //상위 컴포넌트인 PostUpload의 contentList State가 업데이트
   };
 
   const onChangeBrandname = (e) => {
     setBrandname(e.target.value);
-    onChangeItem(index, 'brandName', e.target.value);
+    onChangeItem(index, 'brand', e.target.value);
   };
   const onChangeName = (e) => {
     setItemName(e.target.value);
-    onChangeItem(index, 'itemName', e.target.value);
+    onChangeItem(index, 'productName', e.target.value);
   };
   const onChangeSize = (e) => {
     setItemSize(e.target.value);
-    onChangeItem(index, 'itemSize', e.target.value);
+    onChangeItem(index, 'size', e.target.value);
   };
   const onChangePrice = (e) => {
     setItemPrice(e.target.value);
-    onChangeItem(index, 'itemPrice', e.target.value);
+    onChangeItem(index, 'price', e.target.value);
   };
   const onChangeSite = (e) => {
     setItemSite(e.target.value);
-    onChangeItem(index, 'itemSite', e.target.value);
+    onChangeItem(index, 'link', e.target.value);
   };
   const onChangeRentalCheck = () => {
-    setRentalCheck((prev) => !prev);
-    onChangeItem(index, 'rentalCheck', (prev) => !prev);
+    setRentalCheck(true);
+    onChangeItem(index, 'rental', true);
   };
   const onChangeRentalPrice = (e) => {
     setRentalPrice(e.target.value);
     onChangeItem(index, 'rentalPrice', e.target.value);
+  };
+
+  //추가!!!
+  const onChangeDropdown = (e) => {
+    setItemDropdown(e.target.value);
+    onChangeItem(index, 'category', e.target.value);
   };
 
   return (
@@ -58,10 +71,14 @@ const PostUploadBar = ({ index, onChangeItem }) => {
           index={index}
           imgFile={imgFile}
           onUploadImages={onUploadImages}
+          saveImagePreviewLinks={saveImagePreviewLinks}
         />
         <span className="category">
-          {/* 드롭다운구현하기 */}
-          <Dropdown />
+          {/* 드롭다운 ---------------추가부분------------------*/}
+          <Dropdown
+            onChangeDropdown={onChangeDropdown}
+            itemDropdown={itemDropdown}
+          />
         </span>
         <SMidle>
           <div className="item-top">
@@ -146,7 +163,6 @@ PostUploadBar.propTypes = {
 const SWrapper = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
 
   input {
     width: 6vw;
@@ -171,6 +187,9 @@ const SContainer = styled.div`
   display: flex;
   margin: 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    width: 540px;
+  }
 `;
 
 const SMidle = styled.div`
