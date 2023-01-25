@@ -33,6 +33,9 @@ public class Message extends BaseTimeEntity {
     @Column(name = "deleted_by_receiver", nullable = false)
     private boolean deletedByReceiver = false;
 
+    @Column(name = "message_room", nullable = false)
+    private Long messageRoom;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -53,6 +56,7 @@ public class Message extends BaseTimeEntity {
                    final LocalDateTime createdAt,
                    final boolean deletedBySender,
                    final boolean deletedByReceiver,
+                   final Long messageRoom,
                    final Member sender,
                    final Member receiver
                    ) {
@@ -61,6 +65,7 @@ public class Message extends BaseTimeEntity {
         this.createdAt = createdAt;
         this.deletedBySender = deletedBySender;
         this.deletedByReceiver = deletedByReceiver;
+        this.messageRoom = messageRoom;
         this.sender = sender;
         this.receiver = receiver;
     }
@@ -70,6 +75,10 @@ public class Message extends BaseTimeEntity {
 
     public void addReceiver(final Member receiver) {
         this.receiver = receiver;
+    }
+
+    public void setMessageRoom(final Long messageRoom) {
+        this.messageRoom = messageRoom;
     }
 
     public void deleteBySender() {
