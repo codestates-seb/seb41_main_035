@@ -1,6 +1,5 @@
 package com.lookatme.server.board.service;
 
-import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.repository.BoardRepository;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,17 +71,16 @@ public class BoardService {
 
         List<ProductPostDto> postProducts = post.getProducts();
 
-        for(int i = 0; i < postProducts.size(); i++) {
+        for (int i = 0; i < postProducts.size(); i++) {
             // 2. 상품 사진 업로드
             ProductPostDto postDto = postProducts.get(i);
-//            String itemImageUrl = fileService.upload(postDto.getProductImage(), "item");
-            String itemImageUrl = "파일 주소";
+            String itemImageUrl = fileService.upload(postDto.getProductImage(), "item");
 
             // 3. 상품 등록
             Product product = productService.createProduct(postDto, itemImageUrl);
             board.getBoardProducts().add(new BoardProduct(board, product));
 
-            if(postDto.isRental()) {
+            if (postDto.isRental()) {
                 // 4. 렌탈 등록
                 Rental rental = rentalService.createRental(
                         memberId,
@@ -96,8 +93,7 @@ public class BoardService {
         }
 
         // 1. 게시글 사진 업로드
-//        String userImageUrl = fileService.upload(userImage, "post");
-        String userImageUrl = "파일 주소";
+        String userImageUrl = fileService.upload(userImage, "post");
         board.setUserImage(userImageUrl);
 
         return boardRepository.save(board);
@@ -134,12 +130,12 @@ public class BoardService {
         Board board = boardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
 
-        if(loginMemberId != -1) {
+        if (loginMemberId != -1) {
             Member loginMember = findMember(loginMemberId);
             Member member = board.getMember();
             Set<Follow> followers = member.getFollowers();
             for (Follow follower : followers) {
-                if(follower.getFrom().equals(loginMember)) {
+                if (follower.getFrom().equals(loginMember)) {
                     member.setFollowMemberStatus();
                     break;
                 }
