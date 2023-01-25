@@ -24,5 +24,5 @@ public class BoardProductsResponseDto {
 
     private int price;
 
-    private List<RentalResponseDto> rentals;
+    private RentalResponseDto rental;
 }

@@ -1,4 +1,4 @@
-package com.lookatme.server.entity;
+package com.lookatme.server.board.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
 import com.lookatme.server.board.entity.Board;
@@ -63,9 +63,10 @@ public class BoardProduct extends BaseTimeEntity {
         return product.getBrand().getName();
     }
 
-    public List<Rental> getRentals() {
+    public Rental getRental() {
         return product.getRentals().stream()
-                .filter(rental -> rental.getMember().equals(board.getMember()))
-                .collect(Collectors.toList());
+                .filter(rental -> rental.getBoard().equals(board))
+                .findFirst()
+                .orElse(null);
     }
 }

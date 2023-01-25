@@ -1,6 +1,6 @@
 package com.lookatme.server.product.entity;
 
-import com.lookatme.server.entity.BoardProduct;
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.rental.entity.Rental;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

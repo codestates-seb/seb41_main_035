@@ -1,5 +1,6 @@
 package com.lookatme.server.board.mapper;
 
+import com.lookatme.server.board.dto.BoardListResponseDto;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
@@ -19,6 +20,6 @@ public interface BoardMapper {
     @Mapping(target = "products", source = "boardProducts")
     BoardResponseDto boardToBoardResponse(Board board);
 
-    List<BoardResponseDto> boardsToBoardResponseDtos(List<Board> boards);
+    List<BoardListResponseDto> boardsToBoardResponseDtos(List<Board> boards);
 
 }

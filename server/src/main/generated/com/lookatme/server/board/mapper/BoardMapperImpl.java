@@ -1,14 +1,14 @@
 package com.lookatme.server.board.mapper;
 
+import com.lookatme.server.board.dto.BoardListResponseDto;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
-import com.lookatme.server.board.dto.BoardResponseDto.BoardResponseDtoBuilder;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.entity.Board.BoardBuilder;
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.comment.dto.CommentResponseDtoV2;
 import com.lookatme.server.comment.entity.Comment;
-import com.lookatme.server.entity.BoardProduct;
 import com.lookatme.server.member.dto.MemberDto.ResponseWithFollow;
 import com.lookatme.server.member.dto.MemberDto.SimpleResponse;
 import com.lookatme.server.member.entity.Member;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-25T11:44:15+0900",
+    date = "2023-01-25T13:49:51+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -63,30 +63,30 @@ public class BoardMapperImpl implements BoardMapper {
             return null;
         }
 
-        BoardResponseDtoBuilder boardResponseDto = BoardResponseDto.builder();
+        BoardResponseDto boardResponseDto = new BoardResponseDto();
 
-        boardResponseDto.products( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
-        boardResponseDto.boardId( board.getBoardId() );
-        boardResponseDto.userImage( board.getUserImage() );
-        boardResponseDto.content( board.getContent() );
-        boardResponseDto.createdDate( board.getCreatedDate() );
-        boardResponseDto.updatedDate( board.getUpdatedDate() );
-        boardResponseDto.likeCnt( board.getLikeCnt() );
-        boardResponseDto.member( memberToResponseWithFollow( board.getMember() ) );
-        boardResponseDto.comments( commentListToCommentResponseDtoV2List( board.getComments() ) );
+        boardResponseDto.setProducts( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
+        boardResponseDto.setBoardId( board.getBoardId() );
+        boardResponseDto.setUserImage( board.getUserImage() );
+        boardResponseDto.setContent( board.getContent() );
+        boardResponseDto.setCreatedDate( board.getCreatedDate() );
+        boardResponseDto.setUpdatedDate( board.getUpdatedDate() );
+        boardResponseDto.setLikeCnt( board.getLikeCnt() );
+        boardResponseDto.setMember( memberToResponseWithFollow( board.getMember() ) );
+        boardResponseDto.setComments( commentListToCommentResponseDtoV2List( board.getComments() ) );
 
-        return boardResponseDto.build();
+        return boardResponseDto;
     }
 
     @Override
-    public List<BoardResponseDto> boardsToBoardResponseDtos(List<Board> boards) {
+    public List<BoardListResponseDto> boardsToBoardResponseDtos(List<Board> boards) {
         if ( boards == null ) {
             return null;
         }
 
-        List<BoardResponseDto> list = new ArrayList<BoardResponseDto>( boards.size() );
+        List<BoardListResponseDto> list = new ArrayList<BoardListResponseDto>( boards.size() );
         for ( Board board : boards ) {
-            list.add( boardToBoardResponse( board ) );
+            list.add( boardToBoardListResponseDto( board ) );
         }
 
         return list;
@@ -106,19 +106,6 @@ public class BoardMapperImpl implements BoardMapper {
         return rentalResponseDto;
     }
 
-    protected List<RentalResponseDto> rentalListToRentalResponseDtoList(List<Rental> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<RentalResponseDto> list1 = new ArrayList<RentalResponseDto>( list.size() );
-        for ( Rental rental : list ) {
-            list1.add( rentalToRentalResponseDto( rental ) );
-        }
-
-        return list1;
-    }
-
     protected BoardProductsResponseDto boardProductToBoardProductsResponseDto(BoardProduct boardProduct) {
         if ( boardProduct == null ) {
             return null;
@@ -133,7 +120,7 @@ public class BoardMapperImpl implements BoardMapper {
         boardProductsResponseDto.setCategory( boardProduct.getCategory() );
         boardProductsResponseDto.setBrand( boardProduct.getBrand() );
         boardProductsResponseDto.setPrice( boardProduct.getPrice() );
-        boardProductsResponseDto.setRentals( rentalListToRentalResponseDtoList( boardProduct.getRentals() ) );
+        boardProductsResponseDto.setRental( rentalToRentalResponseDto( boardProduct.getRental() ) );
 
         return boardProductsResponseDto;
     }
@@ -228,5 +215,24 @@ public class BoardMapperImpl implements BoardMapper {
         }
 
         return list1;
+    }
+
+    protected BoardListResponseDto boardToBoardListResponseDto(Board board) {
+        if ( board == null ) {
+            return null;
+        }
+
+        BoardListResponseDto boardListResponseDto = new BoardListResponseDto();
+
+        boardListResponseDto.setBoardId( board.getBoardId() );
+        boardListResponseDto.setUserImage( board.getUserImage() );
+        boardListResponseDto.setContent( board.getContent() );
+        boardListResponseDto.setCreatedDate( board.getCreatedDate() );
+        boardListResponseDto.setUpdatedDate( board.getUpdatedDate() );
+        boardListResponseDto.setLikeCnt( board.getLikeCnt() );
+        boardListResponseDto.setCommentCnt( board.getCommentCnt() );
+        boardListResponseDto.setMember( memberToSimpleResponse( board.getMember() ) );
+
+        return boardListResponseDto;
     }
 }
