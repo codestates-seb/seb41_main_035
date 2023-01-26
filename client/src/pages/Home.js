@@ -23,6 +23,31 @@ const Home = () => {
     };
     fetchData();
   }, [location.pathname]);
+
+  const onNew = () => {
+    let newArr = [...data]; //전체 data배열에 추가
+    let newestResult = newArr.sort((a, b) => {
+      //데이터 가공
+      return b.boardId - a.boardId;
+    });
+    setData(newestResult); //다시 data 넣기
+  };
+  const onHot = () => {
+    let newArr = [...data]; //전체 data배열에 추가
+    let newestResult = newArr.sort((a, b) => {
+      //데이터 가공
+      return a.boardId - b.boardId;
+    });
+    setData(newestResult); //다시 data 넣기
+  };
+  // const onCheap = () => {
+  //   let newArr = [...data]; //전체 data배열에 추가
+  //   let newestResult = newArr.sort((a, b) => {
+  //     //데이터 가공
+  //     return a[0]?.products[0].price - b[1]?.products[0].price;
+  //   });
+  //   setData(newestResult); //다시 data 넣기
+  // };
   return (
     <>
       <SWrapper>
@@ -30,9 +55,13 @@ const Home = () => {
           <Slider />
           <div className="main post">
             <Filter>
-              <button className="filter button">Hot</button>
+              <button className="filter button" onClick={onHot}>
+                Hot
+              </button>
               <p>/</p>
-              <button className="filter button">New</button>
+              <button className="filter button" onClick={onNew}>
+                New
+              </button>
               <p>/</p>
               <button className="filter button">Rent</button>
               <p>/</p>
