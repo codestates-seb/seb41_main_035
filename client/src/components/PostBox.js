@@ -15,7 +15,6 @@ const PostBox = ({ data }) => {
   return (
     <SWrapper>
       <Container>
-        {/* //postData로 렌더링 */}
         {data.map((post) => (
           <PostBoxOne key={post.boardId}>
             <div className="user-info ">
@@ -23,7 +22,7 @@ const PostBox = ({ data }) => {
                 className="user-info left"
                 role="presentation"
                 onClick={() => {
-                  navigate(`/members/${post.member?.memberId}`);
+                  navigate(`/profile/${post.member?.memberId}`);
                 }}
               >
                 {' '}
@@ -31,8 +30,12 @@ const PostBox = ({ data }) => {
                 <div className="user-info name">{post.member?.nickname}</div>
               </div>
               <div className="user-info right">
-                <div className="user-info height">170cm</div>
-                <div className="user-info weight">56kg</div>
+                <span className="user-info height">
+                  {post.member?.height}cm
+                </span>
+                <span className="user-info weight">
+                  {post.member?.weight}kg
+                </span>
               </div>
             </div>
 
@@ -43,13 +46,7 @@ const PostBox = ({ data }) => {
                 navigate(`/postview/${post.boardId}`);
               }}
             >
-              <Avatar
-                size="400px"
-                image={post.userImage}
-                onClick={() => {
-                  navigate(`/postview/${post.id}`);
-                }}
-              />
+              <Avatar size="400px" image={post.userImage} />
             </div>
             <div
               className="add container"
@@ -105,7 +102,7 @@ const PostBoxOne = styled.div`
     width: 90%;
     padding-top: 6px;
     align-items: center;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
         width: 85%;
@@ -113,17 +110,20 @@ const PostBoxOne = styled.div`
     }
     .left {
       cursor: pointer;
+      display: flex;
+      .name {
+        flex-grow: 3;
+        margin-left: 10px;
+        margin-bottom: 7px;
+        font-size: 20px;
+      }
     }
     .right {
       color: #2e2d2a;
       font-size: 13px;
-      margin-left: 100px;
-      text-align: right;
-    }
-    .name {
-      margin-left: 10px;
-      margin-bottom: 7px;
-      font-size: 20px;
+      span {
+        text-align: right;
+      }
     }
   }
   .style-picture {

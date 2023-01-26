@@ -6,37 +6,44 @@ import {
   BsPersonCheck,
   BsBookmarkHeart,
 } from 'react-icons/bs';
-// import Comment from '../components/Comment';
+import ChatWindow from '../components/ChatWindow';
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
-
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { token, BREAK_POINT_PC } from '../constants/index';
 
 const PostView = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isUserChatOpen, setIsUserChatOpen] = useState(false);
+  const onChatOpen = () => {
+    setIsUserChatOpen(true);
+  };
   const url = 'http://13.125.30.88';
+  const name = detailData.member?.nickname;
+  const sentId = detailData.member?.memberId;
+  const boardId = detailData.boardId;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(url + `/boards/` + [params.boardId]);
         setDetailData(response.data);
-        console.log(response.data);
+        console.log(response.data.products);
       } catch (err) {
-        window.alert('오류가 발생했습니다.');
         return err;
       }
     };
     fetchData();
   }, []);
-  const onPostDelete = (url) => {
+  const onPostDelete = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      axios(url + `/boards/` + [params.boardId], {
+      axios(url + `/boards/${params.boardId}`, {
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -56,7 +63,6 @@ const PostView = () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
       `/members/follow?op=${detailData.memberId}&type=down`,
-      {},
       {
         headers: { Authorization: token },
       }
@@ -95,7 +101,13 @@ const PostView = () => {
             <SMiddle>
               <div className="user_info">
                 <div className="user_box">
-                  <div className="user_box left">
+                  <div
+                    className="user_box left"
+                    // role="presentation"
+                    // onClick={() => {
+                    //   navigate(`/profile/${post.member?.memberId}`);
+                    // }}
+                  >
                     <div className="user_avatar">
                       <Avatar image={detailData.member?.profileImageUrl} />
                     </div>
@@ -104,13 +116,18 @@ const PostView = () => {
                         {detailData.member?.nickname}
                       </div>
                       <div className="user_boxtwo">
-                        <div className="user_tall">170cm</div>
-                        <div className="user_weight"> 55kg</div>
+                        <div className="user_tall">
+                          {detailData.member?.height}cm
+                        </div>
+                        <div className="user_weight">
+                          {' '}
+                          {detailData.member?.weight}kg
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="icon">
-                    <BsChatLeftText size="20" />
+                    <BsChatLeftText size="20" onClick={onChatOpen} />
                     {isFollowing ? (
                       <BsPersonCheck size="20" onClick={unfollow} />
                     ) : (
@@ -131,10 +148,11 @@ const PostView = () => {
           </div>
           <SBottom>
             <Item />
-            <Comment />
+            <Comment name={name} boardId={boardId} />
           </SBottom>
         </SContainer>
       </div>
+      {isUserChatOpen && <ChatWindow sentId={sentId} name={name} />}
     </SWrapper>
   );
 };
@@ -157,7 +175,7 @@ const SContainer = styled.div`
   border: 1px solid gray;
   margin: 60px 30px;
   max-width: 820px;
-  background-color: #f4f1e0;
+  background-color: white;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
       width: 650px;

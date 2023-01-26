@@ -15,10 +15,7 @@ const ItemImageInput = ({
     const imageLists = e.target.files[0]; // 파일객체들
     let imageUrlLists = [...imgFile, imageLists];
     let imagePreLists = [];
-    // for (let i = 0; i < imageLists.length; i++) {
-    //   const currentImageUrl = URL.createObjectURL(imageLists[i]); // 이미지 미리보기 링크
-    //   imageUrlLists.push(currentImageUrl);
-    // }
+
     let reader = new FileReader();
     if (imageLists) {
       reader.readAsDataURL(imageLists);
