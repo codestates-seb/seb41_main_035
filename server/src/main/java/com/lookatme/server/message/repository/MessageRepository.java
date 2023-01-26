@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
@@ -15,10 +17,12 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findAllMessages(@Param("sender_id") Long senderId, @Param("receiver_id") Long receiverId, Pageable pageable);
 
     @Query(nativeQuery = true,
-            value = "select * from Message where (sender_id = :sender_id and receiver_id = :receiver_id) or (sender_id = :receiver_id and receiver_id = :sender_id) limit 1")
+            value = "select * from message where (sender_id = :sender_id and receiver_id = :receiver_id) or (sender_id = :receiver_id and receiver_id = :sender_id) limit 1")
     Message findExistedMessageRoom(@Param("sender_id") Long senderId, @Param("receiver_id") Long receiverId);
 
     Message findTopByOrderByMessageRoomDesc();
 
-//    List<Message> findMessageRoomList(@Param("member_id") Long memberId);
+    @Query("select m from Message m group by message_room, message_id order by created_at desc")
+    List<Message> findMessageRoomList();
+    //"select distinct(message_room) * from (select * from message where sender_id = :member_id or receiver_id = :member_id order by created_at desc) as m"
 }

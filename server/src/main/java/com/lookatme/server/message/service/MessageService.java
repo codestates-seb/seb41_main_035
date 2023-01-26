@@ -19,7 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,14 +127,27 @@ public class MessageService {
         return new MultiResponseDto<>(messageResponseDtos, messages);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<MessageResponseDto> getMessageRoomList(final MemberPrincipal memberPrincipal) {
-//        List<Message> messages = messageRepository.findMessageRoomList(memberPrincipal.getMemberId());
-//        List<MessageResponseDto> messageResponseDtos = messages.stream()
-//                .map(message -> MessageResponseDto.of(message))
-//                .collect(Collectors.toList());
-//        return messageResponseDtos;
-//    }
+    @Transactional(readOnly = true)
+    public List<MessageResponseDto> getMessageRoomList(final MemberPrincipal memberPrincipal) {
+        Long memberId = memberPrincipal.getMemberId();
+        List<Message> messages = filterMessages(memberId, messageRepository.findMessageRoomList());
+
+        List<MessageResponseDto> messageResponseDtos = messages.stream()
+                .map(m -> MessageResponseDto.of(m))
+                .collect(Collectors.toList());
+
+        return messageResponseDtos;
+    }
+
+    private List<Message> filterMessages(Long memberId, List<Message> messages) {
+        return messages.stream()
+                .filter(m -> m.getSender().getMemberId() == memberId || m.getReceiver().getMemberId() == memberId)
+                .collect(Collectors.groupingBy(Message::getMessageRoom, Collectors.maxBy(Comparator.comparing(Message::getCreatedAt))))
+                .entrySet().stream()
+                .map(Map.Entry::getValue)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
+    }
 
     //받은 편지 삭제
     @Transactional

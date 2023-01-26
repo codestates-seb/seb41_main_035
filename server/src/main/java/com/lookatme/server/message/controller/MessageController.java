@@ -37,10 +37,10 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
     }
 
-//    @GetMapping("/room")
-////    public ResponseEntity getMessageRoom(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-////        return new ResponseEntity<>(messageService.getMessageRoomList(memberPrincipal), HttpStatus.OK);
-////    }
+    @GetMapping("/room")
+    public ResponseEntity getMessageRoom(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        return new ResponseEntity<>(messageService.getMessageRoomList(memberPrincipal), HttpStatus.OK);
+    }
 
     @DeleteMapping("/received/{messageId}")
     public ResponseEntity deleteReceivedMessage(@PathVariable("messageId") Long messageId,
