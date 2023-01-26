@@ -12,6 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+@NamedEntityGraph(
+        name = "board-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode("member"),
+                @NamedAttributeNode("comments")
+        }
+)
 @Entity
 @Getter
 @Setter

@@ -13,4 +13,5 @@ public class RentalPatchDto {
     private int rentalId;
     private int rentalPrice;
     private String size;
+    private boolean rental;
 }

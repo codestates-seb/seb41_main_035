@@ -17,6 +17,9 @@ public interface ProductMapper {
     @Mapping(target = "rentals", ignore = true)
     @Mapping(target = "productImage", ignore = true)
     Product productPostToProduct(ProductPostDto post);
+
+    ProductPostDto productPatchToProductPost(ProductPatchDto patchDto);
+
 //    Product productPatchToProduct(ProductPatchDto patch);
 //    ProductResponseDto productToProductResponseDto(Product product);
 

@@ -13,9 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.util.List;
@@ -33,20 +31,6 @@ public class BoardController {
         this.boardMapper = boardMapper;
     }
 
-    @PostMapping
-    public ResponseEntity postBoard(BoardPostDto post,
-                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws Exception {
-        Board board = boardService.createBoard(post, memberPrincipal.getMemberId());
-        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
-    }
-
-    @PatchMapping("/{board-Id}")
-    public ResponseEntity patchBoard(BoardPatchDto patch,
-                                     @PathVariable("board-Id") int boardId,
-                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
-        Board board = boardService.updateBoard(patch, boardId, memberPrincipal.getMemberId());
-        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
-    }
 
     @GetMapping("/{board-Id}")
     public ResponseEntity getBoard(@PathVariable("board-Id") int boardId,
@@ -65,6 +49,21 @@ public class BoardController {
         List<Board> boards = findPosts.getContent();
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boardMapper.boardsToBoardResponseDtos(boards), findPosts), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity postBoard(BoardPostDto post,
+                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws Exception {
+        Board board = boardService.createBoard(post, memberPrincipal.getMemberId());
+        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{board-Id}")
+    public ResponseEntity patchBoard(BoardPatchDto patch,
+                                     @PathVariable("board-Id") int boardId,
+                                     @AuthenticationPrincipal MemberPrincipal memberPrincipal) throws IOException {
+        Board board = boardService.updateBoard(patch, boardId, memberPrincipal.getMemberId());
+        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
     }
 
     @DeleteMapping("/{board-Id}")

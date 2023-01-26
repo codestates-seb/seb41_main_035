@@ -31,10 +31,10 @@ public class Product {
 
     private String productImage;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rental> rentals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

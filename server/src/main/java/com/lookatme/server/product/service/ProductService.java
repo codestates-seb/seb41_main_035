@@ -1,5 +1,6 @@
 package com.lookatme.server.product.service;
 
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.file.FileDirectory;
@@ -47,6 +48,11 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product createProduct(ProductPatchDto patch, String itemImageUrl) {
+        ProductPostDto productPost = productMapper.productPatchToProductPost(patch);
+        return createProduct(productPost, itemImageUrl);
+    }
+
     /**
      * 상품 수정
      */
@@ -62,11 +68,17 @@ public class ProductService {
                 patch.getLink(),
                 patch.getPrice()
         );
+        savedProduct.setCategory(findCategory(patch.getCategory()));
+        savedProduct.setBrand(findBrand(patch.getBrand()));
         return savedProduct;
     }
 
     public void deleteProduct(int productId) {
-        productRepository.delete(findExistedProduct(productId));
+        Product product = findExistedProduct(productId);
+        for (BoardProduct boardProduct : product.getBoardProducts()) {
+            boardProduct.removeProduct();
+        }
+        productRepository.delete(product);
     }
 
     public void deleteProducts() {

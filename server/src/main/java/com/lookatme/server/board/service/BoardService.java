@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -74,29 +75,74 @@ public class BoardService {
         return savedBoard;
     }
 
+
     public Board updateBoard(BoardPatchDto patch, int boardId, long memberId) throws IOException {
         Board savedBoard = findBoard(boardId);
         // 로그인 한 작성자가 아니면 수정할 수 없음
         if (savedBoard.getMember().getMemberId() != memberId) {
             throw new ErrorLogicException(ErrorCode.FORBIDDEN);
         }
-        String userImageUrl = savedBoard.getUserImage();
         // userImage가 없으면 수정하지 않음
+        String userImageUrl = savedBoard.getUserImage();
         if (patch.getUserImage() != null) {
             userImageUrl = fileService.upload(patch.getUserImage(), FileDirectory.post);
         }
         savedBoard.updateBoard(userImageUrl, patch.getContent());
-        for (ProductPatchDto product : patch.getProducts()) {
-            productService.updateProduct(product);
-            if (product.isRental()) { // 렌탈 정보가 있으면 업데이트
-                rentalService.updateRental(
-                        new RentalPatchDto(
-                                product.getRentalId(),
-                                product.getRentalPrice(),
-                                product.getSize()
-                        )
-                );
+
+        Set<Integer> savedProductIdSet = savedBoard.getBoardProducts().stream()
+                .map(BoardProduct::getProductId)
+                .collect(Collectors.toSet());
+
+        if (patch.getProducts() != null) {
+            for (ProductPatchDto product : patch.getProducts()) {
+                // id가 없는 상품이면 신규 생성
+                Product savedProduct;
+                if (product.getProductId() == null) {
+                    String itemImageUrl = fileService.upload(product.getProductImage(), FileDirectory.item);
+                    savedProduct = productService.createProduct(product, itemImageUrl);
+                    savedBoard.getBoardProducts().add(new BoardProduct(savedBoard, savedProduct));
+                    if (product.isRental()) {
+                        Rental rental = rentalService.createRental(
+                                memberId,
+                                savedProduct.getProductId(),
+                                savedBoard,
+                                product.getSize(),
+                                product.getRentalPrice()
+                        );
+                        savedProduct.getRentals().add(rental);
+                    }
+                } else {
+                    savedProduct = productService.updateProduct(product);
+                    savedProductIdSet.remove(product.getProductId());
+                }
+
+                // 렌탈 정보가 있으면 업데이트
+                if (product.getRentalId() == null) {
+                    if(product.isRental()) {
+                        Rental rental = rentalService.createRental(
+                                memberId,
+                                savedProduct.getProductId(),
+                                savedBoard,
+                                product.getSize(),
+                                product.getRentalPrice()
+                        );
+                        savedProduct.getRentals().add(rental);
+                    }
+                } else {
+                    rentalService.updateRental(
+                            new RentalPatchDto(
+                                    product.getRentalId(),
+                                    product.getRentalPrice(),
+                                    product.getSize(),
+                                    product.isRental()
+                            )
+                    );
+                }
             }
+        }
+        // id가 오지 않은 상품은 삭제
+        for (Integer productId : savedProductIdSet) {
+            productService.deleteProduct(productId);
         }
         return savedBoard;
     }

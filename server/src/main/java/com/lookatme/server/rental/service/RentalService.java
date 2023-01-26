@@ -35,10 +35,9 @@ public class RentalService {
                 .member(findMember(memberId))
                 .product(findProduct(productId))
                 .board(board)
-                .rental(false)
+                .rental(true)
                 .size(size)
                 .rentalPrice(rentalPrice).build();
-
         return rentalRepository.save(rental);
     }
 
@@ -50,7 +49,7 @@ public class RentalService {
 
     public Rental updateRental(RentalPatchDto patch) {
         Rental savedRental = findRental(patch.getRentalId());
-        savedRental.updateRental(patch.getSize(), patch.getRentalPrice());
+        savedRental.updateRental(patch.getSize(), patch.getRentalPrice(), patch.isRental());
         return savedRental;
     }
 

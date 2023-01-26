@@ -19,11 +19,11 @@ public class BoardProduct extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardproductId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -35,7 +35,7 @@ public class BoardProduct extends BaseTimeEntity {
         this.product = product;
     }
 
-    public long getProductId() {
+    public int getProductId() {
         return product.getProductId();
     }
 
@@ -68,5 +68,14 @@ public class BoardProduct extends BaseTimeEntity {
                 .filter(rental -> rental.getBoard().equals(board))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void addProduct() {
+        this.getBoard().getBoardProducts().add(this);
+    }
+
+    // 상품을 삭제하면 BoardProduct도 삭제하되 게시글은 삭제하면 안됨
+    public void removeProduct() {
+        this.getBoard().getBoardProducts().remove(this);
     }
 }
