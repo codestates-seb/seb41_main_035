@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import slideImg01 from '../svg/2109.i121.033.S.m005.c13.isometric fashion clothes infographics.jpg';
 import slideImg02 from '../svg/Site.webp';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import { useNavigate } from 'react-router-dom';
 
 const slideAction = keyframes`
 0%{transform:translateX(0);}
@@ -52,6 +53,7 @@ const ItemSlider = styled.div`
 `;
 
 const Slider = () => {
+  const navigate = useNavigate();
   return (
     <CssSlider>
       <div className="container">
@@ -62,7 +64,11 @@ const Slider = () => {
             </ItemSlider>
           </li>
           <li>
-            <ItemSlider>
+            <ItemSlider
+              onClick={() => {
+                navigate(`/about`);
+              }}
+            >
               <img src={slideImg02} className="slideThumb" alt="배너02" />
             </ItemSlider>
           </li>
