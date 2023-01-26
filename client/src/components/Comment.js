@@ -1,50 +1,44 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-
-import dummyData from '../db/dummyData.json';
-
+import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { fetchDelete } from '../utils/CommentApi';
 const BREAK_POINT_PC = 1300;
 const token = localStorage.getItem('accessToken');
 
-const Comment = () => {
+const Comment = ({ name, boardId }) => {
   const params = useParams();
   const url = 'http://13.125.30.88/comment';
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
-
+  const [removeData, setRemoveData] = useState(commentData.data);
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
-  const onPostComment = (content) => {
-    if (!contentValue) {
-      alert('댓글을 입력해주세요.');
-      return;
-    } else {
-      axios(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token,
-        },
-        data: JSON.stringify({
-          content,
-        }),
+  const onPostComment = () => {
+    axios(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      data: JSON.stringify({
+        boardId: boardId,
+        content: contentValue,
+      }),
+    })
+      .then((res) => {
+        if (res) {
+          location.href = '/postview/' + [params.boardId]; //새로고침
+        }
       })
-        .then((res) => {
-          if (res) {
-            window.location.replace('/postview/:boardId'); //새로고침
-          }
-        })
-        .catch((err) => {
-          return err;
-        });
-    }
+      .catch((err) => {
+        return err;
+      });
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -52,29 +46,42 @@ const Comment = () => {
         const response = await axios.get(
           url + `/board/${params.boardId}?page=1&size=10`
         );
-        setCommentData(response.data);
+        setCommentData(response.data.data);
+        console.log(response.data);
       } catch (err) {
-        window.alert('오류가 발생했습니다.');
         return err;
       }
       //데이터 받아오기 가능하면 지우고 response.data로 변경
     };
     fetchData();
   }, []);
-  const onDelteComment = () => {
+
+  const onDelteComment = (id) => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      fetchDelete(url + `/${commentData.commentId}`);
+      axios(url + `/${id}`, {
+        method: 'delete',
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            setRemoveData({ commentId: 0 });
+          }
+        })
+        .catch((err) => console.log('Error', err.message));
     }
   };
-  //{commentData로 mapping하기}
+
   return (
     <SWrapper>
-      <div className="comment_count">댓글 {commentData.data?.length}</div>
+      <div className="comment_count">댓글 {commentData.length}</div>
       <div className="line"></div>
       <form className="commentWrap">
         <div className="my_avatar">
           <Avatar />
         </div>
+        <div className="user-name"></div>
         <div className="comment-input">
           <input
             type="text"
@@ -82,27 +89,37 @@ const Comment = () => {
             value={contentValue}
             onChange={onContentChange}
           />
-          <HiOutlinePaperAirplane
+          <button
             disabled={!contentValue}
             onClick={() => {
               onPostComment(contentValue);
             }}
-          />
+          >
+            <HiOutlinePaperAirplane />
+          </button>
         </div>
       </form>
+
       <div className="comment_container">
-        {commentData.data?.map((comment) => (
-          <div
-            className="comment_box"
-            key={comment.commentId}
-            role="presentation"
-            onClick={onDelteComment}
-          >
-            <div className="user_avatar">
-              <Avatar image={comment.profileImageUrl} />
+        {commentData.map((comment) => (
+          <div className="comment_box" key={comment.commentId}>
+            <div className="comment-left">
+              <div className="user_avatar">
+                <Avatar image={comment.profileImageUrl} />
+              </div>
+              <div className="user_name">{comment.nickname}</div>
+              <div className="comment_content">{comment.content}</div>
             </div>
-            <div className="user_name">{comment.nickname}</div>
-            <div className="comment_content">{comment.content}</div>
+            <div className="comment-right">
+              <span>수정</span>
+              <span
+                role="presentation"
+                onClick={() => onDelteComment(comment.commentId)}
+              >
+                삭제
+              </span>
+              {/* <BsThreeDotsVertical /> */}
+            </div>
           </div>
         ))}
       </div>
@@ -123,10 +140,8 @@ const SWrapper = styled.div`
   .commentWrap {
     display: flex;
     margin-bottom: 10px;
-
     justify-content: center;
     align-items: center;
-
     .my_avatar {
       width: 30px;
       height: 30px;
@@ -148,12 +163,17 @@ const SWrapper = styled.div`
       display: flex;
       width: 100%;
       justify-content: center;
-      border: 1px solid gray;
+      /* border-bottom: 1px solid gray; */
+      /* background-color: white; */
+      background-color: #f7f5ec;
+      margin-left: 10px;
 
       input {
         width: 90%;
         height: 4vh;
         border: none;
+        /* border-bottom: 1px solid gray; */
+        background-color: #f7f5ec;
         &:focus {
           outline: none;
         }
@@ -163,6 +183,10 @@ const SWrapper = styled.div`
         transform: rotate(90deg);
         margin-top: 5px;
       }
+    }
+    button {
+      background-color: #f7f5ec;
+      border: none;
     }
   }
   .comment_container {
@@ -178,6 +202,18 @@ const SWrapper = styled.div`
       display: flex;
       height: 40px;
       align-items: center;
+      justify-content: space-between;
+      .comment-left {
+        display: flex;
+      }
+      .comment-right {
+        margin-right: 10px;
+        font-size: 12px;
+        color: gray;
+        span {
+          margin: 0px 5px;
+        }
+      }
     }
     .user_avatar {
       width: 30px;

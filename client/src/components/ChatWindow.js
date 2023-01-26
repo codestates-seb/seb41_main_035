@@ -7,17 +7,19 @@ import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { token } from '../constants/index';
-const ChatWindow = ({ onChatOpen, onChatWindow, sentId }) => {
+const ChatWindow = ({ onChatOpen, onChatWindow, sentId, name }) => {
   const [chatData, setChatData] = useState([]);
+  const [sentData, setSentData] = useState([]);
   const url = 'http://13.125.30.88';
-
-  console.log(sentId);
-  //  멤버아이디받아오기
+  const onChatChange = (e) => {
+    setSentData(e.currentTarget.value);
+    console.log(sentData);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          url + `/message/received/${sentId}?page=1&size=10`,
+          url + `/message/received/${sentId}?page=1&size=100`,
           {
             headers: {
               Authorization: token,
@@ -25,15 +27,40 @@ const ChatWindow = ({ onChatOpen, onChatWindow, sentId }) => {
           }
         );
         setChatData(response.data);
-        console.log(response.data);
+        console.log(response.data.data);
       } catch (err) {
-        window.alert('오류가 발생했습니다.');
         return err;
       }
     };
     fetchData();
   }, []);
-
+  console.log(chatData);
+  const onPostComment = () => {
+    if (!sentData) {
+      alert('글을 입력해주세요.');
+      return;
+    } else {
+      axios(url + '/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+        data: JSON.stringify({
+          content: sentData,
+          receiverNickname: name,
+        }),
+      })
+        .then((res) => {
+          if (res) {
+            window.location.replace('/'); //새로고침
+          }
+        })
+        .catch((err) => {
+          return err;
+        });
+    }
+  };
   return (
     <>
       <SModalBack />
@@ -52,6 +79,7 @@ const ChatWindow = ({ onChatOpen, onChatWindow, sentId }) => {
           <SContent>
             {/* 데이터 받으면 mapping하기 
           상대방과 나 데이터를 받으면 어떻게 구현할지 생각해보기*/}
+            {/* {chatData.map((chat) => ( */}
             <div className="chat-content">
               <Avatar size="40px" />
               <div className="user-content">
@@ -62,10 +90,11 @@ const ChatWindow = ({ onChatOpen, onChatWindow, sentId }) => {
                 <div className="send-content">안녕하세요</div>
               </div>
             </div>
+            {/* ))} */}
           </SContent>
           <SInputContent>
-            <textarea rows="1" cols="33" />
-            <HiOutlinePaperAirplane />
+            <textarea rows="1" cols="33" onChange={onChatChange} />
+            <HiOutlinePaperAirplane onClick={onPostComment} />
           </SInputContent>
         </div>
       </SWrapper>

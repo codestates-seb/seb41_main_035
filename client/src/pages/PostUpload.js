@@ -16,7 +16,7 @@ const PostUpload = () => {
       price: '',
       link: '',
       rental: false,
-      rentalPrice: '',
+      rentalPrice: 0,
       category: '아우터',
     },
     {
@@ -27,7 +27,7 @@ const PostUpload = () => {
       price: '',
       link: '',
       rental: false,
-      rentalPrice: '',
+      rentalPrice: 0,
       category: '아우터',
     },
   ]); // PostUploadBar에 전달 , defaultContent기본값 1개뜨게끔
@@ -86,7 +86,7 @@ const PostUpload = () => {
         })
         .then((res) => {
           if (res) {
-            location.href = '/postview';
+            location.href = '/';
           }
           console.log(res.data);
         })
@@ -111,7 +111,7 @@ const PostUpload = () => {
         price: '',
         link: '',
         rental: false,
-        rentalPrice: '',
+        rentalPrice: 0,
         category: '아우터',
       },
     ]);
