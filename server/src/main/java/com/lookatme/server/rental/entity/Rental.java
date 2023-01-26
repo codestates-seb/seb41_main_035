@@ -1,6 +1,7 @@
 package com.lookatme.server.rental.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
+import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.product.entity.Product;
 import lombok.*;
@@ -23,7 +24,7 @@ public class Rental extends BaseTimeEntity {
     private boolean rental;
 
     @Column(nullable = false)
-    private int size;
+    private String size;
 
     @Column(nullable = false)
     private int rentalPrice;
@@ -35,4 +36,13 @@ public class Rental extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_Id")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_Id")
+    private Board board;
+
+    public void updateRental(String size, int rentalPrice) {
+        this.size = size;
+        this.rentalPrice = rentalPrice;
+    }
 }

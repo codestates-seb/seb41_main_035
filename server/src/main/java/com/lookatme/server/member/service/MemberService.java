@@ -36,10 +36,10 @@ public class MemberService {
     private final MemberMapper mapper;
 
     // ** 메서드 오버로딩 **
-    public MemberDto.Response findMember(long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public MemberDto.ResponseWithFollow findMember(long memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
-        return mapper.memberToMemberResponse(member);
+        return mapper.memberToMemberResponseWithFollow(member);
     }
 
     public Page<MemberDto.Response> findMembers(int page, int size) {
@@ -73,59 +73,6 @@ public class MemberService {
         }
         findMember.updateMemberProfile(patchDto.getNickname(), patchDto.getHeight(), patchDto.getWeight());
         return mapper.memberToMemberResponse(findMember);
-    }
-
-    // 로그인 되어있는 사용자가 / nickname 회원을 / followers list에 추가한다
-    public void followMember(Account account, long opMemberId) {
-        Member member = getMember(account);
-        Member opponent = getMember(opMemberId);
-
-        if (followRepository.existsByFromAndTo(member, opponent)) {
-            throw new ErrorLogicException(ErrorCode.MEMBER_ALREADY_FOLLOW); // 이미 팔로우 한 회원
-        }
-        if (member.equals(opponent)) {
-            throw new ErrorLogicException(ErrorCode.MEMBER_SELF_FOLLOW);
-        }
-        Follow follow = new Follow(member, opponent); // follower = 팔로우 하는 사람 / followee = 팔로우 눌린 상대
-        followRepository.save(follow);
-    }
-
-    public void unfollowMember(Account account, long opMemberId) {
-        Member member = getMember(account);
-        Member opponent = getMember(opMemberId);
-
-        if (!followRepository.existsByFromAndTo(member, opponent)) {
-            throw new ErrorLogicException(ErrorCode.MEMBER_NOT_FOLLOW); // 팔로우 되어있지 않은 회원
-        }
-
-        Follow follow = followRepository.findByFromAndTo(member, opponent);
-        followRepository.delete(follow);
-    }
-
-    public Page<MemberDto.Response> findFollowers(Account account, String tab, int page, int size) {
-        Member member = getMember(account);
-
-        List<Member> memberList;
-        switch (tab) {
-            case "followee":
-                memberList = member.getFollowees().stream()
-                        .map(Follow::getTo).collect(Collectors.toList());
-                break;
-            case "follower":
-                memberList = member.getFollowers().stream()
-                        .map(Follow::getFrom).collect(Collectors.toList());
-                break;
-            default:
-                throw new ErrorLogicException(ErrorCode.BAD_REQUEST);
-        }
-
-        List<MemberDto.Response> memberResponseList = mapper.memberListToMemberResponseList(memberList);
-
-        PageRequest pageRequest = PageRequest.of(page, size);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), memberResponseList.size());
-
-        return new PageImpl<>(memberResponseList.subList(start, end), pageRequest, memberResponseList.size());
     }
 
     public void deleteMember(long memberId) {

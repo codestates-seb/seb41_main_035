@@ -14,6 +14,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { token, BREAK_POINT_PC } from '../constants/index';
+import ChatWindow from '../components/ChatWindow';
 
 const PostView = () => {
   const navigate = useNavigate();
@@ -28,7 +29,6 @@ const PostView = () => {
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
   const boardId = detailData.boardId;
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,6 +84,11 @@ const PostView = () => {
     if (res) {
       setIsFollowing(true);
     }
+  };
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const onChatOpen = () => {
+    setIsChatOpen((prev) => !prev);
   };
 
   return (

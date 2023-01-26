@@ -46,4 +46,11 @@ public class ControllerAdvice {
         log.error(ERROR_MESSAGE, ErrorCode.FILE_SIZE_EXCEEDED.getValue());
         return new ErrorResponseDto(ErrorCode.FILE_SIZE_EXCEEDED);
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleException(Exception e) {
+        e.printStackTrace();
+        return e.getMessage(); // ******* 테스트용 *******
+    }
 }

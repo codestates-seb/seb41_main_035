@@ -1,5 +1,6 @@
 package com.lookatme.server.product.entity;
-import com.lookatme.server.entity.BoardProduct;
+
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.rental.entity.Rental;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,18 +24,18 @@ public class Product {
     private String productName;
 
     @Column(nullable = false)
-    private int sellingPrice;
+    private int price;
 
     @Column(nullable = false)
     private String link;
 
     private String productImage;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<BoardProduct> BoardProducts = new ArrayList<>();
 
-    @OneToMany(fetch=FetchType.LAZY)
-    private List<Rental> rentals;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Rental> rentals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -43,4 +44,11 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    public void updateProduct(String productName, String productImage, String link, int price) {
+        this.productName = productName;
+        this.productImage = productImage;
+        this.link = link;
+        this.price = price;
+    }
 }

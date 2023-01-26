@@ -56,6 +56,7 @@ export const SModalBack = styled.div`
 const SWrapper = styled.div`
   position: fixed;
   width: 100%;
+  height: 100%;
   top: 5%;
   background-color: rgba(0, 0, 0, 0);
   display: flex;
@@ -63,11 +64,12 @@ const SWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   .close-container {
-    margin-top: 30px;
+    /* margin-top: 30px; */
     background-color: rgba(0, 0, 0, 0);
     font-size: 30px;
     cursor: pointer;
     transform: translate(700%, 10%);
+    margin-left: 50px; //추가
   }
   p {
     margin-left: 40px;

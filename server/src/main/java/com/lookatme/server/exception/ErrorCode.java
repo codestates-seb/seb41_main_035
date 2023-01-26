@@ -14,6 +14,12 @@ public enum ErrorCode {
     // BOARD
     BOARD_NOT_FOUND("해당 게시글은 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
+    // PRODUCT & Rental
+    PRODUCT_NOT_FOUND("상품이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    PRODUCT_ALREADY_EXISTS("상품이 이미 존재합니다.", HttpStatus.BAD_REQUEST),
+    RENTAL_NOT_FOUND("렌탈 정보가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    RENTAL_ALREADY_EXISTS("렌탈 정보가 이미 존재합니다.", HttpStatus.BAD_REQUEST),
+
     // MEMBER
     MEMBER_NOT_FOUND("회원이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     MEMBER_ACCOUNT_EXISTS("이미 존재하는 계정입니다.", HttpStatus.BAD_REQUEST),

@@ -2,27 +2,18 @@ package com.lookatme.server.product.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Column;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 public class ProductPostDto {
+    private MultipartFile productImage;
     private String productName;
-
-    private int size;
-
-    private int price; // 상품 구매 가격
-
-    private String link;
-
-    private boolean rental;
-
-    private int rentalPrice; // 렌탈 가격
-
     private String category;
-
     private String brand;
-
-    private String productImage;
+    private String size;
+    private String link;
+    private int price; // 구매 가격
+    private int rentalPrice; // 렌탈 가격
+    private boolean rental;
 }

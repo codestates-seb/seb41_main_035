@@ -68,11 +68,13 @@ const ChatWindow = ({ onChatOpen, onChatWindow, sentId, name }) => {
         <AiOutlineClose className="close-container" onClick={onChatOpen} />
         <div className="chat-container">
           <div className="top">
+            {/* 뒤로가기 왼쪽으로 이동 */}
+            <MdNavigateBefore onClick={onChatWindow} />
             <div className="user-info">
               <Avatar size="45px" />
               <span className="user-name">uuuuu</span>
             </div>
-            <MdNavigateBefore onClick={onChatWindow} />
+            {/* <MdNavigateBefore onClick={onChatWindow} /> */}
           </div>
           <SContent>
             {/* 데이터 받으면 mapping하기 
@@ -105,22 +107,27 @@ export const SModalBack = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 0;
+  z-index: 999; //로그인헤더만 하얘서 추가
 `;
 const SWrapper = styled.div`
   position: fixed;
   width: 100%;
+  //추가 height 100%
+  height: 100%;
   top: 5%;
   background-color: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  z-index: 99999; //추가
   .close-container {
-    margin-top: 30px;
+    /* margin-top: 30px; */
     background-color: rgba(0, 0, 0, 0);
     transform: translate(700%, 10%);
     font-size: 30px;
     cursor: pointer;
+    margin-left: 50px; //추가
   }
   .chat-container {
     margin: 10px 0px 50px 0px;
@@ -134,11 +141,13 @@ const SWrapper = styled.div`
     .top {
       display: flex;
       align-items: center;
-      width: 80%;
+      width: 90%;
       margin-top: 10px;
       font-size: 30px;
-      justify-content: space-between;
+      /* justify-content: space-between; */
       background-color: #cadde5;
+      justify-content: flex-start; //추가
+
       .user-info {
         display: flex;
         padding-right: 20px;
@@ -154,6 +163,8 @@ const SWrapper = styled.div`
       svg {
         cursor: pointer;
         background-color: #cadde5;
+        //추가
+        margin: -5px 20px 0px -20px;
       }
     }
   }
@@ -164,6 +175,7 @@ const SContent = styled.div`
   background-color: #f4f1e0;
   margin: 10px 0px 20px 0px;
   overflow: auto;
+  border-radius: 8px; //추가
   .chat-content {
     display: flex;
     margin: 15px 0px 5px 15px;
@@ -187,18 +199,21 @@ const SInputContent = styled.div`
   background-color: #f4f1e0;
   margin-bottom: 30px;
   display: flex;
+  border-radius: 8px; //추가
   textarea {
     border: none;
     resize: none;
     background-color: #f4f1e0;
     font-size: 20px;
+    border-radius: 8px; //추가
+
     &:focus {
       outline: none;
     }
   }
   svg {
-    font-size: 40px;
-    margin: 8px 10px 0px 20px;
+    font-size: 30px; //추가
+    margin: 13px 10px 0px 20px; //추가
     transform: rotate(90deg);
   }
 `;

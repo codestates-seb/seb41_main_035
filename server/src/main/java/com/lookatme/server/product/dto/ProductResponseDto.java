@@ -9,14 +9,19 @@ public class ProductResponseDto {
 
     private String productName;
 
-    private String size;
-
-    private int price;
+    private String productImage;
 
     private String link;
 
-    private boolean rental;
+//    private String category;
+//
+//    private String brand;
+//
+//    private boolean rental;
+//
+//    private String size;
+//
+//    private int price;
 
-    // 이미지는 URL을 통해 접근하도록 한다.
-    private String image;
+
 }

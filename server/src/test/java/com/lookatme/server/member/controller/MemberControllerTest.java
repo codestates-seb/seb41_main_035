@@ -5,7 +5,8 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
-import com.lookatme.server.file.service.FileService;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
@@ -13,6 +14,7 @@ import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.OauthPlatform;
 import com.lookatme.server.member.mapper.MemberMapper;
 import com.lookatme.server.member.mapper.MemberMapperImpl;
+import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,8 +42,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -62,6 +63,9 @@ class MemberControllerTest {
 
     @MockBean
     private FileService fileService;
+
+    @MockBean
+    private FollowService followService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -100,7 +104,8 @@ class MemberControllerTest {
     @Test
     void getMemberTest() throws Exception {
         // Given
-        given(memberService.findMember(savedMember.getMemberId())).willReturn(savedMemberResponse);
+        MemberDto.ResponseWithFollow response = mapper.memberToMemberResponseWithFollow(savedMember);
+        given(memberService.findMember(savedMember.getMemberId())).willReturn(response);
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -127,7 +132,8 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("follow").type(BOOLEAN).description("팔로우 유무")
                                 )
                         )
                 ));
@@ -312,7 +318,7 @@ class MemberControllerTest {
     @Test
     void followTest() throws Exception {
         // Given
-        willDoNothing().given(memberService).followMember(any(Account.class), anyInt());
+        willDoNothing().given(followService).follow(anyLong(), anyLong());
 
         // When
         ResultActions actions = mockMvc.perform(
@@ -362,7 +368,7 @@ class MemberControllerTest {
         Page<MemberDto.Response> memberPage = new PageImpl<>(responseList.subList(start, end), pageRequest, responseList.size());
 
         given(
-                memberService.findFollowers(
+                followService.findFollows(
                         memberPrincipal.getAccount(),
                         tab,
                         page - 1,
@@ -421,7 +427,7 @@ class MemberControllerTest {
         // Given
         MockMultipartFile image = new MockMultipartFile("image", "testImage.png", "image/png", "<<png data>>".getBytes());
 
-        given(fileService.upload(any(MultipartFile.class), anyString())).willReturn("새 프로필 사진 링크");
+        given(fileService.upload(any(MultipartFile.class), any(FileDirectory.class))).willReturn("새 프로필 사진 링크");
         given(memberService.setProfileImage(any(Account.class), anyString())).willReturn(savedMemberResponse);
 
         // When

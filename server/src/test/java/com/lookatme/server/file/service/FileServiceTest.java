@@ -3,6 +3,8 @@ package com.lookatme.server.file.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
+import com.lookatme.server.file.FileDirectory;
+import com.lookatme.server.file.FileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,7 +53,7 @@ class FileServiceTest {
         );
 
         // When
-        Throwable exception = catchThrowable(() -> fileService.upload(file, "dirName"));
+        Throwable exception = catchThrowable(() -> fileService.upload(file, FileDirectory.profile));
 
         // Then
         assertThat(exception).isInstanceOf(ErrorLogicException.class);
