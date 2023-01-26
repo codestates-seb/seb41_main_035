@@ -15,12 +15,15 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { token, BREAK_POINT_PC } from '../constants/index';
+import ChatWindow from '../components/ChatWindow';
 
 const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const url = 'http://13.125.30.88';
+  const sentId = detailData.member?.memberId;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,6 +83,11 @@ const PostView = () => {
     }
   };
 
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const onChatOpen = () => {
+    setIsChatOpen((prev) => !prev);
+  };
+
   return (
     <SWrapper>
       <div className="container">
@@ -110,7 +118,7 @@ const PostView = () => {
                     </div>
                   </div>
                   <div className="icon">
-                    <BsChatLeftText size="20" />
+                    <BsChatLeftText size="20" onClick={onChatOpen} />
                     {isFollowing ? (
                       <BsPersonCheck size="20" onClick={unfollow} />
                     ) : (
@@ -135,6 +143,7 @@ const PostView = () => {
           </SBottom>
         </SContainer>
       </div>
+      {isChatOpen && <ChatWindow sentId={sentId} onChatOpen={onChatOpen} />}
     </SWrapper>
   );
 };

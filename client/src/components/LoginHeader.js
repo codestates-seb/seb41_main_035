@@ -10,7 +10,9 @@ import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
 import memberstore from '../store/memberstore';
 import axios from 'axios';
+import Logo from '../svg/Logo.svg';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+
 const backendUrl = 'http://13.125.30.88/';
 
 const LoginHeader = () => {
@@ -50,13 +52,14 @@ const LoginHeader = () => {
         <SHeader>
           <div className="header-container">
             <div className="title-name">
-              <p
+              {/* ---로고삽입--- */}
+              <img
+                src={Logo}
+                alt="logo"
                 className="title"
                 role="presentation"
                 onClick={() => navigate(`/`)}
-              >
-                Look at me
-              </p>
+              />
             </div>
             <SearchBox />
             {!isLogin ? (
@@ -114,12 +117,14 @@ const SHeader = styled.div`
   top: 0;
   border-bottom: 3px solid #196ba5;
   background-color: #fff;
+  //수정
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-    padding: 0 10px;
+    margin: 0 -50px;
   }
   .header-container {
     display: flex;
-    width: 100%;
+    /* 100% -> 80% 변경 */
+    width: 90%;
     /* 1250에서 1400으로 변경 */
     max-width: 1400px;
     align-items: center;
@@ -127,15 +132,18 @@ const SHeader = styled.div`
   }
   .title-name {
     flex-grow: 4;
-    height: 12vh;
+    /* height: 12vh; */
     display: flex;
     /* justify-content: flex-start; */
+    img {
+      height: 90px;
+    }
   }
   .title {
-    font-size: 40px;
+    /* font-size: 40px; */
     cursor: pointer;
-    font-family: 'Song Myung', serif;
-    color: #196ba5;
+    /* font-family: 'Song Myung', serif;
+    color: #196ba5; */
   }
 
   .right {
@@ -184,6 +192,7 @@ const SHeader = styled.div`
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
         display: flex;
+        margin-right: 20px;
       }
     }
   }
