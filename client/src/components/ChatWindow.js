@@ -4,8 +4,63 @@ import Avatar from './Avatar';
 import { MdNavigateBefore } from 'react-icons/md';
 import { AiOutlineClose } from 'react-icons/ai';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-
-const ChatWindow = ({ onChatOpen, onChatWindow }) => {
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { token } from '../constants/index';
+const ChatWindow = ({ onChatOpen, onChatWindow, sentId, name }) => {
+  const [chatData, setChatData] = useState([]);
+  const [sentData, setSentData] = useState([]);
+  const url = 'http://13.125.30.88';
+  const onChatChange = (e) => {
+    setSentData(e.currentTarget.value);
+    console.log(sentData);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          url + `/message/received/${sentId}?page=1&size=100`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setChatData(response.data);
+        console.log(response.data.data);
+      } catch (err) {
+        return err;
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(chatData);
+  const onPostComment = () => {
+    if (!sentData) {
+      alert('글을 입력해주세요.');
+      return;
+    } else {
+      axios(url + '/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+        data: JSON.stringify({
+          content: sentData,
+          receiverNickname: name,
+        }),
+      })
+        .then((res) => {
+          if (res) {
+            window.location.replace('/'); //새로고침
+          }
+        })
+        .catch((err) => {
+          return err;
+        });
+    }
+  };
   return (
     <>
       <SModalBack />
@@ -22,6 +77,7 @@ const ChatWindow = ({ onChatOpen, onChatWindow }) => {
           <SContent>
             {/* 데이터 받으면 mapping하기 
           상대방과 나 데이터를 받으면 어떻게 구현할지 생각해보기*/}
+            {/* {chatData.map((chat) => ( */}
             <div className="chat-content">
               <Avatar size="40px" />
               <div className="user-content">
@@ -32,10 +88,11 @@ const ChatWindow = ({ onChatOpen, onChatWindow }) => {
                 <div className="send-content">안녕하세요</div>
               </div>
             </div>
+            {/* ))} */}
           </SContent>
           <SInputContent>
-            <textarea rows="1" cols="33" />
-            <HiOutlinePaperAirplane />
+            <textarea rows="1" cols="33" onChange={onChatChange} />
+            <HiOutlinePaperAirplane onClick={onPostComment} />
           </SInputContent>
         </div>
       </SWrapper>
@@ -45,13 +102,12 @@ const ChatWindow = ({ onChatOpen, onChatWindow }) => {
 export const SModalBack = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 0;
 `;
 const SWrapper = styled.div`
   position: fixed;
-  overflow: hidden;
   width: 100%;
   top: 5%;
   background-color: rgba(0, 0, 0, 0);
