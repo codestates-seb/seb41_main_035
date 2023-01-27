@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-27T12:56:30+0900",
+    date = "2023-01-27T18:24:41+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -151,6 +151,7 @@ public class BoardMapperImpl implements BoardMapper {
         int followerCnt = 0;
         int followeeCnt = 0;
         boolean follow = false;
+        boolean delete = false;
 
         memberId = member.getMemberId();
         email = member.getEmail();
@@ -162,8 +163,9 @@ public class BoardMapperImpl implements BoardMapper {
         followerCnt = member.getFollowerCnt();
         followeeCnt = member.getFolloweeCnt();
         follow = member.isFollow();
+        delete = member.isDelete();
 
-        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow );
+        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow, delete );
 
         return responseWithFollow;
     }
@@ -176,12 +178,14 @@ public class BoardMapperImpl implements BoardMapper {
         long memberId = 0L;
         String nickname = null;
         String profileImageUrl = null;
+        boolean delete = false;
 
         memberId = member.getMemberId();
         nickname = member.getNickname();
         profileImageUrl = member.getProfileImageUrl();
+        delete = member.isDelete();
 
-        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl );
+        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl, delete );
 
         return simpleResponse;
     }

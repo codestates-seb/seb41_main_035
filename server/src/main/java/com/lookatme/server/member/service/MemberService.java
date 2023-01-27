@@ -5,11 +5,10 @@ import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
-import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.mapper.MemberMapper;
-import com.lookatme.server.member.repository.FollowRepository;
 import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.rental.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private final RentalService rentalService;
     private final MemberRepository memberRepository;
-    private final FollowRepository followRepository;
-
     private final MemberAuthorityUtils authorityUtils;
     private final PasswordEncoder passwordEncoder;
     private final MemberMapper mapper;
@@ -76,7 +73,9 @@ public class MemberService {
     }
 
     public void deleteMember(long memberId) {
-        memberRepository.deleteById(memberId);
+        Member member = getMember(memberId);
+        member.withdrawal();
+        rentalService.withdrawalMember(memberId);
     }
 
     public MemberDto.Response setProfileImage(Account account, String imageUrl) {

@@ -70,6 +70,7 @@ public class MemberDto {
         private int weight;
         private int followerCnt;
         private int followeeCnt;
+        private boolean delete;
     }
 
     @Getter
@@ -85,6 +86,7 @@ public class MemberDto {
         private int followerCnt;
         private int followeeCnt;
         private boolean follow;
+        private boolean delete;
     }
 
     @Getter
@@ -94,6 +96,7 @@ public class MemberDto {
         private String nickname;
         private String profileImageUrl;
         private boolean follow;
+        private boolean delete;
     }
 
     @Getter
@@ -102,5 +105,6 @@ public class MemberDto {
         private long memberId;
         private String nickname;
         private String profileImageUrl;
+        private boolean delete;
     }
 }

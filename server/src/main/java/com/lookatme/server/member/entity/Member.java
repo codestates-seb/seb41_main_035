@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "member_status not like 'MEMBER_WITHDRAWAL'")
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(name = "UniqueAccount", columnNames = {"email", "oauthPlatform"}),
@@ -55,7 +57,7 @@ public class Member extends BaseTimeEntity {
     private MemberStatus memberStatus;
 
     @Column(length = 1000)
-    @ColumnDefault("'https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png'")
+    @ColumnDefault("'" + DEFAULT_PROFILE_IMG + "'")
     private String profileImageUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -68,6 +70,8 @@ public class Member extends BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime updatedDate;
 
+    private LocalDateTime deletedDate;
+
     @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE) // Member를 제거할 때 Follow도 같이 제거
     private Set<Follow> followees = new HashSet<>(); // 내가 팔로우 한 사람
 
@@ -76,6 +80,9 @@ public class Member extends BaseTimeEntity {
 
     @Transient
     private boolean follow; // 로그인 한 사용자가 팔로우 한 회원인지 유무 체크
+
+    @Transient
+    private final String DEFAULT_PROFILE_IMG = "https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png";
 
     @Builder
     public Member(long memberId, Account account, String password, String nickname, int height, int weight, String profileImageUrl) {
@@ -121,6 +128,21 @@ public class Member extends BaseTimeEntity {
         loginTryCnt = 0;
     }
 
+    // 회원 탈퇴
+    public void withdrawal() {
+        this.memberStatus = MemberStatus.MEMBER_WITHDRAWAL;
+        this.password = null;
+        this.height = this.weight = 0;
+        this.profileImageUrl = DEFAULT_PROFILE_IMG;
+        this.deletedDate = LocalDateTime.now();
+    }
+    
+    // 탈퇴한 회원인지 유무
+    public boolean isDelete() {
+        return memberStatus == MemberStatus.MEMBER_WITHDRAWAL;
+    }
+
+    // 내가 팔로우 중인 회원인지 유무
     public boolean isFollow() {
         return follow;
     }

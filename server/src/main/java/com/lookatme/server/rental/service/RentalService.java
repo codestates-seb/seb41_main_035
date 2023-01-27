@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Service
 public class RentalService {
@@ -54,12 +56,14 @@ public class RentalService {
         return savedRental;
     }
 
-    public void deleteRental(int rentalId) {
+    public void deleteRental(long rentalId) {
         rentalRepository.delete(findExistedRental(rentalId));
     }
 
-    public void deleteRentals() {
-        rentalRepository.deleteAll();
+    // 회원 탈퇴 시 회원이 올린 모든 렌탈 데이터를 이용 불가 상태로 변경
+    public void withdrawalMember(long memberId) {
+        rentalRepository.findByMember_MemberId(memberId)
+                .forEach(rental -> rental.setAvailable(false));
     }
 
     public Rental findRentalByBoardId(long boardId, long productId) {
