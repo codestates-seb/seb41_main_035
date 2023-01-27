@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleBoardResponseDto {
 
-    private int boardId;
+    private long boardId;
 
     private String userImage;
 

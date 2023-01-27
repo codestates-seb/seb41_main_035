@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
-import com.lookatme.server.file.FileDirectory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,11 +30,15 @@ public class FileService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public String upload(MultipartFile multipartFile, FileDirectory dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, FileDirectory dirName) {
         String fileType = imageTypeCheck(multipartFile);
-        File uploadFile = convertMultipartFileToFile(multipartFile)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED));
-        return upload(uploadFile, dirName.getName(), fileType);
+        try {
+            File uploadFile = convertMultipartFileToFile(multipartFile)
+                    .orElseThrow(() -> new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED));
+            return upload(uploadFile, dirName.getName(), fileType);
+        } catch (IOException e) {
+            throw new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED);
+        }
     }
 
     private String upload(File file, String dirName, String fileType) {

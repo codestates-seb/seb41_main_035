@@ -9,4 +9,5 @@ public class RentalResponseDto {
     private int rentalId;
     private String size;
     private int rentalPrice;
+    private boolean available;
 }
