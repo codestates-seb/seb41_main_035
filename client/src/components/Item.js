@@ -66,7 +66,7 @@ const Item = () => {
                 <span> {item.price}</span>
               </div>
             </div>
-            {isRent ? (
+            {item.rental.available === true ? (
               <div className="item_rent">
                 <Rent />
                 <div className="rent_price">
@@ -136,6 +136,7 @@ const SItemContainer = styled.div`
         background-color: #eee6ca;
         svg {
           background-color: #eee6ca;
+          margin-top: 10px;
         }
       }
       .rent_price {
