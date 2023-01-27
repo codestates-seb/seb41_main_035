@@ -1,17 +1,20 @@
 package com.lookatme.server.board.service;
 
+import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.entity.Board;
+import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.repository.BoardRepository;
-import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.exception.board.BoardNotFoundException;
 import com.lookatme.server.file.FileDirectory;
 import com.lookatme.server.file.FileService;
+import com.lookatme.server.likes.repository.LikesRepository;
+import com.lookatme.server.likes.service.LikesService;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.member.service.FollowService;
@@ -47,6 +50,8 @@ public class BoardService {
     private final FollowService followService;
     private final RentalService rentalService;
     private final ProductService productService;
+    private final LikesRepository likesRepository;
+    private final LikesService likesService;
 
     public BoardResponseDto createBoard(BoardPostDto post, long memberId) {
         // 1. 게시글 저장
@@ -132,13 +137,13 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Board findBoard(int boardId) {
+    public Board findBoard(long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public Board findBoard(int boardId, long loginMemberId) {
+    public Board findBoard(long boardId, long loginMemberId) {
         Board board = findBoard(boardId);
         Member writer = board.getMember();
         if (loginMemberId != -1) {
@@ -179,5 +184,21 @@ public class BoardService {
     private Product findProduct(long productId) {
         return productRepository.findByProductId(productId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    @Transactional
+    public BoardResponseDto likeBoard(final MemberPrincipal memberPrincipal, final long boardId) {
+        Member member = findMember(memberPrincipal.getMemberId());
+        Board board = findBoard(boardId);
+
+        if (likesRepository.findByBoardAndMember(board, member) == null) {
+            board.setLikeCnt(board.getLikeCnt() + 1);
+            likesService.like(member, board);
+        } else {
+            board.setLikeCnt(board.getLikeCnt() - 1);
+            likesService.unlike(member, board);
+        }
+
+        return mapper.boardToBoardResponse(board);
     }
 }

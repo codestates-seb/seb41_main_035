@@ -1,13 +1,13 @@
 package com.lookatme.server.board.controller;
 
 import com.lookatme.server.auth.dto.MemberPrincipal;
+import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
-import com.lookatme.server.common.dto.MultiResponseDto;
-import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.service.BoardService;
+import com.lookatme.server.common.dto.MultiResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -73,5 +73,11 @@ public class BoardController {
     public ResponseEntity<?> deletePost(@Positive @PathVariable("board-Id") int boardId) {
         boardService.deleteBoard(boardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{board-Id}/like")
+    public ResponseEntity<?> likeBoard(@PathVariable("board-Id") long boardId,
+                                       @AuthenticationPrincipal MemberPrincipal memberPrincipal){
+        return new ResponseEntity<>(boardService.likeBoard(memberPrincipal,boardId), HttpStatus.OK);
     }
 }
