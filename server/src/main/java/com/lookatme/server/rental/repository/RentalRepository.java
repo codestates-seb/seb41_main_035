@@ -3,6 +3,7 @@ package com.lookatme.server.rental.repository;
 import com.lookatme.server.rental.entity.Rental;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
@@ -10,4 +11,5 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     Optional<Rental> findByBoard_BoardIdAndProduct_ProductId(long boardId, long productId);
 
+    List<Rental> findByMember_MemberId(long memberId);
 }

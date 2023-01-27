@@ -4,6 +4,8 @@ import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
 import com.lookatme.server.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -21,4 +23,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<Follow> findByTo_Account(Account account);
 
     List<Follow> findByFrom_MemberId(long memberId);
+
+    @Query("select f from Follow f where f.to.memberId=:memberId or f.from.memberId=:memberId")
+    List<Follow> findFollowListByMemberId(@Param("memberId") long memberId);
 }
