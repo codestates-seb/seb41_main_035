@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -102,7 +101,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public MessageResponseDto getMessage(Long messageId) {
+    public MessageResponseDto findMessage(Long messageId) {
         return MessageResponseDto.of(findMessageById(messageId));
     }
 
@@ -114,7 +113,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public MultiResponseDto getMessages(final MemberPrincipal memberPrincipal,
+    public MultiResponseDto findMessages(final MemberPrincipal memberPrincipal,
                                         final Long memberId,
                                         final int page, final int size) {
         //특정한 사람과 주고 받은 모든 메시지 조회
@@ -128,7 +127,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageResponseDto> getMessageRoomList(final MemberPrincipal memberPrincipal) {
+    public List<MessageResponseDto> findMessageRoomList(final MemberPrincipal memberPrincipal) {
         Long memberId = memberPrincipal.getMemberId();
         List<Message> messages = filterMessages(memberId, messageRepository.findMessageRoomList());
 
@@ -143,8 +142,7 @@ public class MessageService {
         return messages.stream()
                 .filter(m -> m.getSender().getMemberId() == memberId || m.getReceiver().getMemberId() == memberId)
                 .collect(Collectors.groupingBy(Message::getMessageRoom, Collectors.maxBy(Comparator.comparing(Message::getCreatedAt))))
-                .entrySet().stream()
-                .map(Map.Entry::getValue)
+                .values().stream()
                 .flatMap(Optional::stream)
                 .collect(Collectors.toList());
     }

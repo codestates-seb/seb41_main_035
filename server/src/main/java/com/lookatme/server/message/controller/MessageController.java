@@ -26,7 +26,7 @@ public class MessageController {
 
     @GetMapping("/{messageId}")
     public ResponseEntity getMessage(@PathVariable("messageId") final Long messageId) {
-        return new ResponseEntity<>(messageService.getMessage(messageId), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.findMessage(messageId), HttpStatus.OK);
     }
 
     @GetMapping("/received/{memberId}")
@@ -34,12 +34,12 @@ public class MessageController {
                                                         @PathVariable("memberId") final Long memberId,
                                                         @RequestParam("page") final int page,
                                                         @RequestParam("size") final int size) {
-        return new ResponseEntity<>(messageService.getMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.findMessages(memberPrincipal, memberId, page - 1, size), HttpStatus.OK);
     }
 
     @GetMapping("/room")
-    public ResponseEntity getMessageRoom(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-        return new ResponseEntity<>(messageService.getMessageRoomList(memberPrincipal), HttpStatus.OK);
+    public ResponseEntity getMessageRoomList(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        return new ResponseEntity<>(messageService.findMessageRoomList(memberPrincipal), HttpStatus.OK);
     }
 
     @DeleteMapping("/received/{messageId}")
