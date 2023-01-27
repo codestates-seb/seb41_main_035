@@ -274,6 +274,22 @@ include::{snippets}/get-messages/response-body.adoc[]
 .response-fields
 include::{snippets}/get-messages/response-fields.adoc[]
 
+=== 메시지방 목록 조회
+.curl-request
+include::{snippets}/get-message-room-list/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-message-room-list/http-request.adoc[]
+
+.http-response
+include::{snippets}/get-message-room-list/http-response.adoc[]
+
+.response-body
+include::{snippets}/get-message-room-list/response-body.adoc[]
+
+.response-fields
+include::{snippets}/get-message-room-list/response-fields.adoc[]
+
 === 받은 메시지 삭제
 .curl-request
 include::{snippets}/delete-message-by-receiver/curl-request.adoc[]
