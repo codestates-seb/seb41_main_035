@@ -6,7 +6,6 @@ import {
   BsPersonCheck,
   BsBookmarkHeart,
 } from 'react-icons/bs';
-import ChatWindow from '../components/ChatWindow';
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
@@ -24,9 +23,10 @@ const PostView = () => {
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
   const boardId = detailData.boardId;
+  const profile = detailData.member?.profileImageUrl;
   localStorage.setItem('sentId', JSON.stringify(sentId));
   localStorage.setItem('name', JSON.stringify(name));
-  console.log(JSON.stringify(name));
+  localStorage.setItem('boardId', JSON.stringify(boardId));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,10 +102,10 @@ const PostView = () => {
                 <div className="user_box">
                   <div
                     className="user_box left"
-                    // role="presentation"
-                    // onClick={() => {
-                    //   navigate(`/profile/${post.member?.memberId}`);
-                    // }}
+                    role="presentation"
+                    onClick={() => {
+                      navigate(`/profile/${sentId}`);
+                    }}
                   >
                     <div className="user_avatar">
                       <Avatar image={detailData.member?.profileImageUrl} />
@@ -143,7 +143,14 @@ const PostView = () => {
               </div>
               <div className="post">{detailData.content}</div>
               <div className="edit-delete">
-                <span>Edit</span>
+                <span
+                  role="presentation"
+                  onClick={() => {
+                    navigate(`/edit`);
+                  }}
+                >
+                  Edit
+                </span>
                 <span role="presentation" onClick={onPostDelete}>
                   Delete
                 </span>
@@ -152,7 +159,7 @@ const PostView = () => {
           </div>
           <SBottom>
             <Item />
-            <Comment name={name} boardId={boardId} />
+            <Comment name={name} boardId={boardId} profile={profile} />
           </SBottom>
         </SContainer>
       </div>
@@ -223,6 +230,7 @@ const SMiddle = styled.div`
     }
   }
   .user_info {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
   }
@@ -237,6 +245,9 @@ const SMiddle = styled.div`
     }
     svg {
       padding-left: 10px;
+      :hover {
+        color: gray;
+      }
     }
   }
   .user_avatar {
@@ -271,8 +282,13 @@ const SMiddle = styled.div`
   .edit-delete {
     margin: 5px;
     text-align: right;
+
     span {
       margin-right: 10px;
+      cursor: pointer;
+      :hover {
+        color: gray;
+      }
     }
   }
 `;

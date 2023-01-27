@@ -1,18 +1,37 @@
-import LoginHeader from '../components/LoginHeader';
 import styled from 'styled-components';
 import PostBox from '../components/PostBox';
-import Sidebar from '../components/Sidebar';
 import UserInfo from '../components/UserInfo';
 import userStore from '../store/userStore';
 import { useParams } from 'react-router-dom';
 import dummyData from '../db/dummyData.json';
-
+import { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 const Profile = () => {
   const data = dummyData.posts;
   const params = useParams();
   const userId = params.userId;
   const userStoreId = userStore((state) => state.userId);
-
+  const [codi, setCodi] = useState([]);
+  // console.log(userId);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://13.125.30.88/boards`);
+        setCodi(response.data.data);
+        console.log(response.data.data);
+      } catch {
+        window.alert('오류가 발생했습니다.');
+      }
+    };
+    fetchData();
+  }, []);
+  const myCodi = useMemo(() => {
+    return codi.filter((codi) => {
+      return codi.member?.memberId === 22;
+    });
+  }, [codi]);
+  console.log(myCodi);
   return (
     <>
       <SWrapper>
@@ -31,7 +50,7 @@ const Profile = () => {
             ) : (
               ''
             )}
-            <PostBox data={data} />
+            <PostBox data={myCodi} />
           </div>
         </div>
       </SWrapper>
