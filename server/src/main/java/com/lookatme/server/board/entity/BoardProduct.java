@@ -1,23 +1,24 @@
 package com.lookatme.server.board.entity;
 
 import com.lookatme.server.audit.BaseTimeEntity;
-import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.product.entity.Product;
 import com.lookatme.server.rental.entity.Rental;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@Builder
+@AllArgsConstructor
+@Getter @Setter
 @Entity
-@Getter
-@Setter
 public class BoardProduct extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int boardproductId;
+    private long boardProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "board_id")
@@ -27,6 +28,12 @@ public class BoardProduct extends BaseTimeEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private String link;
+
+    private String size;
+
+    private int price;
+
     protected BoardProduct() {
     }
 
@@ -35,20 +42,18 @@ public class BoardProduct extends BaseTimeEntity {
         this.product = product;
     }
 
-    public int getProductId() {
+    public void updateProductInfo(String link, String size, int price) {
+        this.link = link;
+        this.size = size;
+        this.price = price;
+    }
+
+    public long getProductId() {
         return product.getProductId();
     }
 
     public String getProductName() {
         return product.getProductName();
-    }
-
-    public String getLink() {
-        return product.getLink();
-    }
-
-    public int getPrice() {
-        return product.getPrice();
     }
 
     public String getProductImage() {

@@ -18,10 +18,7 @@ import javax.persistence.*;
 public class Rental extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int rentalId;
-
-    @Column(nullable = false)
-    private boolean rental;
+    private long rentalId;
 
     @Column(nullable = false)
     private String size;

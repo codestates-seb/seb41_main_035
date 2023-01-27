@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-26T15:16:15+0900",
+    date = "2023-01-27T12:56:30+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -63,7 +63,7 @@ public class BoardMapperImpl implements BoardMapper {
         BoardResponseDto boardResponseDto = new BoardResponseDto();
 
         boardResponseDto.setProducts( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
-        boardResponseDto.setBoardId( board.getBoardId() );
+        boardResponseDto.setBoardId( (int) board.getBoardId() );
         boardResponseDto.setUserImage( board.getUserImage() );
         boardResponseDto.setContent( board.getContent() );
         boardResponseDto.setCreatedDate( board.getCreatedDate() );
@@ -96,7 +96,7 @@ public class BoardMapperImpl implements BoardMapper {
 
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
 
-        rentalResponseDto.setRentalId( rental.getRentalId() );
+        rentalResponseDto.setRentalId( (int) rental.getRentalId() );
         rentalResponseDto.setSize( rental.getSize() );
         rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
         rentalResponseDto.setAvailable( rental.isAvailable() );

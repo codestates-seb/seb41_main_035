@@ -2,6 +2,7 @@ package com.lookatme.server.board.service;
 
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
+import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.repository.BoardRepository;
@@ -17,6 +18,7 @@ import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.product.dto.ProductPatchDto;
 import com.lookatme.server.product.dto.ProductPostDto;
 import com.lookatme.server.product.entity.Product;
+import com.lookatme.server.product.repository.ProductRepository;
 import com.lookatme.server.product.service.ProductService;
 import com.lookatme.server.rental.dto.RentalPatchDto;
 import com.lookatme.server.rental.entity.Rental;
@@ -29,9 +31,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -41,12 +42,13 @@ public class BoardService {
     private final BoardMapper mapper;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final ProductRepository productRepository;
     private final FileService fileService;
     private final FollowService followService;
     private final RentalService rentalService;
     private final ProductService productService;
 
-    public Board createBoard(BoardPostDto post, long memberId) throws IOException {
+    public BoardResponseDto createBoard(BoardPostDto post, long memberId) {
         // 1. 게시글 저장
         Board board = mapper.boardPostToBoard(post);
         board.setMember(findMember(memberId));
@@ -54,33 +56,63 @@ public class BoardService {
         board.setUserImage(userImageUrl);
         Board savedBoard = boardRepository.save(board);
 
-        // 2. 게시글 상품 저장
-        for (ProductPostDto postProduct : post.getProducts()) {
-            String itemImageUrl = fileService.upload(postProduct.getProductImage(), FileDirectory.item);
-            Product product = productService.createProduct(postProduct, itemImageUrl);
-            board.getBoardProducts().add(new BoardProduct(board, product));
+        if (post.getProducts() != null) {
+            for (ProductPostDto postProduct : post.getProducts()) {
+                // 2. 게시글 상품 저장
+                String itemImageUrl = fileService.upload(postProduct.getProductImage(), FileDirectory.item);
+                Product savedProduct = productService.createProduct(postProduct, itemImageUrl);
+                BoardProduct boardProduct = BoardProduct.builder()
+                        .board(board)
+                        .product(savedProduct)
+                        .price(postProduct.getPrice())
+                        .size(postProduct.getSize())
+                        .link(postProduct.getLink()).build();
+                board.getBoardProducts().add(boardProduct);
 
-            // 3. 렌탈 가능한 경우 렌탈 정보 저장
-            if (postProduct.isRental()) {
+                // 3. 렌탈 정보 저장
                 Rental rental = rentalService.createRental(
                         memberId,
-                        product.getProductId(),
+                        savedProduct.getProductId(),
                         board,
                         postProduct.getSize(),
-                        postProduct.getRentalPrice()
+                        postProduct.getRentalPrice(),
+                        postProduct.isRental()
                 );
-                product.getRentals().add(rental);
+                savedProduct.getRentals().add(rental);
             }
         }
-        return savedBoard;
+        return mapper.boardToBoardResponse(savedBoard);
     }
 
-
-    public Board updateBoard(BoardPatchDto patch, int boardId, long memberId) throws IOException {
+    public BoardResponseDto updateBoard(BoardPatchDto patch, int boardId, long memberId) {
         Board savedBoard = findBoard(boardId);
         // 로그인 한 작성자가 아니면 수정할 수 없음
         if (savedBoard.getMember().getMemberId() != memberId) {
             throw new ErrorLogicException(ErrorCode.FORBIDDEN);
+        }
+        if (patch.getProducts() != null) {
+            for (ProductPatchDto product : patch.getProducts()) {
+                productService.updateProduct(product);
+                for (BoardProduct boardProduct : savedBoard.getBoardProducts()) {
+                    if (boardProduct.getProduct().getProductId() == product.getProductId()) {
+                        boardProduct.updateProductInfo(
+                                product.getLink(),
+                                product.getSize(),
+                                product.getPrice()
+                        );
+                        break;
+                    }
+                }
+                rentalService.updateRental(
+                        savedBoard.getBoardId(),
+                        product.getProductId(),
+                        new RentalPatchDto(
+                                product.getRentalPrice(),
+                                product.getSize(),
+                                product.isRental()
+                        )
+                );
+            }
         }
         // userImage가 없으면 수정하지 않음
         String userImageUrl = savedBoard.getUserImage();
@@ -88,63 +120,7 @@ public class BoardService {
             userImageUrl = fileService.upload(patch.getUserImage(), FileDirectory.post);
         }
         savedBoard.updateBoard(userImageUrl, patch.getContent());
-
-        Set<Integer> savedProductIdSet = savedBoard.getBoardProducts().stream()
-                .map(BoardProduct::getProductId)
-                .collect(Collectors.toSet());
-
-        if (patch.getProducts() != null) {
-            for (ProductPatchDto product : patch.getProducts()) {
-                // id가 없는 상품이면 신규 생성
-                Product savedProduct;
-                if (product.getProductId() == null) {
-                    String itemImageUrl = fileService.upload(product.getProductImage(), FileDirectory.item);
-                    savedProduct = productService.createProduct(product, itemImageUrl);
-                    savedBoard.getBoardProducts().add(new BoardProduct(savedBoard, savedProduct));
-                    if (product.isRental()) {
-                        Rental rental = rentalService.createRental(
-                                memberId,
-                                savedProduct.getProductId(),
-                                savedBoard,
-                                product.getSize(),
-                                product.getRentalPrice()
-                        );
-                        savedProduct.getRentals().add(rental);
-                    }
-                } else {
-                    savedProduct = productService.updateProduct(product);
-                    savedProductIdSet.remove(product.getProductId());
-                }
-
-                // 렌탈 정보가 있으면 업데이트
-                if (product.getRentalId() == null) {
-                    if(product.isRental()) {
-                        Rental rental = rentalService.createRental(
-                                memberId,
-                                savedProduct.getProductId(),
-                                savedBoard,
-                                product.getSize(),
-                                product.getRentalPrice()
-                        );
-                        savedProduct.getRentals().add(rental);
-                    }
-                } else {
-                    rentalService.updateRental(
-                            new RentalPatchDto(
-                                    product.getRentalId(),
-                                    product.getRentalPrice(),
-                                    product.getSize(),
-                                    product.isRental()
-                            )
-                    );
-                }
-            }
-        }
-        // id가 오지 않은 상품은 삭제
-        for (Integer productId : savedProductIdSet) {
-            productService.deleteProduct(productId);
-        }
-        return savedBoard;
+        return mapper.boardToBoardResponse(savedBoard);
     }
 
     public void deleteBoard(int boardId) {
@@ -174,11 +150,12 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> findBoards(int page, int size) {
+    public Page<BoardResponseDto> findBoards(int page, int size) {
         return findBoards(page, size, -1); // 팔로우 유무 체크하지 않음
     }
 
-    public Page<Board> findBoards(int page, int size, long memberId) {
+    @Transactional(readOnly = true)
+    public Page<BoardResponseDto> findBoards(int page, int size, long memberId) {
         Page<Board> boardPage = boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
         if (memberId != -1) {
             Set<Long> followMemberIdList = followService.getFollowMemberIdSet(memberId); // 현재 로그인 한 회원이 팔로우 중인 회원 id list
@@ -189,14 +166,18 @@ public class BoardService {
                             member.setStatusToFollowingMember();
                         }
                     });
-            return new PageImpl<>(boardPage.getContent(), boardPage.getPageable(), boardPage.getTotalElements());
-        } else {
-            return boardPage;
         }
+        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardPage.getContent());
+        return new PageImpl<>(response, boardPage.getPageable(), boardPage.getTotalElements());
     }
 
     private Member findMember(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    private Product findProduct(long productId) {
+        return productRepository.findByProductId(productId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

@@ -10,6 +10,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "product-entity-graph", // product 조회 시 category + brand를 한꺼번에 긁어옴
+        attributeNodes = {
+                @NamedAttributeNode("category"),
+                @NamedAttributeNode("brand")
+        }
+)
 @Entity
 @Getter
 @Setter
@@ -18,15 +25,13 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    private long productId;
 
     @Column(nullable = false)
     private String productName;
 
-    @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
     private String link;
 
     private String productImage;
@@ -45,10 +50,23 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    public void updateProduct(String productName, String productImage, String link, int price) {
+    public void updateProduct(String productName, String productImage) {
         this.productName = productName;
         this.productImage = productImage;
-        this.link = link;
-        this.price = price;
+    }
+
+    public void updateProductV2(String productName, String productImage, Category category, Brand brand) {
+        this.productName = productName;
+        this.productImage = productImage;
+        this.category = category;
+        this.brand = brand;
+    }
+
+    public String getCategoryName() {
+        return category.getName();
+    }
+
+    public String getBrandName() {
+        return brand.getName();
     }
 }
