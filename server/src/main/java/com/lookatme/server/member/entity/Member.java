@@ -72,7 +72,7 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime deletedDate;
 
-    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE) // Member를 제거할 때 Follow도 같이 제거
+    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE)
     private Set<Follow> followees = new HashSet<>(); // 내가 팔로우 한 사람
 
     @OneToMany(mappedBy = "to", cascade = CascadeType.REMOVE)
@@ -82,7 +82,7 @@ public class Member extends BaseTimeEntity {
     private boolean follow; // 로그인 한 사용자가 팔로우 한 회원인지 유무 체크
 
     @Transient
-    private final String DEFAULT_PROFILE_IMG = "https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png";
+    public static final String DEFAULT_PROFILE_IMG = "https://user-images.githubusercontent.com/74748851/212484014-b22c7726-1091-4b89-a9d5-c97d72b82068.png";
 
     @Builder
     public Member(long memberId, Account account, String password, String nickname, int height, int weight, String profileImageUrl) {

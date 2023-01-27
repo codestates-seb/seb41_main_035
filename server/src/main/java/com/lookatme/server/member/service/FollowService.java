@@ -90,4 +90,11 @@ public class FollowService {
         return Member.builder()
                 .memberId(memberId).build();
     }
+
+    /**
+     * 회원 탈퇴 시 해당 회원ID가 들어간 팔로우/팔로워 목록 전부 제거
+     */
+    public void withdrawalMember(long memberId) {
+        followRepository.deleteAll(followRepository.findFollowListByMemberId(memberId));
+    }
 }

@@ -26,6 +26,7 @@ import java.util.List;
 @Service
 public class MemberService {
 
+    private final FollowService followService;
     private final RentalService rentalService;
     private final MemberRepository memberRepository;
     private final MemberAuthorityUtils authorityUtils;
@@ -74,7 +75,13 @@ public class MemberService {
 
     public void deleteMember(long memberId) {
         Member member = getMember(memberId);
+        // 회원 정보 정리
         member.withdrawal();
+
+        // 팔로우 정보 정리
+        followService.withdrawalMember(memberId);
+
+        // 렌탈 정보 정리
         rentalService.withdrawalMember(memberId);
     }
 

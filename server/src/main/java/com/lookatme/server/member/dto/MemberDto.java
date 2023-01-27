@@ -70,7 +70,7 @@ public class MemberDto {
         private int weight;
         private int followerCnt;
         private int followeeCnt;
-        private boolean delete;
+        private boolean delete; // 회원 탈퇴 유무
     }
 
     @Getter
