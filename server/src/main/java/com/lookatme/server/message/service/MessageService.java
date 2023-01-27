@@ -118,7 +118,7 @@ public class MessageService {
                                         final int page, final int size) {
         //특정한 사람과 주고 받은 모든 메시지 조회
         Page<Message> messages = messageRepository.findAllMessages(memberPrincipal.getMemberId(), memberId,
-                PageRequest.of(page, size, Sort.by("createdAt")));
+                PageRequest.of(page, size, Sort.by("createdDate")));
         List<MessageResponseDto> messageResponseDtos = messages.getContent()
                 .stream()
                 .map(message -> MessageResponseDto.of(message))
@@ -141,7 +141,7 @@ public class MessageService {
     private List<Message> filterMessages(Long memberId, List<Message> messages) {
         return messages.stream()
                 .filter(m -> m.getSender().getMemberId() == memberId || m.getReceiver().getMemberId() == memberId)
-                .collect(Collectors.groupingBy(Message::getMessageRoom, Collectors.maxBy(Comparator.comparing(Message::getCreatedAt))))
+                .collect(Collectors.groupingBy(Message::getMessageRoom, Collectors.maxBy(Comparator.comparing(Message::getCreatedDate))))
                 .values().stream()
                 .flatMap(Optional::stream)
                 .collect(Collectors.toList());

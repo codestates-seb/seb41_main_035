@@ -101,7 +101,7 @@ public class MessageControllerTest {
         MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .messageId(message.getMessageId())
                 .content(message.getContent())
-                .createdAt(message.getCreatedAt())
+                .createdDate(message.getCreatedDate())
                 .messageRoom(message.getMessageRoom())
                 .senderId(message.getSender().getMemberId())
                 .senderNickname(message.getSender().getNickname())
@@ -138,7 +138,7 @@ public class MessageControllerTest {
                                 List.of(
                                         fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
-                                        fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("createdDate").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
@@ -188,7 +188,7 @@ public class MessageControllerTest {
         MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .messageId(message.getMessageId())
                 .content(message.getContent())
-                .createdAt(message.getCreatedAt())
+                .createdDate(message.getCreatedDate())
                 .messageRoom(message.getMessageRoom())
                 .senderId(message.getSender().getMemberId())
                 .senderNickname(message.getSender().getNickname())
@@ -221,7 +221,7 @@ public class MessageControllerTest {
                                 List.of(
                                         fieldWithPath("messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용"),
-                                        fieldWithPath("createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("createdDate").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
@@ -315,12 +315,12 @@ public class MessageControllerTest {
         List<Message> messages = List.of(message3, message4);
 
         PageImpl<Message> messagePage = new PageImpl<>(messages,
-                PageRequest.of(0, 10, Sort.by("createdAt")), 2);
+                PageRequest.of(0, 10, Sort.by("createdDate")), 2);
 
         MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .messageId(message3.getMessageId())
                 .content(message3.getContent())
-                .createdAt(message3.getCreatedAt())
+                .createdDate(message3.getCreatedDate())
                 .messageRoom(message3.getMessageRoom())
                 .senderId(message3.getSender().getMemberId())
                 .senderNickname(message3.getSender().getNickname())
@@ -333,7 +333,7 @@ public class MessageControllerTest {
         MessageResponseDto messageResponseDto2 = MessageResponseDto.builder()
                 .messageId(message4.getMessageId())
                 .content(message4.getContent())
-                .createdAt(message4.getCreatedAt())
+                .createdDate(message4.getCreatedDate())
                 .messageRoom(message4.getMessageRoom())
                 .senderId(message4.getSender().getMemberId())
                 .senderNickname(message4.getSender().getNickname())
@@ -374,7 +374,7 @@ public class MessageControllerTest {
                                         fieldWithPath("data").type(JsonFieldType.ARRAY).description("메시지 목록"),
                                         fieldWithPath("data[].messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용"),
-                                        fieldWithPath("data[].createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("data[].createdDate").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("data[].messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("data[].senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),
@@ -476,7 +476,7 @@ public class MessageControllerTest {
         MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .messageId(message3.getMessageId())
                 .content(message3.getContent())
-                .createdAt(message3.getCreatedAt())
+                .createdDate(message3.getCreatedDate())
                 .messageRoom(message3.getMessageRoom())
                 .senderId(message3.getSender().getMemberId())
                 .senderNickname(message3.getSender().getNickname())
@@ -489,7 +489,7 @@ public class MessageControllerTest {
         MessageResponseDto messageResponseDto2 = MessageResponseDto.builder()
                 .messageId(message4.getMessageId())
                 .content(message4.getContent())
-                .createdAt(message4.getCreatedAt())
+                .createdDate(message4.getCreatedDate())
                 .messageRoom(message4.getMessageRoom())
                 .senderId(message4.getSender().getMemberId())
                 .senderNickname(message4.getSender().getNickname())
@@ -521,7 +521,7 @@ public class MessageControllerTest {
                                 List.of(
                                         fieldWithPath("[].messageId").type(JsonFieldType.NUMBER).description("메시지 식별자"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("메시지 내용"),
-                                        fieldWithPath("[].createdAt").type(JsonFieldType.NULL).description("메시지 작성일"),
+                                        fieldWithPath("[].createdDate").type(JsonFieldType.NULL).description("메시지 작성일"),
                                         fieldWithPath("[].messageRoom").type(JsonFieldType.NUMBER).description("메시지 방 번호"),
                                         fieldWithPath("[].senderId").type(JsonFieldType.NUMBER).description("메시지 발신자 식별자"),
                                         fieldWithPath("[].senderNickname").type(JsonFieldType.STRING).description("메시지 발신자 닉네임"),

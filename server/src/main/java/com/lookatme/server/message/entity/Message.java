@@ -24,8 +24,8 @@ public class Message extends BaseTimeEntity {
     private String content;
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "deleted_by_sender", nullable = false)
     private boolean deletedBySender = false;
@@ -62,7 +62,7 @@ public class Message extends BaseTimeEntity {
                    ) {
         this.messageId = messageId;
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdDate = createdAt;
         this.deletedBySender = deletedBySender;
         this.deletedByReceiver = deletedByReceiver;
         this.messageRoom = messageRoom;
