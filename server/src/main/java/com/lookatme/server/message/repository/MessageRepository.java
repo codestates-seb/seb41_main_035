@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
@@ -20,5 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Message findTopByOrderByMessageRoomDesc();
 
-//    List<Message> findMessageRoomList(@Param("member_id") Long memberId);
+    @Query("select m from Message m group by message_room, message_id order by created_at desc")
+    List<Message> findMessageRoomList();
+    //"select distinct(message_room) * from (select * from message where sender_id = :member_id or receiver_id = :member_id order by created_at desc) as m"
 }
