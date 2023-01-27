@@ -1,30 +1,29 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import Avatar from './Avatar';
-import { MdNavigateBefore } from 'react-icons/md';
-import { AiOutlineClose } from 'react-icons/ai';
-import { HiOutlinePaperAirplane } from 'react-icons/hi';
+import dummyData from '../db/dummyData.json';
+import Avatar from '../components/Avatar';
 import { useState, useEffect } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
+import ChatWindow from '../components/ChatWindow';
 import axios from 'axios';
+import { MdNavigateBefore } from 'react-icons/md';
+import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { token } from '../constants/index';
-const ChatWindow = ({ onChatListOpen, onChatWindow, sentId, name }) => {
+const Chat = () => {
   const [chatData, setChatData] = useState([]); //get
   const [sentData, setSentData] = useState([]); //post
   const url = 'http://13.125.30.88';
-  // useEffect(() => {
-  //   if()
-
-  // },[]);
+  const data = dummyData.posts;
+  const sentId = JSON.parse(localStorage.getItem('sentId'));
+  const name = JSON.parse(localStorage.getItem('name'));
   const onChatChange = (e) => {
     setSentData(e.currentTarget.value);
-    console.log(sentData);
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          url + `/message/received/17?page=1&size=100`,
+          url + `/message/received/${sentId}?page=1&size=100`,
           {
             headers: {
               Authorization: token,
@@ -38,8 +37,9 @@ const ChatWindow = ({ onChatListOpen, onChatWindow, sentId, name }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [sentId]);
   console.log(chatData);
+  console.log(sentData);
   const onPostChat = () => {
     axios(url + '/message', {
       method: 'POST',
@@ -49,12 +49,12 @@ const ChatWindow = ({ onChatListOpen, onChatWindow, sentId, name }) => {
       },
       data: JSON.stringify({
         content: sentData,
-        receiverNickname: 'hi',
+        receiverNickname: name,
       }),
     })
       .then((res) => {
         if (res) {
-          window.location.replace('/'); //새로고침
+          window.location.reload(); //새로고침
         }
       })
       .catch((err) => {
@@ -63,16 +63,30 @@ const ChatWindow = ({ onChatListOpen, onChatWindow, sentId, name }) => {
   };
   return (
     <>
-      <SModalBack />
       <SWrapper>
-        <AiOutlineClose className="close-container" onClick={onChatListOpen} />
+        <div className="chatlist-container">
+          <p>채팅</p>
+          {data.map((chat) => (
+            <SChatList key={chat.id}>
+              <div className="chat-box">
+                <Avatar size="45px" image={chat.avatar} />
+                <div className="right content">
+                  <div className="user-name">{chat.userNickname}</div>
+                  <div className="content_and_time">
+                    <div className="chat-last_content">hiiiiiii</div>
+                    <div className="chat-time">1월 12일 (목) 12:00</div>
+                  </div>
+                </div>
+              </div>
+            </SChatList>
+          ))}
+        </div>
         <div className="chat-container">
           <div className="top">
-            {/* 뒤로가기 왼쪽으로 이동 */}
-            <MdNavigateBefore onClick={onChatWindow} />
+            {/* <MdNavigateBefore /> */}
             <div className="user-info">
               <Avatar size="45px" />
-              <span className="user-name">uuuuu</span>
+              <span className="user-name">{name}</span>
             </div>
           </div>
           <SContent>
@@ -100,16 +114,113 @@ const ChatWindow = ({ onChatListOpen, onChatWindow, sentId, name }) => {
     </>
   );
 };
-export const SModalBack = styled.div`
+// const Siii = styled.div`
+//   display: flex;
+// `;
+
+const SWrapper = styled.div`
+  /* position: fixed; */
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 0;
-  z-index: 999; //로그인헤더만 하얘서 추가
+  /* top: 5%; */
+  /* background-color: rgba(0, 0, 0, 0); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 20px;
+
+  p {
+    margin-left: 40px;
+    font-size: 25px;
+    background-color: #cadde5;
+  }
+  .chatlist-container {
+    margin: 10px 0px 50px 0px;
+    width: 55vh;
+    height: 75vh;
+    background-color: #cadde5;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 7px;
+      background-color: #cadde5;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: white;
+      border-radius: 5px;
+    }
+  }
+  .chat-container {
+    margin: 10px 0px 50px 0px;
+    width: 55vh;
+    height: 75vh;
+    background-color: #cadde5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .top {
+      display: flex;
+      align-items: center;
+      width: 90%;
+      margin-top: 10px;
+      font-size: 30px;
+      /* justify-content: space-between; */
+      background-color: #cadde5;
+      justify-content: flex-start; //추가
+
+      .user-info {
+        display: flex;
+        padding-right: 20px;
+        background-color: #cadde5;
+        .user-name {
+          padding-left: 20px;
+          background-color: #cadde5;
+        }
+        div {
+          background-color: #cadde5;
+        }
+      }
+      svg {
+        cursor: pointer;
+        background-color: #cadde5;
+        //추가
+        margin: -5px 20px 0px -20px;
+      }
+    }
+  }
 `;
-const SWrapper = styled.div`
-  position: fixed;
+const SChatList = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: #cadde5;
+  .chat-box {
+    cursor: pointer;
+    width: 85%;
+    height: 9.5vh;
+    background-color: #f4f1e0;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 5px gray;
+    .content {
+      margin-left: 10px;
+      flex-grow: 1;
+    }
+    .content_and_time {
+      margin-top: 14px;
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+`;
+const SIIWrapper = styled.div`
+  /* position: fixed; */
   width: 100%;
   //추가 height 100%
   height: 100%;
@@ -119,7 +230,7 @@ const SWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 99999; //추가
+  /* z-index: 99999; //추가 */
   margin-top: 20px;
   .close-container {
     /* margin-top: 30px; */
@@ -221,4 +332,4 @@ const SInputContent = styled.div`
     border: none;
   }
 `;
-export default ChatWindow;
+export default Chat;

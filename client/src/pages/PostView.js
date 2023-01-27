@@ -14,27 +14,26 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { token, BREAK_POINT_PC } from '../constants/index';
-import ChatWindow from '../components/ChatWindow';
 
 const PostView = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isUserChatOpen, setIsUserChatOpen] = useState(false);
-  const onChatOpen = () => {
-    setIsUserChatOpen(true);
-  };
   const url = 'http://13.125.30.88';
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
   const boardId = detailData.boardId;
+  localStorage.setItem('sentId', JSON.stringify(sentId));
+  localStorage.setItem('name', JSON.stringify(name));
+  console.log(JSON.stringify(name));
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(url + `/boards/` + [params.boardId]);
         setDetailData(response.data);
-        console.log(response.data.products);
+        console.log(response.data);
       } catch (err) {
         return err;
       }
@@ -86,11 +85,6 @@ const PostView = () => {
     }
   };
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const onChatOpen = () => {
-    setIsChatOpen((prev) => !prev);
-  };
-
   return (
     <SWrapper>
       <div className="container">
@@ -132,7 +126,12 @@ const PostView = () => {
                     </div>
                   </div>
                   <div className="icon">
-                    <BsChatLeftText size="20" onClick={onChatOpen} />
+                    <BsChatLeftText
+                      size="20"
+                      onClick={() => {
+                        navigate(`/chatting`);
+                      }}
+                    />
                     {isFollowing ? (
                       <BsPersonCheck size="20" onClick={unfollow} />
                     ) : (
@@ -157,7 +156,6 @@ const PostView = () => {
           </SBottom>
         </SContainer>
       </div>
-      {isUserChatOpen && <ChatWindow sentId={sentId} name={name} />}
     </SWrapper>
   );
 };

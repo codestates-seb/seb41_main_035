@@ -19,13 +19,15 @@ const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  // const [isChatList, setIsChatList] = useState(false);
   const userId = userStore((state) => state.userId);
 
   const onClickButton = () => {
     setIsOpen(true);
   };
-
+  // const onChatListOpen = () => {
+  //   setIsChatList((prev) => !prev);
+  // };
   const Logout = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
@@ -40,10 +42,6 @@ const LoginHeader = () => {
       // eslint-disable-next-line react/prop-types
     }
     setisLogin(false);
-  };
-
-  const onChatOpen = () => {
-    setIsChatOpen((prev) => !prev);
   };
 
   return (
@@ -79,7 +77,10 @@ const LoginHeader = () => {
                   role="presentation"
                   onClick={() => navigate(`/postupload`)}
                 />
-                <AiOutlineMessage size="30" onClick={onChatOpen} />
+                <AiOutlineMessage
+                  size="30"
+                  onClick={() => navigate(`/chatting`)}
+                />
                 <button className="logout button" onClick={Logout}>
                   Log out
                 </button>
@@ -96,7 +97,7 @@ const LoginHeader = () => {
             }}
           />
         )}
-        {isChatOpen && <ChattingList onChatOpen={onChatOpen} />}
+        {/* {isChatList && <ChattingList onChatListOpen={onChatListOpen} />} */}
       </SWrapper>
     </>
   );

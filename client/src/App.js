@@ -11,6 +11,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Category from './pages/Category';
 import About from './pages/About';
+import ChatWindow from './components/ChatWindow';
+import ChattingList from './components/ChattingList';
+import Chat from './pages/Chat';
 function App() {
   return (
     <div>
@@ -25,6 +28,9 @@ function App() {
           <Route path="/google" element={<Google />} />
           <Route path="/category/:categoryId" element={<Category />} />
           <Route path="/about" element={<About />} />
+          <Route path="/chat/17" element={<ChatWindow />} />
+          <Route path="/chat" element={<ChattingList />} />
+          <Route path="/chatting" element={<Chat />} />
         </Routes>
         <Footer />
       </BrowserRouter>
