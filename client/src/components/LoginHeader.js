@@ -6,28 +6,23 @@ import { AiOutlineMessage } from 'react-icons/ai';
 import { GoThreeBars } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
-import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
 import memberstore from '../store/memberstore';
 import axios from 'axios';
 import Logo from '../svg/Logo.svg';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
-
 const backendUrl = 'http://13.125.30.88/';
 
 const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  // const [isChatList, setIsChatList] = useState(false);
   const userId = userStore((state) => state.userId);
 
   const onClickButton = () => {
     setIsOpen(true);
   };
-  // const onChatListOpen = () => {
-  //   setIsChatList((prev) => !prev);
-  // };
+
   const Logout = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(

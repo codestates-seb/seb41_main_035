@@ -109,21 +109,19 @@ const PostBoxOne = styled.div`
       }
     }
     .left {
-      cursor: pointer;
       display: flex;
+      width: 300%;
       .name {
-        flex-grow: 3;
         margin-left: 10px;
         margin-bottom: 7px;
         font-size: 20px;
+        cursor: pointer;
       }
     }
     .right {
       color: #2e2d2a;
       font-size: 13px;
-      span {
-        text-align: right;
-      }
+      flex-grow: 1;
     }
   }
   .style-picture {
