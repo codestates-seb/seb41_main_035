@@ -3,19 +3,51 @@ import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useParams } from 'react';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import axios from 'axios';
+
+const backendUrl = 'http://13.125.30.88/';
+
+// Home.js의 PostBox의 data
 const PostBox = ({ data }) => {
   const navigate = useNavigate();
-  const [like, setLike] = useState(0);
-  const onClickGood = () => {
-    setLike(like + 1);
+  // console.log(data);
+  // const [like, setLike] = useState(0);
+  // const onClickGood = () => {
+  //   setLike(like + 1);
+  // };
+
+  // like State 를 number[] 형태의 배열로 - 값을 0 으로 채워주고
+  // const [like, setLike] = useState(new Array(data?.length).fill(0));
+  const [like, setLike] = useState(data.map((item) => item.likeCnt));
+  const onClickGood = async (id, index) => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      // `${backendUrl}boards/likes/${id}`, // 좋아요 API 를 요청
+      `${backendUrl}boards/${id}/like`, // 좋아요 API 를 요청
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res && res?.data) {
+      setLike((prev) =>
+        prev.map((item, idx) => {
+          if (idx === index) {
+            // item.likeCnt = res.data.likeCnt;
+            return res.data.likeCnt;
+          }
+          return item;
+        })
+      );
+    }
   };
 
   return (
     <SWrapper>
       <Container>
-        {data.map((post) => (
+        {data.map((post, index) => (
           <PostBoxOne key={post.boardId}>
             <div className="user-info ">
               <div
@@ -51,9 +83,10 @@ const PostBox = ({ data }) => {
             <div
               className="add container"
               role="presentation"
-              onClick={onClickGood}
+              onClick={() => onClickGood(post.boardId, index)}
             >
-              {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+              {/* {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />} */}
+              {like[index] ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
             </div>
           </PostBoxOne>
         ))}

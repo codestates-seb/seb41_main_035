@@ -3,13 +3,26 @@ import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
 import { useParams } from 'react-router-dom';
 import CATEGORY_CODE from '../constants/index';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
+
 import CategoryData from '../db/CategoryData.json';
+
+const PRODUCT = {
+  outer: '아우터',
+  top: '상의',
+  bottom: '하의',
+  onepiece: '원피스',
+  hat: '모자',
+  shoes: '신발',
+};
+
 const Category = () => {
   const params = useParams();
   const category = params.categoryId;
+
   const [data, setData] = useState([]);
+  console.log(data);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -19,38 +32,59 @@ const Category = () => {
     }
   };
 
-  const postCate = (url) => {
-    axios
-      .get(url)
-      .then((res) => {
-        setData([...res.data]);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const postCate = (url) => {
+  //   axios
+  //     .get(url)
+  //     .then((res) => {
+  //       setData([...res.data]);
+  //       console.log(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  //   if (category === 'outer') {
+  //     // postCate();
+  //     setData(CategoryData.outer);
+  //     console.log(CategoryData.outer);
+  //   } else if (category === 'top') {
+  //     // postCate();
+  //     setData(CategoryData.top);
+  //     console.log(CategoryData.top);
+  //   } else if (category === 'bottom') {
+  //     postCate();
+  //   } else if (category === 'onepiece') {
+  //     postCate();
+  //   } else if (category === 'hat') {
+  //     postCate();
+  //   } else if (category === 'shoes') {
+  //     postCate();
+  //   }
+  // }, [category]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (category === 'outer') {
-      // postCate();
-      setData(CategoryData.outer);
-      console.log(CategoryData.outer);
-    } else if (category === 'top') {
-      // postCate();
-      setData(CategoryData.top);
-      console.log(CategoryData.top);
-    } else if (category === 'bottom') {
-      postCate();
-    } else if (category === 'onepiece') {
-      postCate();
-    } else if (category === 'hat') {
-      postCate();
-    } else if (category === 'shoes') {
-      postCate();
-    }
-  }, [category]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://13.125.30.88/boards`);
+        setData(response.data.data);
+      } catch {
+        window.alert('오류가 발생했습니다.');
+      }
+    };
+    fetchData();
+  }, [location.pathname]);
+
+  const currentCategoryProducts = useMemo(() => {
+    return data.filter((item) => {
+      return item?.products.some(
+        (product) => product.category === PRODUCT[category]
+      );
+    });
+  }, [data, category]); // 종속성으로 category 를 넣고,category가 변경되면 이 변수값이 업데이트
 
   return (
     <SWrapper>
@@ -74,7 +108,8 @@ const Category = () => {
               </div>
             </div>
           </Filter>
-          <PostBox data={data} />
+          {/* <PostBox data={data} /> */}
+          <PostBox data={currentCategoryProducts} />
         </div>
       </div>
     </SWrapper>

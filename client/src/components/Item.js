@@ -93,6 +93,7 @@ const SItemContainer = styled.div`
     align-items: center;
     padding: 10px;
     background-color: #eee6ca;
+    border-radius: 5px;
     cursor: pointer;
     .item_info {
       width: 90%;
@@ -104,12 +105,13 @@ const SItemContainer = styled.div`
         display: flex;
         justify-content: center;
         background-color: #eee6ca;
+        margin-left: 5px;
         .item_info_name {
           display: flex;
           flex-direction: column;
           justify-content: center;
           font-weight: bold;
-          text-align: center;
+          /* text-align: center; */
           margin-right: 10px;
           background-color: #eee6ca;
           span {
@@ -121,10 +123,11 @@ const SItemContainer = styled.div`
           flex-direction: column;
           justify-content: center;
           font-size: 15px;
-          margin-top: 2px;
+          /* margin-top: 2px; */
           background-color: #eee6ca;
           span {
             background-color: #eee6ca;
+            margin: 1px 0px 3px 0px;
           }
         }
       }
@@ -141,6 +144,7 @@ const SItemContainer = styled.div`
       .rent_price {
         display: flex;
         background-color: #eee6ca;
+        margin-right: 20px;
         p {
           background-color: #eee6ca;
         }

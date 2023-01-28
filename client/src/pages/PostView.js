@@ -13,8 +13,7 @@ import Item from '../components/Item';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { token, BREAK_POINT_PC } from '../constants/index';
-import ChatWindow from '../components/ChatWindow';
+import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostView = () => {
   const navigate = useNavigate();
@@ -22,9 +21,9 @@ const PostView = () => {
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isUserChatOpen, setIsUserChatOpen] = useState(false);
-  const onChatOpen = () => {
-    setIsUserChatOpen(true);
-  };
+  // const onChatOpen = () => {
+  //   setIsUserChatOpen(true);
+  // };
   const url = 'http://13.125.30.88';
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
@@ -165,6 +164,12 @@ const PostView = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin-left: 200px;
+  min-width: 500px;
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    margin-left: 12px; // 카테고리 사이드바가 있으면 이게 그나마 최선..
+  }
+
   .container {
     display: flex;
     justify-content: flex-start;
@@ -175,16 +180,20 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  width: 47vw;
+  width: 45vw;
   height: 750px;
-  border: 1px solid gray;
+  border: 1px solid #b3b3b3;
+  border-radius: 8px;
   margin: 60px 30px;
   max-width: 820px;
   background-color: white;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
-      width: 650px;
-      height: 700px;
+      width: 564px;
+      /* height: 700px; */
+    }
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      width: 550px;
     }
   }
 
@@ -195,15 +204,16 @@ const SContainer = styled.div`
 `;
 
 const SPost = styled.div`
-  width: 22.5vw;
-  height: 320px;
+  width: 20vw;
+  height: 335px;
   object-fit: cover;
   position: relative;
   overflow: hidden;
+  /* margin-top: 10px; */
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
-      width: 290px;
-      height: 320px;
+      width: 235px;
+      height: 330px;
     }
   }
   img {
@@ -217,7 +227,8 @@ const SPost = styled.div`
 `;
 
 const SMiddle = styled.div`
-  width: 22vw;
+  width: 27vw;
+  /* width: 70%; */
   margin-left: 10px;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
@@ -230,7 +241,7 @@ const SMiddle = styled.div`
   }
   .user_box {
     display: flex;
-    margin: 5px;
+    margin: 0px 5px 5px 5px;
     align-items: center;
     justify-content: space-between;
     .user_id {
@@ -238,11 +249,11 @@ const SMiddle = styled.div`
       font-size: 18px;
     }
     svg {
-      padding-left: 10px;
+      padding-left: 15px;
     }
   }
   .user_avatar {
-    width: 2vw;
+    width: 30px;
     height: 30px;
     object-fit: cover;
     position: relative;
@@ -265,8 +276,12 @@ const SMiddle = styled.div`
       margin: 0px 10px;
     }
   }
+  .icon {
+    cursor: pointer;
+    display: flex;
+  }
   .post {
-    height: 28vh;
+    height: 280px;
     margin-left: 10px;
     font-size: 20px;
   }
@@ -275,6 +290,7 @@ const SMiddle = styled.div`
     text-align: right;
     span {
       margin-right: 10px;
+      cursor: pointer;
     }
   }
 `;
