@@ -39,23 +39,22 @@ public class Product {
     private List<Rental> rentals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(
+            name = "category_id",
+            foreignKey = @ForeignKey(name = "FK_category")
+    )
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(
+            name = "brand_id",
+            foreignKey = @ForeignKey(name = "FK_brand")
+    )
     private Brand brand;
 
     public void updateProduct(String productName, String productImage) {
         this.productName = productName;
         this.productImage = productImage;
-    }
-
-    public void updateProductV2(String productName, String productImage, Category category, Brand brand) {
-        this.productName = productName;
-        this.productImage = productImage;
-        this.category = category;
-        this.brand = brand;
     }
 
     public String getCategoryName() {
