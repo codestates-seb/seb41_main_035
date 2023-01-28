@@ -3,13 +3,23 @@ import PostBox from '../components/PostBox';
 import { BiCaretDownCircle } from 'react-icons/bi';
 import { useParams } from 'react-router-dom';
 import CATEGORY_CODE from '../constants/index';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import CategoryData from '../db/CategoryData.json';
+
+const PRODUCT = {
+  outer: '아우터',
+  top: '상의',
+  bottom: '하의',
+  onepiece: '원피스',
+  hat: '모자',
+  shoes: '신발',
+};
+
 const Category = () => {
   const params = useParams();
   const category = params.categoryId;
   const [data, setData] = useState([]);
+  const [check, setCheck] = useState(false);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -19,38 +29,60 @@ const Category = () => {
     }
   };
 
-  const postCate = (url) => {
-    axios
-      .get(url)
-      .then((res) => {
-        setData([...res.data]);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (category === 'outer') {
-      // postCate();
-      setData(CategoryData.outer);
-      console.log(CategoryData.outer);
-    } else if (category === 'top') {
-      // postCate();
-      setData(CategoryData.top);
-      console.log(CategoryData.top);
-    } else if (category === 'bottom') {
-      postCate();
-    } else if (category === 'onepiece') {
-      postCate();
-    } else if (category === 'hat') {
-      postCate();
-    } else if (category === 'shoes') {
-      postCate();
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://13.125.30.88/boards`);
+        setData(response.data.data);
+      } catch {
+        window.alert('오류가 발생했습니다.');
+      }
+    };
+    fetchData();
+  }, [check]);
+
+  const currentCategoryProducts = useMemo(() => {
+    return data.filter((item) => {
+      return item?.products.some(
+        (product) => product.category === PRODUCT[category]
+      );
+    });
+  }, [data, category]); // 종속성으로 category 를 넣고,category가 변경되면 이 변수값이 업데이트
+  console.log(currentCategoryProducts);
+  //렌탈가능
+  const onCheck = () => {
+    const checkbox = document.getElementById('checkbox');
+    if (checkbox.checked === true) {
+      setCheck(true);
+    } else {
+      setCheck(false);
     }
-  }, [category]);
+  };
+  //정렬
+  //최신순
+  const onNew = () => {
+    let newArr = [...currentCategoryProducts];
+    let newestResult = newArr.sort((a, b) => {
+      return b.boardId - a.boardId;
+    });
+    setData(newestResult);
+  };
+  //가격 높은순
+  const onCheap = () => {
+    let newArr = [...currentCategoryProducts];
+    let newestResult = newArr.sort((a, b) => {
+      return a.products[0].price - b.products[0].price;
+    });
+    setData(newestResult);
+  };
+  const onExpensive = () => {
+    let newArr = [...currentCategoryProducts];
+    let newestResult = newArr.sort((a, b) => {
+      return b.products[0].price - a.products[0].price;
+    });
+    setData(newestResult);
+  };
 
   return (
     <SWrapper>
@@ -59,7 +91,13 @@ const Category = () => {
           <span className="category-name">{CATEGORY_CODE[category]}</span>
           <Filter>
             <div className="rental availability ">
-              <input type="checkbox" name="rental" value="" />
+              <input
+                type="checkbox"
+                name="rental"
+                value=""
+                id="checkbox"
+                onClick={onCheck}
+              />
               렌탈 가능
             </div>
             <div className="dropdown">
@@ -68,13 +106,13 @@ const Category = () => {
                 정렬 순서
               </button>
               <div id="drop-content">
-                <button>가격 낮은순</button>
-                <button>가격 높은순</button>
-                <button>최신순</button>
+                <button onClick={onCheap}>가격 낮은순</button>
+                <button onClick={onExpensive}>가격 높은순</button>
+                <button onClick={onNew}>최신순</button>
               </div>
             </div>
           </Filter>
-          <PostBox data={data} />
+          <PostBox data={currentCategoryProducts} />
         </div>
       </div>
     </SWrapper>
@@ -135,7 +173,7 @@ const Filter = styled.div`
       height: 30px;
       border: 0.1px solid gray;
       cursor: pointer;
-      background-color: #eee5ca;
+      background-color: white;
     }
   }
 `;

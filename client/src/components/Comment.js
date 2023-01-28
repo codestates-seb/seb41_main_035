@@ -30,27 +30,27 @@ const Comment = ({ boardId, profile }) => {
     })
       .then((res) => {
         if (res) {
-          location.href = '/postview/' + [params.boardId]; //새로고침
+          fetchCommentData();
         }
       })
       .catch((err) => {
         return err;
       });
   };
+  const fetchCommentData = async () => {
+    try {
+      const response = await axios.get(
+        url + `/board/${params.boardId}?page=1&size=10`
+      );
+      setCommentData(response.data);
+      console.log(response.data);
+    } catch (err) {
+      return err;
+    }
+    //데이터 받아오기 가능하면 지우고 response.data로 변경
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          url + `/board/${params.boardId}?page=1&size=10`
-        );
-        setCommentData(response.data);
-        console.log(response.data);
-      } catch (err) {
-        return err;
-      }
-      //데이터 받아오기 가능하면 지우고 response.data로 변경
-    };
-    fetchData();
+    fetchCommentData();
   }, []);
 
   const onDelteComment = (id) => {
@@ -62,8 +62,8 @@ const Comment = ({ boardId, profile }) => {
         },
       })
         .then((res) => {
-          if (res.ok) {
-            location.href = '/postview/' + [params.boardId]; //새로고침
+          if (res) {
+            fetchCommentData();
           }
         })
         .catch((err) => console.log('Error', err.message));

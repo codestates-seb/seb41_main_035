@@ -1,45 +1,77 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import dummyData from '../db/dummyData.json';
 import Avatar from '../components/Avatar';
 import { useState, useEffect } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
-import ChatWindow from '../components/ChatWindow';
 import axios from 'axios';
-import { MdNavigateBefore } from 'react-icons/md';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { token } from '../constants/index';
+import userStore from '../store/userStore';
 const Chat = () => {
   const [chatData, setChatData] = useState([]); //get
   const [sentData, setSentData] = useState([]); //post
+  const [listData, setListData] = useState([]); //list get
+  const [idData, setIdData] = useState('');
   const url = 'http://13.125.30.88';
-  const data = dummyData.posts;
   const sentId = JSON.parse(localStorage.getItem('sentId'));
   const name = JSON.parse(localStorage.getItem('name'));
+
   const onChatChange = (e) => {
     setSentData(e.currentTarget.value);
   };
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        url + `/message/received/${sentId}?page=1&size=100`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setChatData(response.data.data);
+      console.log(response.data.data);
+    } catch (err) {
+      return err;
+    }
+  };
+  const fetchListClickData = async () => {
+    try {
+      const response = await axios.get(
+        url + `/message/received/${idData}?page=1&size=100`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setChatData(response.data.data);
+      console.log(response.data.data);
+    } catch (err) {
+      return err;
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          url + `/message/received/${sentId}?page=1&size=100`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setChatData(response.data.data);
-        console.log(response.data.data);
-      } catch (err) {
-        return err;
-      }
-    };
     fetchData();
-  }, [sentId]);
+    fetchListClickData();
+  }, [sentId, idData]);
+  //목록조회
+  const fetchListData = async () => {
+    try {
+      const response = await axios.get(url + `/message/room`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setListData(response.data);
+    } catch (err) {
+      return err;
+    }
+  };
+  useEffect(() => {
+    fetchListData();
+  }, []);
+  console.log(listData);
   console.log(chatData);
-  console.log(sentData);
   const onPostChat = () => {
     axios(url + '/message', {
       method: 'POST',
@@ -54,7 +86,8 @@ const Chat = () => {
     })
       .then((res) => {
         if (res) {
-          window.location.reload(); //새로고침
+          fetchData();
+          fetchListData(); //새로고침
         }
       })
       .catch((err) => {
@@ -66,15 +99,20 @@ const Chat = () => {
       <SWrapper>
         <div className="chatlist-container">
           <p>채팅</p>
-          {data.map((chat) => (
-            <SChatList key={chat.id}>
+          {listData.map((chat) => (
+            <SChatList
+              key={chat.messageRoom}
+              onClick={() => setIdData(chat.receiverId)}
+            >
               <div className="chat-box">
-                <Avatar size="45px" image={chat.avatar} />
+                <Avatar size="45px" image={chat.receiverProfileImageUrl} />
                 <div className="right content">
-                  <div className="user-name">{chat.userNickname}</div>
+                  <div className="user-name">{chat.receiverNickname}</div>
                   <div className="content_and_time">
-                    <div className="chat-last_content">hiiiiiii</div>
-                    <div className="chat-time">1월 12일 (목) 12:00</div>
+                    <div className="chat-last_content">{chat.content}</div>
+                    <div className="chat-time">
+                      {new Date(chat.createdDate).toLocaleString()}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -83,7 +121,6 @@ const Chat = () => {
         </div>
         <div className="chat-container">
           <div className="top">
-            {/* <MdNavigateBefore /> */}
             <div className="user-info">
               <Avatar size="45px" />
               <span className="user-name">{name}</span>
@@ -96,7 +133,9 @@ const Chat = () => {
                 <div className="user-content">
                   <div className="user-content_top">
                     <span className="user-name">{chat.senderNickname}</span>
-                    <span className="user-send-time">{chat.createdAt}</span>
+                    <span className="user-send-time">
+                      {new Date(chat.createdDate).toLocaleString()}
+                    </span>
                   </div>
                   <div className="send-content">{chat.content}</div>
                 </div>
@@ -114,22 +153,15 @@ const Chat = () => {
     </>
   );
 };
-// const Siii = styled.div`
-//   display: flex;
-// `;
 
 const SWrapper = styled.div`
-  /* position: fixed; */
   width: 100%;
   height: 100%;
-  /* top: 5%; */
-  /* background-color: rgba(0, 0, 0, 0); */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   margin-top: 20px;
-
   p {
     margin-left: 40px;
     font-size: 25px;

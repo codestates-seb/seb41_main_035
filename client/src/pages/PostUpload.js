@@ -73,27 +73,24 @@ const PostUpload = () => {
       );
       formData.append('products[' + i + '].category', contentList[i].category);
     }
-    if (!inputContent) {
-      alert('게시글을 입력해주세요.');
-      return;
-    } else {
-      axios
-        .post('http://13.125.30.88/boards', formData, {
-          headers: {
-            Authorization: token,
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then((res) => {
-          if (res) {
-            location.href = '/';
-          }
-          console.log(res.data);
-        })
-        .catch((err) => {
-          return err;
-        });
-    }
+
+    axios
+      .post('http://13.125.30.88/boards', formData, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        if (res) {
+          location.href = '/';
+        }
+        console.log(res.data);
+      })
+      .catch((err) => {
+        return err;
+      });
+
     for (let [key, value] of formData.entries()) {
       console.log(key + ':' + value);
     }
@@ -122,7 +119,7 @@ const PostUpload = () => {
       <Scontainer>
         <SHeader>
           <div className="image_upload">
-            <button type="submit" onClick={onPost}>
+            <button type="submit" onClick={onPost} disabled={!inputContent}>
               완료
             </button>
           </div>
