@@ -2,6 +2,8 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+
 //postuploadbar.js 에서 받아온 index,imgFile,onUploadImages 함수
 const ItemImageInput = ({
   index,
@@ -44,7 +46,7 @@ const ItemImageInput = ({
           type="file"
           id={`input-imgfile${index}`}
           onChange={onChangeImg} // 파일이 추가되면 이벤트가 일어난다.
-          multiple // 파일 여러개 선택 가능
+          // multiple // 파일 여러개 선택 가능
           accept="image/*" //모든 이미지 파일형식
         />
       </div>
