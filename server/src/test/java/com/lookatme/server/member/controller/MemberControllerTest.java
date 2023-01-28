@@ -7,6 +7,7 @@ import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.file.FileDirectory;
 import com.lookatme.server.file.FileService;
+import com.lookatme.server.member.controller.MemberController;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
