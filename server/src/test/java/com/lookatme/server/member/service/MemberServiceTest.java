@@ -8,6 +8,8 @@ import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.MemberStatus;
 import com.lookatme.server.member.entity.OauthPlatform;
 import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.FollowService;
+import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
