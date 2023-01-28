@@ -152,40 +152,40 @@ const Comment = ({ boardId, profile }) => {
                 <div className="user_avatar">
                   <Avatar image={comment.profileImageUrl} />
                 </div>
-              <div className="user_name">{comment.nickname}</div>
-              {editCommentId === comment.commentId ? ( //현재 수정중인 Comment와 동일한CommentId를 가지고있는지?
-                <SInput
-                  // value={comment.content}
-                  value={revise}
-                  onChange={onChangeInput}
-                ></SInput>
-              ) : (
-                <div className="comment_content">{comment.content}</div>
-              )}
-            </div>
-            <div className="comment-right">
-              {editCommentId === comment.commentId ? (
-                <SSave onClick={() => onSave(comment.commentId)}> 저장</SSave>
-              ) : (
-                <>
-                  <span
-                    role="presentation"
-                    onClick={() => {
-                      setRevise(comment.content);
-                      setEditCommentId(comment.commentId);
-                    }}
-                  >
-                    수정
-                  </span>
-                  <span
-                    role="presentation"
-                    onClick={() => onDelteComment(comment.commentId)}
-                  >
-                    삭제
-                  </span>
-                </>
-              )}
-              {/* <span
+                <div className="user_name">{comment.nickname}</div>
+                {editCommentId === comment.commentId ? ( //현재 수정중인 Comment와 동일한CommentId를 가지고있는지?
+                  <SInput
+                    // value={comment.content}
+                    value={revise}
+                    onChange={onChangeInput}
+                  ></SInput>
+                ) : (
+                  <div className="comment_content">{comment.content}</div>
+                )}
+              </div>
+              <div className="comment-right">
+                {editCommentId === comment.commentId ? (
+                  <SSave onClick={() => onSave(comment.commentId)}> 저장</SSave>
+                ) : (
+                  <>
+                    <span
+                      role="presentation"
+                      onClick={() => {
+                        setRevise(comment.content);
+                        setEditCommentId(comment.commentId);
+                      }}
+                    >
+                      수정
+                    </span>
+                    <span
+                      role="presentation"
+                      onClick={() => onDelteComment(comment.commentId)}
+                    >
+                      삭제
+                    </span>
+                  </>
+                )}
+                {/* <span
                 role="presentation"
                 onClick={() => {
                   setRevise(comment.content);
@@ -205,7 +205,8 @@ const Comment = ({ boardId, profile }) => {
               ) : (
                 ''
               )} */}
-              {/* <BsThreeDotsVertical /> */}
+                {/* <BsThreeDotsVertical /> */}
+              </div>
             </div>
           ))}
       </div>

@@ -70,8 +70,6 @@ const PostView = () => {
       `/members/follow?op=${detailData.member.memberId}&type=down`,
       {},
 
-      `/members/follow?op=${detailData.memberId}&type=down`,
-
       {
         headers: { Authorization: token },
       }
