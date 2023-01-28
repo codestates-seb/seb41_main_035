@@ -6,6 +6,7 @@ import Signup from '../Signup/Signup';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import memberstore from '../../store/memberstore';
+import { persist } from 'zustand';
 
 const backendUrl = 'http://13.125.30.88/';
 
@@ -114,7 +115,9 @@ function LoginModal(props) {
             }}
             onChange={onChangePassword}
           ></input>
-          <SigninButton onClick={SignIn}>로그인</SigninButton>
+          <div>
+            <SigninButton onClick={SignIn}>로그인</SigninButton>
+          </div>
           <div
             style={{
               display: 'flex',
@@ -188,6 +191,7 @@ const SigninButton = styled.button`
   font-style: italic;
   font-weight: 200;
   margin-top: 10px;
+  width: 277px;
   cursor: pointer;
   &:hover {
     background-color: #898989;

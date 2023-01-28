@@ -1,12 +1,20 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-const userStore = create((set) => ({
-  userId: '',
-  setUserId: (e) => {
-    set({
-      userId: e,
-    });
-  },
-}));
+const userStore = create(
+  persist(
+    (set) => ({
+      userId: '',
+      setUserId: (e) => {
+        set({
+          userId: e,
+        });
+      },
+    }),
+    {
+      userId: 'userid',
+    }
+  )
+);
 
 export default userStore;

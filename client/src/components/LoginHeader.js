@@ -11,6 +11,7 @@ import userStore from '../store/userStore';
 import memberstore from '../store/memberstore';
 import axios from 'axios';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+
 const backendUrl = 'http://13.125.30.88/';
 
 const LoginHeader = () => {
@@ -18,7 +19,7 @@ const LoginHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const userId = userStore((state) => state.userId);
+  const { userId, setUserId } = userStore((state) => state);
 
   const onClickButton = () => {
     setIsOpen(true);
@@ -38,6 +39,7 @@ const LoginHeader = () => {
       // eslint-disable-next-line react/prop-types
     }
     setisLogin(false);
+    setUserId('');
   };
 
   const onChatOpen = () => {
@@ -59,7 +61,7 @@ const LoginHeader = () => {
               </p>
             </div>
             <SearchBox />
-            {!isLogin ? (
+            {!localStorage.getItem('accessToken') ? (
               <div className="right zone">
                 <button className="login button" onClick={onClickButton}>
                   Log in
