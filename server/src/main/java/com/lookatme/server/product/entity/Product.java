@@ -30,10 +30,6 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
-    private int price;
-
-    private String link;
-
     private String productImage;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)

@@ -70,7 +70,6 @@ public class BoardService {
                         .board(board)
                         .product(savedProduct)
                         .price(postProduct.getPrice())
-                        .size(postProduct.getSize())
                         .link(postProduct.getLink()).build();
                 board.getBoardProducts().add(boardProduct);
 
@@ -102,7 +101,6 @@ public class BoardService {
                     if (boardProduct.getProduct().getProductId() == product.getProductId()) {
                         boardProduct.updateProductInfo(
                                 product.getLink(),
-                                product.getSize(),
                                 product.getPrice()
                         );
                         break;
