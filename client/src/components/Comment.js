@@ -11,6 +11,7 @@ const BREAK_POINT_PC = 1300;
 const Comment = ({ boardId, profile }) => {
   const params = useParams();
   const url = 'http://13.125.30.88/comment';
+
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
   const onContentChange = (e) => {
@@ -70,6 +71,51 @@ const Comment = ({ boardId, profile }) => {
     }
   };
 
+  //추가 : 댓글 수정부분
+  const [revise, setRevise] = useState(''); //댓글수정창에 입력한 값이 저장되는 State
+  // const [isFixing, setIsFixing] = useState(false);
+  const [editCommentId, setEditCommentId] = useState(''); // 현재 수정중인 Comment의 Id. '' 값이면 댓글 수정중이 아닌 것을 의미
+  const onChangeInput = (e) => {
+    setRevise(e.target.value);
+  };
+  // const fixMode = () => {
+  //   setIsFixing(true);
+  // };
+
+  // 댓글 수정한거 저장
+  const onSave = async (id) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await axios.patch(
+        `${url}/${id}`,
+        // url + `/${id}`,
+        {
+          // boardId: boardId,
+          content: revise,
+        },
+        {
+          headers: { Authorization: token },
+        },
+        { withCredentials: true }
+      );
+    } catch (err) {
+      window.alert(err);
+    }
+    // setIsFixing(false);
+    setEditCommentId(''); // 저장시 현재 수정중인 Comment의 Id를 ''으로 변경하여 초기화
+    setCommentData((prev) =>
+      prev.map((comment) => {
+        if (comment.commentId === id) {
+          return {
+            ...comment,
+            content: revise,
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
   return (
     <SWrapper>
       <div className="comment_count">댓글 {commentData.data?.length}</div>
@@ -86,6 +132,7 @@ const Comment = ({ boardId, profile }) => {
             value={contentValue}
             onChange={onContentChange}
           />
+
           <button
             disabled={!contentValue}
             onClick={() => {
@@ -105,19 +152,60 @@ const Comment = ({ boardId, profile }) => {
                 <div className="user_avatar">
                   <Avatar image={comment.profileImageUrl} />
                 </div>
-                <div className="user_name">{comment.nickname}</div>
+              <div className="user_name">{comment.nickname}</div>
+              {editCommentId === comment.commentId ? ( //현재 수정중인 Comment와 동일한CommentId를 가지고있는지?
+                <SInput
+                  // value={comment.content}
+                  value={revise}
+                  onChange={onChangeInput}
+                ></SInput>
+              ) : (
                 <div className="comment_content">{comment.content}</div>
-              </div>
-              <div className="comment-right">
-                <span>수정</span>
-                <span
-                  role="presentation"
-                  onClick={() => onDelteComment(comment.commentId)}
-                >
-                  삭제
-                </span>
-                {/* <BsThreeDotsVertical /> */}
-              </div>
+              )}
+            </div>
+            <div className="comment-right">
+              {editCommentId === comment.commentId ? (
+                <SSave onClick={() => onSave(comment.commentId)}> 저장</SSave>
+              ) : (
+                <>
+                  <span
+                    role="presentation"
+                    onClick={() => {
+                      setRevise(comment.content);
+                      setEditCommentId(comment.commentId);
+                    }}
+                  >
+                    수정
+                  </span>
+                  <span
+                    role="presentation"
+                    onClick={() => onDelteComment(comment.commentId)}
+                  >
+                    삭제
+                  </span>
+                </>
+              )}
+              {/* <span
+                role="presentation"
+                onClick={() => {
+                  setRevise(comment.content);
+                  setEditCommentId(comment.commentId);
+                }}
+              >
+                수정
+              </span>
+              <span
+                role="presentation"
+                onClick={() => onDelteComment(comment.commentId)}
+              >
+                삭제
+              </span>
+              {editCommentId === comment.commentId ? (
+                <SSave onClick={onSave}>저장</SSave>
+              ) : (
+                ''
+              )} */}
+              {/* <BsThreeDotsVertical /> */}
             </div>
           ))}
       </div>
@@ -128,6 +216,8 @@ const Comment = ({ boardId, profile }) => {
 const SWrapper = styled.div`
   width: 100%;
   height: 50%;
+  padding-top: 8px;
+
   .line {
     width: 100%;
     text-align: center;
@@ -164,7 +254,8 @@ const SWrapper = styled.div`
       /* border-bottom: 1px solid gray; */
       /* background-color: white; */
       background-color: #f7f5ec;
-      margin-left: 10px;
+      margin-left: 2px;
+      border-radius: 5px;
 
       input {
         width: 90%;
@@ -199,7 +290,7 @@ const SWrapper = styled.div`
     overflow: auto;
     .comment_box {
       display: flex;
-      height: 40px;
+      height: 50px;
       align-items: center;
       justify-content: space-between;
       .comment-left {
@@ -209,6 +300,9 @@ const SWrapper = styled.div`
         margin-right: 10px;
         font-size: 12px;
         color: gray;
+        width: 70px;
+        justify-content: center;
+        display: flex;
         span {
           margin: 0px 5px;
         }
@@ -231,8 +325,8 @@ const SWrapper = styled.div`
       }
     }
     .user_name {
-      margin: 0px 10px;
-      font-size: 18px;
+      margin: 3px 10px;
+      font-size: 16px;
       font-weight: bold;
     }
     span {
@@ -240,8 +334,23 @@ const SWrapper = styled.div`
         color: black;
         cursor: pointer;
       }
+    .comment_content {
+      margin-top: 5px;
+      font-size: 14px;
+      width: 26vw;
+      height: 100%;
     }
   }
+`;
+const SSave = styled.div`
+  /* width: 70px;
+  border-radius: 20px; */
+`;
+const SInput = styled.input`
+  width: 22vw;
+  display: flex;
+  /* justify-content: center; */
+  font-size: 14px;
 `;
 
 export default Comment;

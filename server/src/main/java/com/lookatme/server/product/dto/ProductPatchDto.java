@@ -13,9 +13,8 @@ public class ProductPatchDto {
     private String brand;
     private String link;
     private String size;
+    private Long productId;
     private int price;
-    private int rentalId;
-    private int productId;
     private int rentalPrice;
     private boolean rental;
 }

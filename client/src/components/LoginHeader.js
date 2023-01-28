@@ -17,8 +17,7 @@ const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const userId = userStore((state) => state.userId);
-
+  const { userId, setUserId } = userStore((state) => state);
   const onClickButton = () => {
     setIsOpen(true);
   };
@@ -37,6 +36,7 @@ const LoginHeader = () => {
       // eslint-disable-next-line react/prop-types
     }
     setisLogin(false);
+    setUserId('');
   };
 
   return (
@@ -55,7 +55,7 @@ const LoginHeader = () => {
               />
             </div>
             <SearchBox />
-            {!isLogin ? (
+            {!localStorage.getItem('accessToken') ? (
               <div className="right zone">
                 <button className="login button" onClick={onClickButton}>
                   Log in

@@ -7,6 +7,7 @@ import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.MemberStatus;
 import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +40,13 @@ class AuthControllerTest {
     private MemberRepository memberRepository;
 
     @Autowired
+    private MemberService memberService;
+
+    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private Gson gson;
@@ -250,5 +258,28 @@ class AuthControllerTest {
                 accessToken.replace("Bearer ", "")
         );
         assertThat(hasAccessToken).isTrue();
+    }
+
+    @DisplayName("탈퇴한 회원은 로그인 불가")
+    @Test
+    void withdrawalMemberTest() throws Exception {
+        // Given - 회원 탈퇴함
+        memberService.deleteMember(1L);
+        em.flush(); em.clear();
+
+        // When - 탈퇴한 회원 계정으로 다시 로그인 시도
+        LoginRequest loginRequest = new LoginRequest("email_1@com", "qwe123!@#");
+        String content = gson.toJson(loginRequest);
+        ResultActions actions = mockMvc.perform(
+                post("/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+        );
+
+        // Then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.LOGIN_ACCOUNT_FAILED.name()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.LOGIN_ACCOUNT_FAILED.getValue()));
     }
 }

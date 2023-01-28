@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Service
 public class RentalService {
@@ -30,15 +32,14 @@ public class RentalService {
         this.productRepository = productRepository;
     }
 
-    public Rental createRental(long memberId, int productId, Board board, String size, int rentalPrice) {
+    public Rental createRental(long memberId, long productId, Board board, String size, int rentalPrice, boolean isRental) {
         Rental rental = Rental.builder()
                 .member(findMember(memberId))
                 .product(findProduct(productId))
                 .board(board)
-                .rental(false)
+                .available(isRental)
                 .size(size)
                 .rentalPrice(rentalPrice).build();
-
         return rentalRepository.save(rental);
     }
 
@@ -48,21 +49,29 @@ public class RentalService {
         return rentalRepository.save(rental);
     }
 
-    public Rental updateRental(RentalPatchDto patch) {
-        Rental savedRental = findRental(patch.getRentalId());
-        savedRental.updateRental(patch.getSize(), patch.getRentalPrice());
+    public Rental updateRental(long boardId, long productId, RentalPatchDto patch) {
+        Rental savedRental = findRentalByBoardId(boardId, productId);
+        String size = patch.getSize() == null ? "-" : patch.getSize();
+        savedRental.updateRental(size, patch.getRentalPrice(), patch.isRental());
         return savedRental;
     }
 
-    public void deleteRental(int rentalId) {
+    public void deleteRental(long rentalId) {
         rentalRepository.delete(findExistedRental(rentalId));
     }
 
-    public void deleteRentals() {
-        rentalRepository.deleteAll();
+    // 회원 탈퇴 시 회원이 올린 모든 렌탈 데이터를 이용 불가 상태로 변경
+    public void withdrawalMember(long memberId) {
+        rentalRepository.findByMember_MemberId(memberId)
+                .forEach(rental -> rental.setAvailable(false));
     }
 
-    public Rental findRental(int rentalId) {
+    public Rental findRentalByBoardId(long boardId, long productId) {
+        return rentalRepository.findByBoard_BoardIdAndProduct_ProductId(boardId, productId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.RENTAL_NOT_FOUND));
+    }
+
+    public Rental findRental(long rentalId) {
         return findExistedRental(rentalId);
     }
 
@@ -70,12 +79,12 @@ public class RentalService {
         return rentalRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
     }
 
-    private void verifyExistRental(int rentalId) {
+    private void verifyExistRental(long rentalId) {
         rentalRepository.findById(rentalId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.RENTAL_ALREADY_EXISTS));
     }
 
-    private Rental findExistedRental(int rentalId) {
+    private Rental findExistedRental(long rentalId) {
         return rentalRepository.findById(rentalId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.RENTAL_NOT_FOUND));
     }
@@ -85,7 +94,7 @@ public class RentalService {
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private Product findProduct(int productId) {
+    private Product findProduct(long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
     }

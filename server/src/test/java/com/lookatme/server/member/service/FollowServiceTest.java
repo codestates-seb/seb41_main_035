@@ -6,10 +6,13 @@ import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.OauthPlatform;
 import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.FollowService;
+import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -17,12 +20,15 @@ import javax.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FollowServiceTest {
 
     @Autowired
     private FollowService followService;
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     private EntityManager em;
@@ -97,6 +103,7 @@ class FollowServiceTest {
     void followMemberTest() {
         // When
         followService.follow(1L, 2L); // 1번 회원이 2번 회원을 팔로우 하면
+        em.flush(); em.clear();
 
         // Then
         Member follower = memberRepository.findById(1L).get();
@@ -117,7 +124,7 @@ class FollowServiceTest {
 
         // When - 1번 회원이 3번 회원을 언팔로우 함
         followService.unFollow(1L, 3L);
-        em.flush(); // 강제 반영 (트랜잭션이 안끝난 상태임)
+        em.flush(); em.clear();
 
         // Then
         Member follower = memberRepository.findById(1L).get();
@@ -130,5 +137,21 @@ class FollowServiceTest {
         assertThat(unfollowee.getFolloweeCnt()).isEqualTo(0);
         assertThat(followee.getFollowerCnt()).isEqualTo(1); // 2번 회원의 follower 수 = 1 (1번)
         assertThat(followee.getFolloweeCnt()).isEqualTo(0);
+    }
+
+    @DisplayName("탈퇴한 회원을 팔로우 할 수 없음")
+    @Test
+    void withdrawalMember_FollowTest() {
+        // Given
+        memberService.deleteMember(1L);
+
+        // When
+        Throwable exception = catchThrowable(
+                () -> followService.follow(2L, 1L)
+        );
+
+        // Then
+        assertThat(exception).isInstanceOf(ErrorLogicException.class);
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_NOT_FOUND.getValue());
     }
 }

@@ -7,6 +7,7 @@ import com.lookatme.server.config.CustomTestConfiguration;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.file.FileDirectory;
 import com.lookatme.server.file.FileService;
+import com.lookatme.server.member.controller.MemberController;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
 import com.lookatme.server.member.entity.Follow;
@@ -133,7 +134,8 @@ class MemberControllerTest {
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
                                         fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
-                                        fieldWithPath("follow").type(BOOLEAN).description("팔로우 유무")
+                                        fieldWithPath("follow").type(BOOLEAN).description("팔로우 유무"),
+                                        fieldWithPath("delete").type(BOOLEAN).description("회원 탈퇴 유무")
                                 )
                         )
                 ));
@@ -185,7 +187,8 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("delete").type(BOOLEAN).description("회원 탈퇴 유무")
                                 )
                         )
                 ));
@@ -245,7 +248,8 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("delete").type(BOOLEAN).description("회원 탈퇴 유무")
                                 )
                         )
                 ));
@@ -411,6 +415,7 @@ class MemberControllerTest {
                                         fieldWithPath("data[].weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("data[].followerCnt").type(NUMBER).description("팔로워 수"),
                                         fieldWithPath("data[].followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("data[].delete").type(BOOLEAN).description("회원 탈퇴 유무"),
                                         fieldWithPath("pageInfoDto.page").type(NUMBER).description("페이지"),
                                         fieldWithPath("pageInfoDto.size").type(NUMBER).description("페이지 당 데이터 개수"),
                                         fieldWithPath("pageInfoDto.totalElements").type(NUMBER).description("전체 데이터 개수"),
@@ -456,7 +461,8 @@ class MemberControllerTest {
                                         fieldWithPath("height").type(NUMBER).description("키"),
                                         fieldWithPath("weight").type(NUMBER).description("몸무게"),
                                         fieldWithPath("followerCnt").type(NUMBER).description("팔로워 수"),
-                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수")
+                                        fieldWithPath("followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("delete").type(BOOLEAN).description("회원 탈퇴 유무")
                                 )
                         )
                 ));

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-25T22:35:59+0900",
+    date = "2023-01-28T15:32:35+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -63,7 +63,7 @@ public class BoardMapperImpl implements BoardMapper {
         BoardResponseDto boardResponseDto = new BoardResponseDto();
 
         boardResponseDto.setProducts( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
-        boardResponseDto.setBoardId( board.getBoardId() );
+        boardResponseDto.setBoardId( (int) board.getBoardId() );
         boardResponseDto.setUserImage( board.getUserImage() );
         boardResponseDto.setContent( board.getContent() );
         boardResponseDto.setCreatedDate( board.getCreatedDate() );
@@ -96,9 +96,10 @@ public class BoardMapperImpl implements BoardMapper {
 
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
 
-        rentalResponseDto.setRentalId( rental.getRentalId() );
+        rentalResponseDto.setRentalId( (int) rental.getRentalId() );
         rentalResponseDto.setSize( rental.getSize() );
         rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
+        rentalResponseDto.setAvailable( rental.isAvailable() );
 
         return rentalResponseDto;
     }
@@ -150,6 +151,7 @@ public class BoardMapperImpl implements BoardMapper {
         int followerCnt = 0;
         int followeeCnt = 0;
         boolean follow = false;
+        boolean delete = false;
 
         memberId = member.getMemberId();
         email = member.getEmail();
@@ -161,8 +163,9 @@ public class BoardMapperImpl implements BoardMapper {
         followerCnt = member.getFollowerCnt();
         followeeCnt = member.getFolloweeCnt();
         follow = member.isFollow();
+        delete = member.isDelete();
 
-        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow );
+        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow, delete );
 
         return responseWithFollow;
     }
@@ -175,12 +178,14 @@ public class BoardMapperImpl implements BoardMapper {
         long memberId = 0L;
         String nickname = null;
         String profileImageUrl = null;
+        boolean delete = false;
 
         memberId = member.getMemberId();
         nickname = member.getNickname();
         profileImageUrl = member.getProfileImageUrl();
+        delete = member.isDelete();
 
-        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl );
+        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl, delete );
 
         return simpleResponse;
     }

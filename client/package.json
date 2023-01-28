@@ -21,7 +21,8 @@
     "react-select": "^5.7.0",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4",
-    "zustand": "^4.3.2"
+    "zustand": "^4.3.2",
+    "zustand-persist": "^0.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

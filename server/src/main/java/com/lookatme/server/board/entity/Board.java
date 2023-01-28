@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+@NamedEntityGraph(
+        name = "board-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode(value = "member")
+        }
+)
 @Entity
 @Getter
 @Setter
@@ -19,7 +26,7 @@ import java.util.Objects;
 public class Board extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int boardId;
+    private long boardId;
 
     @Column(nullable = false)
     private String userImage;
@@ -48,7 +55,7 @@ public class Board extends BaseTimeEntity {
     }
 
     @Builder
-    public Board(final int boardId,
+    public Board(final long boardId,
                  final String userImage,
                  final String content,
                  final int likeCnt) {

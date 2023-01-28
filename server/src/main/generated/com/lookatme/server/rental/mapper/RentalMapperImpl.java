@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-25T21:09:10+0900",
+    date = "2023-01-27T20:32:18+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -26,7 +26,6 @@ public class RentalMapperImpl implements RentalMapper {
 
         RentalBuilder rental = Rental.builder();
 
-        rental.rental( post.isRental() );
         rental.size( String.valueOf( post.getSize() ) );
 
         return rental.build();
@@ -40,7 +39,6 @@ public class RentalMapperImpl implements RentalMapper {
 
         RentalBuilder rental = Rental.builder();
 
-        rental.rentalId( patch.getRentalId() );
         rental.size( patch.getSize() );
         rental.rentalPrice( patch.getRentalPrice() );
 
@@ -55,9 +53,10 @@ public class RentalMapperImpl implements RentalMapper {
 
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
 
-        rentalResponseDto.setRentalId( rental.getRentalId() );
+        rentalResponseDto.setRentalId( (int) rental.getRentalId() );
         rentalResponseDto.setSize( rental.getSize() );
         rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
+        rentalResponseDto.setAvailable( rental.isAvailable() );
 
         return rentalResponseDto;
     }

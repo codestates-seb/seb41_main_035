@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import CATEGORY_CODE from '../constants/index';
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-
 const PRODUCT = {
   outer: '아우터',
   top: '상의',
@@ -18,8 +17,10 @@ const PRODUCT = {
 const Category = () => {
   const params = useParams();
   const category = params.categoryId;
+
   const [data, setData] = useState([]);
   const [check, setCheck] = useState(false);
+  console.log(data);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -28,7 +29,6 @@ const Category = () => {
       click.style.display = 'none';
     }
   };
-
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
@@ -41,6 +41,7 @@ const Category = () => {
     };
     fetchData();
   }, [check]);
+
 
   const currentCategoryProducts = useMemo(() => {
     return data.filter((item) => {
@@ -83,7 +84,6 @@ const Category = () => {
     });
     setData(newestResult);
   };
-
   return (
     <SWrapper>
       <div className="category">
