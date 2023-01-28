@@ -4,12 +4,19 @@ import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
 import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.member.entity.Account;
+import com.lookatme.server.member.entity.Member;
+import com.lookatme.server.member.entity.MemberStatus;
 import com.lookatme.server.member.entity.OauthPlatform;
+import com.lookatme.server.member.repository.MemberRepository;
+import com.lookatme.server.member.service.FollowService;
+import com.lookatme.server.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -25,6 +32,15 @@ class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private FollowService followService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private EntityManager em;
 
     @DisplayName("회원 조회 실패 테스트 - 회원 없음")
     @Test
@@ -98,69 +114,42 @@ class MemberServiceTest {
         assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_NICKNAME_EXISTS.getValue());
     }
 
-    @DisplayName("팔로우 실패 테스트 - 셀프 팔로우 금지")
+    @DisplayName("회원 탈퇴 테스트")
     @Test
-    void followMemberTest_SelfFollow() {
-        // Given
-        Account member_1_Account = new Account("email_1@com", OauthPlatform.NONE);
+    void deleteMemberTest() {
+        // Given - 1번 회원이 2번 회원 팔로우 함
+        followService.follow(1L, 2L);
+        em.flush();
 
-        // When
+        // When - 1번 회원 탈퇴함
+        memberService.deleteMember(1L);
+        em.flush();
+
         Throwable exception = catchThrowable(
-                () -> memberService.followMember(member_1_Account, 1L)
+                () -> memberService.findMember(1L)
         );
 
         // Then
+        Member member = memberRepository.findById(1L).get();
+        Member followMember = memberRepository.findByMemberId(2L).get();
+
+        // 삭제 X
+        assertThat(member.getNickname()).isEqualTo("닉네임_1");
+        assertThat(member.getAccount()).isEqualTo(new Account("email_1@com", OauthPlatform.NONE));
+
+        // 삭제 O
+        assertThat(member.getMemberStatus()).isEqualTo(MemberStatus.MEMBER_WITHDRAWAL);
+        assertThat(member.getPassword()).isNull();
+        assertThat(member.getProfileImageUrl()).isEqualTo(Member.DEFAULT_PROFILE_IMG);
+
+        // 팔로우 정보 초기화
+        assertThat(member.getFolloweeCnt()).isEqualTo(0);
+        assertThat(member.getFollowerCnt()).isEqualTo(0);
+        assertThat(followMember.getFollowerCnt()).isEqualTo(0);
+        assertThat(followMember.getFolloweeCnt()).isEqualTo(0);
+
+        // 회원 조회하면 안찾아짐
         assertThat(exception).isInstanceOf(ErrorLogicException.class);
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_SELF_FOLLOW.getValue());
-    }
-
-    @DisplayName("팔로우 실패 테스트 - 중복 팔로우 금지")
-    @Test
-    void followMemberTest_AlreadyFollow() {
-        // Given
-        Account member_1_Account = new Account("email_1@com", OauthPlatform.NONE);
-        memberService.followMember(member_1_Account, 2L); // 1번 회원이 2번 회원을 팔로우 함
-
-        // When
-        Throwable exception = catchThrowable(
-                () -> memberService.followMember(member_1_Account, 2L) // 2번 회원을 이미 팔로우 한 상태에서 다시 팔로우 요청 보내면 예외 터져야함
-        );
-
-        // Then
-        assertThat(exception).isInstanceOf(ErrorLogicException.class);
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_ALREADY_FOLLOW.getValue());
-    }
-
-    @DisplayName("언팔로우 실패 테스트 - 팔로우 안한 회원")
-    @Test
-    void unfollowMemberTest_NotFollow() {
-        // Given
-        Account member_1_Account = new Account("email_1@com", OauthPlatform.NONE); // 아무도 팔로우 하지 않은 상태
-
-        // When
-        Throwable exception = catchThrowable(
-                () -> memberService.unfollowMember(member_1_Account, 2L) // 2번 회원을 이미 팔로우 한 상태에서 다시 팔로우 요청 보내면 예외 터져야함
-        );
-
-        // Then
-        assertThat(exception).isInstanceOf(ErrorLogicException.class);
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_NOT_FOLLOW.getValue());
-    }
-
-    @DisplayName("팔로워 찾기 실패 테스트 - 탭 없음")
-    @Test
-    void findFollowerTest_badTabRequest() {
-        // Given
-        Account member_1_Account = new Account("email_1@com", OauthPlatform.NONE);
-        String tab = "존재하지 않는 탭"; // followee / follower 탭만 처리 가능함
-
-        // When
-        Throwable exception = catchThrowable(
-                () -> memberService.findFollowers(member_1_Account, tab, 1, 10)
-        );
-
-        // Then
-        assertThat(exception).isInstanceOf(ErrorLogicException.class);
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.BAD_REQUEST.getValue());
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.MEMBER_NOT_FOUND.getValue());
     }
 }

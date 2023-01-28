@@ -42,6 +42,7 @@ const SWrapper = styled.div`
   /* 768px이하일때 사이드바 없애기 */
   /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     display: none;
+    visibility: hidden;
   } */
 `;
 

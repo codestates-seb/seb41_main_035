@@ -64,6 +64,6 @@ public class Comment extends BaseTimeEntity {
 
     public void addBoard(final Board board) {
         this.board = board;
-        board.getCommentList().add(this);
+        board.getComments().add(this);
     }
 }

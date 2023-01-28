@@ -70,6 +70,41 @@ public class MemberDto {
         private int weight;
         private int followerCnt;
         private int followeeCnt;
+        private boolean delete; // 회원 탈퇴 유무
     }
 
+    @Getter
+    @AllArgsConstructor
+    public static class ResponseWithFollow {
+        private long memberId;
+        private String email;
+        private OauthPlatform oauthPlatform;
+        private String nickname;
+        private String profileImageUrl;
+        private int height;
+        private int weight;
+        private int followerCnt;
+        private int followeeCnt;
+        private boolean follow;
+        private boolean delete;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class SimpleResponseWithFollow {
+        private long memberId;
+        private String nickname;
+        private String profileImageUrl;
+        private boolean follow;
+        private boolean delete;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class SimpleResponse {
+        private long memberId;
+        private String nickname;
+        private String profileImageUrl;
+        private boolean delete;
+    }
 }

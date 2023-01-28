@@ -16,7 +16,7 @@ const PostUpload = () => {
       price: '',
       link: '',
       rental: false,
-      rentalPrice: '',
+      rentalPrice: 0,
       category: '아우터',
     },
     {
@@ -27,7 +27,7 @@ const PostUpload = () => {
       price: '',
       link: '',
       rental: false,
-      rentalPrice: '',
+      rentalPrice: 0,
       category: '아우터',
     },
   ]); // PostUploadBar에 전달 , defaultContent기본값 1개뜨게끔
@@ -86,7 +86,7 @@ const PostUpload = () => {
         })
         .then((res) => {
           if (res) {
-            location.href = '/postview';
+            location.href = '/';
           }
           console.log(res.data);
         })
@@ -111,7 +111,7 @@ const PostUpload = () => {
         price: '',
         link: '',
         rental: false,
-        rentalPrice: '',
+        rentalPrice: 0,
         category: '아우터',
       },
     ]);
@@ -154,13 +154,11 @@ const PostUpload = () => {
     </Section>
   );
 };
-
 const Section = styled.div`
   display: flex;
   justify-content: center;
-  margin-left: 165px;
+  margin-left: 200px;
   min-width: 500px;
-
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     margin-left: 0px;
   }
@@ -178,7 +176,6 @@ const SHeader = styled.div`
   justify-content: flex-end;
   border-bottom: 1px solid #b3b3b3;
   margin: 10px;
-
   .image_upload {
     /* width: 44vw; */
     /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
@@ -203,6 +200,8 @@ const SMid = styled.form`
   width: 100%; //* 추가
   margin: 10px 0px;
   background-color: #eee6ca;
+  height: 375px;
+  border-radius: 6px;
   /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     width: 540px;
   } */
@@ -217,14 +216,13 @@ const SMid = styled.form`
   textarea {
     font-size: 14px;
     box-sizing: border-box;
-    height: 33vh;
+    height: 310px;
     width: 100%; //* 추가
     /* width: 28vw; */
     border: none;
     border-radius: 5px;
     background-color: #ffffff;
     resize: none; /* 사용자가 텍스트사이즈 임의 변경 불가 */
-
     /* 1200px보다 작은화면에서는 아래와 같이 보이게 */
     /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       width: 350px;

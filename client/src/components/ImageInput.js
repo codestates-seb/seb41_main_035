@@ -90,8 +90,8 @@ const SWrapper = styled.div`
     cursor: pointer;
   }
   img {
-    width: 11vw;
-    height: 28vh;
+    width: 95%;
+    height: 275px;
     margin: 20px 0px 20px 5px;
   }
 `;

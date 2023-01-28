@@ -10,7 +10,7 @@ import Google from './pages/Google';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Category from './pages/Category';
-
+import About from './pages/About';
 function App() {
   return (
     <div>
@@ -24,6 +24,7 @@ function App() {
           <Route path="/postview/:boardId" element={<PostView />} />
           <Route path="/google" element={<Google />} />
           <Route path="/category/:categoryId" element={<Category />} />
+          <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
       </BrowserRouter>

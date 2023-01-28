@@ -3,27 +3,58 @@ import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useParams } from 'react';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import axios from 'axios';
+
+const backendUrl = 'http://13.125.30.88/';
+
+// Home.js의 PostBox의 data
 const PostBox = ({ data }) => {
   const navigate = useNavigate();
-  const [like, setLike] = useState(0);
-  const onClickGood = () => {
-    setLike(like + 1);
+  // console.log(data);
+  // const [like, setLike] = useState(0);
+  // const onClickGood = () => {
+  //   setLike(like + 1);
+  // };
+
+  // like State 를 number[] 형태의 배열로 - 값을 0 으로 채워주고
+  // const [like, setLike] = useState(new Array(data?.length).fill(0));
+  const [like, setLike] = useState(data.map((item) => item.likeCnt));
+  const onClickGood = async (id, index) => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      // `${backendUrl}boards/likes/${id}`, // 좋아요 API 를 요청
+      `${backendUrl}boards/${id}/like`, // 좋아요 API 를 요청
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res && res?.data) {
+      setLike((prev) =>
+        prev.map((item, idx) => {
+          if (idx === index) {
+            // item.likeCnt = res.data.likeCnt;
+            return res.data.likeCnt;
+          }
+          return item;
+        })
+      );
+    }
   };
 
   return (
     <SWrapper>
       <Container>
-        {/* //postData로 렌더링 */}
-        {data.map((post) => (
+        {data.map((post, index) => (
           <PostBoxOne key={post.boardId}>
             <div className="user-info ">
               <div
                 className="user-info left"
                 role="presentation"
                 onClick={() => {
-                  navigate(`/members/${post.member?.memberId}`);
+                  navigate(`/profile/${post.member?.memberId}`);
                 }}
               >
                 {' '}
@@ -31,8 +62,12 @@ const PostBox = ({ data }) => {
                 <div className="user-info name">{post.member?.nickname}</div>
               </div>
               <div className="user-info right">
-                <div className="user-info height">170cm</div>
-                <div className="user-info weight">56kg</div>
+                <span className="user-info height">
+                  {post.member?.height}cm
+                </span>
+                <span className="user-info weight">
+                  {post.member?.weight}kg
+                </span>
               </div>
             </div>
 
@@ -43,20 +78,15 @@ const PostBox = ({ data }) => {
                 navigate(`/postview/${post.boardId}`);
               }}
             >
-              <Avatar
-                size="400px"
-                image={post.userImage}
-                onClick={() => {
-                  navigate(`/postview/${post.id}`);
-                }}
-              />
+              <Avatar size="400px" image={post.userImage} />
             </div>
             <div
               className="add container"
               role="presentation"
-              onClick={onClickGood}
+              onClick={() => onClickGood(post.boardId, index)}
             >
-              {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+              {/* {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />} */}
+              {like[index] ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
             </div>
           </PostBoxOne>
         ))}
@@ -105,7 +135,7 @@ const PostBoxOne = styled.div`
     width: 90%;
     padding-top: 6px;
     align-items: center;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
         width: 85%;
@@ -113,17 +143,20 @@ const PostBoxOne = styled.div`
     }
     .left {
       cursor: pointer;
+      display: flex;
+      .name {
+        flex-grow: 3;
+        margin-left: 10px;
+        margin-bottom: 7px;
+        font-size: 20px;
+      }
     }
     .right {
       color: #2e2d2a;
       font-size: 13px;
-      margin-left: 100px;
-      text-align: right;
-    }
-    .name {
-      margin-left: 10px;
-      margin-bottom: 7px;
-      font-size: 20px;
+      span {
+        text-align: right;
+      }
     }
   }
   .style-picture {

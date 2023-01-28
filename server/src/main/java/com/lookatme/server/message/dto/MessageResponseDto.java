@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class MessageResponseDto {
     private Long messageId;
     private String content;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
     private Long messageRoom;
     private Long senderId;
     private String senderNickname;
@@ -22,7 +22,7 @@ public class MessageResponseDto {
     @Builder
     public MessageResponseDto(final Long messageId,
                               final String content,
-                              final LocalDateTime createdAt,
+                              final LocalDateTime createdDate,
                               final Long messageRoom,
                               final Long senderId,
                               final String senderNickname,
@@ -32,7 +32,7 @@ public class MessageResponseDto {
                               final String receiverProfileImageUrl) {
         this.messageId = messageId;
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdDate = createdDate;
         this.messageRoom = messageRoom;
         this.senderId = senderId;
         this.senderNickname = senderNickname;
@@ -46,7 +46,7 @@ public class MessageResponseDto {
         return MessageResponseDto.builder()
                 .messageId(message.getMessageId())
                 .content(message.getContent())
-                .createdAt(message.getCreatedAt())
+                .createdDate(message.getCreatedDate())
                 .messageRoom(message.getMessageRoom())
                 .senderId(message.getSender().getMemberId())
                 .senderNickname(message.getSender().getNickname())

@@ -180,16 +180,17 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  /* width: 44vw; */
-  height: 16vh;
+  height: 150px;
   background-color: #eee6ca;
-  /* flex-direction: row; */
-
   display: flex;
   justify-content: space-around;
   align-items: baseline;
   margin: 10px 0px; //* 추가
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 6px;
+  /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    height: 200px;
+  } */
 `;
 
 const SMidle = styled.div`

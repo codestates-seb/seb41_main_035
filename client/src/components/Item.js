@@ -9,22 +9,36 @@ const Item = () => {
   const params = useParams();
   const url = 'http://13.125.30.88';
   const [itemData, setItemData] = useState([]);
+  const [isRent, setIsRent] = useState(true);
+
+  // console.log(itemData.products[1].rental);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(url + `/boards/` + [params.boardId]);
         setItemData(response.data);
       } catch (err) {
-        window.alert('오류가 발생했습니다.');
         return err;
       }
     };
     fetchData();
   }, []);
-  // console.log(itemData.products[0].link);
-  const onMoveLink = () => {
-    window.location.href = {};
+  // Object.keys(itemData.products.rental)?.forEach((el) =>
+  //   console.log(el[rental])
+  // );
+  // console.log(Object.keys(itemData.products.rental));
+
+  const onMoveLink = (link) => {
+    window.open(link, '', '');
   };
+
+  function openPop() {
+    let popup = window.open(
+      'http://www.naver.com',
+      '네이버팝업',
+      'width=700px,height=800px,scrollbars=yes'
+    );
+  }
   return (
     <SItemContainer>
       {itemData.products?.map((item) => (
@@ -33,7 +47,7 @@ const Item = () => {
           key={item.productId}
           role="presentation"
           onClick={() => {
-            window.open = item.products?.link;
+            onMoveLink(item.link);
           }}
         >
           <div className="item_picture">
@@ -52,15 +66,15 @@ const Item = () => {
                 <span> {item.price}</span>
               </div>
             </div>
-            {/* {isRent ? ( */}
-            <div className="item_rent">
-              <Rent />
-              <div className="rent_price">
-                <p>대여가격: </p>
-                <p>{item.rentalPrice}</p>
+            {isRent ? (
+              <div className="item_rent">
+                <Rent />
+                <div className="rent_price">
+                  <p>대여가격: </p>
+                  <p>{item.rental?.rentalPrice}</p>
+                </div>
               </div>
-            </div>
-            {/* ) : null} */}
+            ) : null}
           </div>
         </div>
       ))}
@@ -79,6 +93,7 @@ const SItemContainer = styled.div`
     align-items: center;
     padding: 10px;
     background-color: #eee6ca;
+    border-radius: 5px;
     cursor: pointer;
     .item_info {
       width: 90%;
@@ -90,12 +105,13 @@ const SItemContainer = styled.div`
         display: flex;
         justify-content: center;
         background-color: #eee6ca;
+        margin-left: 5px;
         .item_info_name {
           display: flex;
           flex-direction: column;
           justify-content: center;
           font-weight: bold;
-          text-align: center;
+          /* text-align: center; */
           margin-right: 10px;
           background-color: #eee6ca;
           span {
@@ -107,10 +123,11 @@ const SItemContainer = styled.div`
           flex-direction: column;
           justify-content: center;
           font-size: 15px;
-          margin-top: 2px;
+          /* margin-top: 2px; */
           background-color: #eee6ca;
           span {
             background-color: #eee6ca;
+            margin: 1px 0px 3px 0px;
           }
         }
       }
@@ -127,6 +144,7 @@ const SItemContainer = styled.div`
       .rent_price {
         display: flex;
         background-color: #eee6ca;
+        margin-right: 20px;
         p {
           background-color: #eee6ca;
         }

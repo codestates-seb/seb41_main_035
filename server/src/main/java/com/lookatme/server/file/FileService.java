@@ -1,4 +1,4 @@
-package com.lookatme.server.file.service;
+package com.lookatme.server.file;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -30,11 +30,15 @@ public class FileService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, FileDirectory dirName) {
         String fileType = imageTypeCheck(multipartFile);
-        File uploadFile = convertMultipartFileToFile(multipartFile)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED));
-        return upload(uploadFile, dirName, fileType);
+        try {
+            File uploadFile = convertMultipartFileToFile(multipartFile)
+                    .orElseThrow(() -> new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED));
+            return upload(uploadFile, dirName.getName(), fileType);
+        } catch (IOException e) {
+            throw new ErrorLogicException(ErrorCode.FILE_CONVERT_FAILED);
+        }
     }
 
     private String upload(File file, String dirName, String fileType) {
@@ -70,6 +74,7 @@ public class FileService {
     private String imageTypeCheck(MultipartFile file) {
         String fileType = file.getContentType();
         if (!fileType.startsWith("image")) {
+            log.error(">> 파일 타입: {}", fileType);
             throw new ErrorLogicException(ErrorCode.FILE_TYPE_NOT_SUPPORTED);
         }
         switch (fileType) {

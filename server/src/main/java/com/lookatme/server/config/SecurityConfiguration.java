@@ -58,9 +58,12 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/members/signup").permitAll()
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/comment/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/boards/**").permitAll()
                         .antMatchers( "/auth/**").authenticated()
                         .antMatchers("/comment/**").authenticated()
                         .antMatchers("/members/**").authenticated()
+                        .antMatchers("/boards/**").authenticated()
+                        .antMatchers("/message/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2

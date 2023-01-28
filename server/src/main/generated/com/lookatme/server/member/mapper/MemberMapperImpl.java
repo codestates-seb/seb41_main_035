@@ -2,6 +2,7 @@ package com.lookatme.server.member.mapper;
 
 import com.lookatme.server.member.dto.MemberDto.Post;
 import com.lookatme.server.member.dto.MemberDto.Response;
+import com.lookatme.server.member.dto.MemberDto.ResponseWithFollow;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.Member.MemberBuilder;
 import com.lookatme.server.member.entity.OauthPlatform;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-20T16:24:05+0900",
+    date = "2023-01-27T20:32:19+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -51,6 +52,7 @@ public class MemberMapperImpl implements MemberMapper {
         int weight = 0;
         int followerCnt = 0;
         int followeeCnt = 0;
+        boolean delete = false;
 
         memberId = member.getMemberId();
         email = member.getEmail();
@@ -61,10 +63,46 @@ public class MemberMapperImpl implements MemberMapper {
         weight = member.getWeight();
         followerCnt = member.getFollowerCnt();
         followeeCnt = member.getFolloweeCnt();
+        delete = member.isDelete();
 
-        Response response = new Response( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt );
+        Response response = new Response( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, delete );
 
         return response;
+    }
+
+    @Override
+    public ResponseWithFollow memberToMemberResponseWithFollow(Member member) {
+        if ( member == null ) {
+            return null;
+        }
+
+        long memberId = 0L;
+        String email = null;
+        OauthPlatform oauthPlatform = null;
+        String nickname = null;
+        String profileImageUrl = null;
+        int height = 0;
+        int weight = 0;
+        int followerCnt = 0;
+        int followeeCnt = 0;
+        boolean follow = false;
+        boolean delete = false;
+
+        memberId = member.getMemberId();
+        email = member.getEmail();
+        oauthPlatform = member.getOauthPlatform();
+        nickname = member.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
+        height = member.getHeight();
+        weight = member.getWeight();
+        followerCnt = member.getFollowerCnt();
+        followeeCnt = member.getFolloweeCnt();
+        follow = member.isFollow();
+        delete = member.isDelete();
+
+        ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow, delete );
+
+        return responseWithFollow;
     }
 
     @Override
