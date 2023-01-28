@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 import axios from 'axios';
-
 import Slider from '../components/Slider';
 const Home = () => {
   const location = useLocation();
@@ -40,17 +39,11 @@ const Home = () => {
     });
     setData(newestResult); //다시 data 넣기
   };
-  // const onCheap = () => {
-  //   let newArr = [...data]; //전체 data배열에 추가
-  //   let newestResult = newArr.sort((a, b) => {
-  //     //데이터 가공
-  //     return a[0]?.products[0].price - b[1]?.products[0].price;
-  //   });
-  //   setData(newestResult); //다시 data 넣기
-  // };
+
   return (
     <>
       <SWrapper>
+        {/* <Sidebar /> */}
         <div className="home">
           <Slider />
           <div className="main post">
@@ -77,6 +70,7 @@ const Home = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  /* max-width: 1400px; */
 
   .home {
     width: 85%;
@@ -86,8 +80,10 @@ const SWrapper = styled.div`
     left: 0;
     right: 0;
     top: 0;
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    clear: both;
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       padding: 0 10px;
+      width: 100%;
     }
   }
   .post {

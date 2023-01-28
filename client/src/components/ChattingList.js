@@ -6,18 +6,19 @@ import { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import ChatWindow from './ChatWindow';
 import axios from 'axios';
-const ChattingList = ({ onChatOpen }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const ChattingList = ({ onChatListOpen }) => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatData, setChatDat] = useState([]);
   const onChatWindow = () => {
-    setIsOpen((prev) => !prev);
+    setIsChatOpen((prev) => !prev);
   };
+
   const data = dummyData.posts;
   return (
     <>
       <SModalBack />
       <SWrapper>
-        <AiOutlineClose className="close-container" onClick={onChatOpen} />
+        <AiOutlineClose className="close-container" onClick={onChatListOpen} />
         <div className="chat-container">
           <p>채팅</p>
           {data.map((chat) => (
@@ -40,8 +41,11 @@ const ChattingList = ({ onChatOpen }) => {
           ))}
         </div>
       </SWrapper>
-      {isOpen && (
-        <ChatWindow onChatWindow={onChatWindow} onChatOpen={onChatOpen} />
+      {isChatOpen && (
+        <ChatWindow
+          onChatWindow={onChatWindow}
+          onChatListOpen={onChatListOpen}
+        />
       )}
     </>
   );
@@ -63,6 +67,7 @@ const SWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 20px;
   .close-container {
     /* margin-top: 30px; */
     background-color: rgba(0, 0, 0, 0);

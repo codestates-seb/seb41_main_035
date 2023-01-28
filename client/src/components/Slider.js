@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import slideImg01 from '../svg/2109.i121.033.S.m005.c13.isometric fashion clothes infographics.jpg';
-import slideImg02 from '../svg/Site.webp';
+import slideImg02 from '../svg/SiteInfo.webp';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,6 +38,8 @@ const ListSlider = styled.ul`
 `;
 
 const ItemSlider = styled.div`
+  cursor: pointer;
+
   .slideThumb {
     display: block;
     width: 100%;

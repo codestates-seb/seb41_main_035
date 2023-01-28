@@ -11,6 +11,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Category from './pages/Category';
 import About from './pages/About';
+import Chat from './pages/Chat';
+import EditPost from './pages/EditPost';
 function App() {
   return (
     <div>
@@ -25,6 +27,8 @@ function App() {
           <Route path="/google" element={<Google />} />
           <Route path="/category/:categoryId" element={<Category />} />
           <Route path="/about" element={<About />} />
+          <Route path="/chatting" element={<Chat />} />
+          <Route path="/edit" element={<EditPost />} />
         </Routes>
         <Footer />
       </BrowserRouter>

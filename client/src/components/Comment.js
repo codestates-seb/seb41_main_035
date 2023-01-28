@@ -2,21 +2,18 @@
 import styled from 'styled-components';
 import Avatar from '../components/Avatar';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { fetchDelete } from '../utils/CommentApi';
+import { token } from '../constants/index';
 const BREAK_POINT_PC = 1300;
-const token = localStorage.getItem('accessToken');
 
-const Comment = ({ name, boardId }) => {
+const Comment = ({ boardId, profile }) => {
   const params = useParams();
   const url = 'http://13.125.30.88/comment';
 
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
-  const [removeData, setRemoveData] = useState(commentData.data);
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
@@ -34,27 +31,27 @@ const Comment = ({ name, boardId }) => {
     })
       .then((res) => {
         if (res) {
-          location.href = '/postview/' + [params.boardId]; //새로고침
+          fetchCommentData();
         }
       })
       .catch((err) => {
         return err;
       });
   };
+  const fetchCommentData = async () => {
+    try {
+      const response = await axios.get(
+        url + `/board/${params.boardId}?page=1&size=10`
+      );
+      setCommentData(response.data);
+      console.log(response.data);
+    } catch (err) {
+      return err;
+    }
+    //데이터 받아오기 가능하면 지우고 response.data로 변경
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          url + `/board/${params.boardId}?page=1&size=10`
-        );
-        setCommentData(response.data.data);
-        console.log(response.data);
-      } catch (err) {
-        return err;
-      }
-      //데이터 받아오기 가능하면 지우고 response.data로 변경
-    };
-    fetchData();
+    fetchCommentData();
   }, []);
 
   const onDelteComment = (id) => {
@@ -66,8 +63,8 @@ const Comment = ({ name, boardId }) => {
         },
       })
         .then((res) => {
-          if (res.ok) {
-            setRemoveData({ commentId: 0 });
+          if (res) {
+            fetchCommentData();
           }
         })
         .catch((err) => console.log('Error', err.message));
@@ -121,11 +118,11 @@ const Comment = ({ name, boardId }) => {
 
   return (
     <SWrapper>
-      <div className="comment_count">댓글 {commentData.length}</div>
+      <div className="comment_count">댓글 {commentData.data?.length}</div>
       <div className="line"></div>
       <form className="commentWrap">
         <div className="my_avatar">
-          <Avatar />
+          <Avatar image={profile} />
         </div>
         <div className="user-name"></div>
         <div className="comment-input">
@@ -148,12 +145,13 @@ const Comment = ({ name, boardId }) => {
       </form>
 
       <div className="comment_container">
-        {commentData.map((comment) => (
-          <div className="comment_box" key={comment.commentId}>
-            <div className="comment-left">
-              <div className="user_avatar">
-                <Avatar image={comment.profileImageUrl} />
-              </div>
+        {commentData &&
+          commentData.data?.map((comment) => (
+            <div className="comment_box" key={comment.commentId}>
+              <div className="comment-left">
+                <div className="user_avatar">
+                  <Avatar image={comment.profileImageUrl} />
+                </div>
               <div className="user_name">{comment.nickname}</div>
               {editCommentId === comment.commentId ? ( //현재 수정중인 Comment와 동일한CommentId를 가지고있는지?
                 <SInput
@@ -209,8 +207,7 @@ const Comment = ({ name, boardId }) => {
               )} */}
               {/* <BsThreeDotsVertical /> */}
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </SWrapper>
   );
@@ -279,6 +276,7 @@ const SWrapper = styled.div`
     button {
       background-color: #f7f5ec;
       border: none;
+      cursor: pointer;
     }
   }
   .comment_container {
@@ -331,6 +329,11 @@ const SWrapper = styled.div`
       font-size: 16px;
       font-weight: bold;
     }
+    span {
+      :hover {
+        color: black;
+        cursor: pointer;
+      }
     .comment_content {
       margin-top: 5px;
       font-size: 14px;

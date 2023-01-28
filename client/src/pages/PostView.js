@@ -6,7 +6,6 @@ import {
   BsPersonCheck,
   BsBookmarkHeart,
 } from 'react-icons/bs';
-import ChatWindow from '../components/ChatWindow';
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
 import Item from '../components/Item';
@@ -20,10 +19,6 @@ const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isUserChatOpen, setIsUserChatOpen] = useState(false);
-  // const onChatOpen = () => {
-  //   setIsUserChatOpen(true);
-  // };
   const url = 'http://13.125.30.88';
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
@@ -42,6 +37,7 @@ const PostView = () => {
         });
         console.log(token);
         setDetailData(response.data);
+        console.log(response.data);
         setIsFollowing(response.data.member.follow);
         console.log(isFollowing);
       } catch (err) {
@@ -99,11 +95,6 @@ const PostView = () => {
     }
   };
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const onChatOpen = () => {
-    setIsChatOpen((prev) => !prev);
-  };
-
   return (
     <SWrapper>
       <div className="container">
@@ -125,11 +116,6 @@ const PostView = () => {
                     onClick={() => {
                       navigate(`/profile/${sentId}`);
                     }}
-
-                    // role="presentation"
-                    // onClick={() => {
-                    //   navigate(`/profile/${post.member?.memberId}`);
-                    // }}
                   >
                     <div className="user_avatar">
                       <Avatar image={detailData.member?.profileImageUrl} />
@@ -156,9 +142,6 @@ const PostView = () => {
                         navigate(`/chatting`);
                       }}
                     />
-
-                    <BsChatLeftText size="20" onClick={onChatOpen} />
-
                     {isFollowing ? (
                       <BsPersonCheck size="20" onClick={unfollow} />
                     ) : (
@@ -186,12 +169,10 @@ const PostView = () => {
           </div>
           <SBottom>
             <Item />
-
             <Comment name={name} boardId={boardId} profile={profile} />
           </SBottom>
         </SContainer>
       </div>
-      {isUserChatOpen && <ChatWindow sentId={sentId} name={name} />}
     </SWrapper>
   );
 };
@@ -285,11 +266,9 @@ const SMiddle = styled.div`
       font-size: 18px;
     }
     svg {
-      padding-left: 10px;
       :hover {
         color: gray;
       }
-
       padding-left: 15px;
     }
   }
@@ -333,7 +312,6 @@ const SMiddle = styled.div`
     span {
       margin-right: 10px;
       cursor: pointer;
-
       :hover {
         color: gray;
       }

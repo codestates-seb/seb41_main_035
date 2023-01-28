@@ -6,22 +6,18 @@ import { AiOutlineMessage } from 'react-icons/ai';
 import { GoThreeBars } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from './SearchBox';
-import ChattingList from './ChattingList';
 import userStore from '../store/userStore';
 import memberstore from '../store/memberstore';
 import axios from 'axios';
 import Logo from '../svg/Logo.svg';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
-
 const backendUrl = 'http://13.125.30.88/';
 
 const LoginHeader = () => {
   const { isLogin, setisLogin } = memberstore((state) => state);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const { userId, setUserId } = userStore((state) => state);
-
   const onClickButton = () => {
     setIsOpen(true);
   };
@@ -41,10 +37,6 @@ const LoginHeader = () => {
     }
     setisLogin(false);
     setUserId('');
-  };
-
-  const onChatOpen = () => {
-    setIsChatOpen((prev) => !prev);
   };
 
   return (
@@ -80,7 +72,10 @@ const LoginHeader = () => {
                   role="presentation"
                   onClick={() => navigate(`/postupload`)}
                 />
-                <AiOutlineMessage size="30" onClick={onChatOpen} />
+                <AiOutlineMessage
+                  size="30"
+                  onClick={() => navigate(`/chatting`)}
+                />
                 <button className="logout button" onClick={Logout}>
                   Log out
                 </button>
@@ -97,7 +92,7 @@ const LoginHeader = () => {
             }}
           />
         )}
-        {isChatOpen && <ChattingList onChatOpen={onChatOpen} />}
+        {/* {isChatList && <ChattingList onChatListOpen={onChatListOpen} />} */}
       </SWrapper>
     </>
   );
