@@ -80,6 +80,7 @@ const Footer = () => {
 const FWrapper = styled.div`
   text-align: center;
   border-top: 3px solid #196ba5;
+
   .team-name {
     font-size: 18px;
     margin-top: 10px;
@@ -99,8 +100,6 @@ const FWrapper = styled.div`
 const Scontainer = styled.div`
   display: flex;
   justify-content: space-evenly;
-
-  /* justify-content: center; */
   /* 중앙정렬 */
   /* margin: 0 auto; */
   width: 100%;
