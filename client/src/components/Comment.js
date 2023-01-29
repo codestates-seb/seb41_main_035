@@ -14,6 +14,7 @@ const Comment = ({ boardId, profile }) => {
 
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
+
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
@@ -88,9 +89,7 @@ const Comment = ({ boardId, profile }) => {
       const token = localStorage.getItem('accessToken');
       await axios.patch(
         `${url}/${id}`,
-        // url + `/${id}`,
         {
-          // boardId: boardId,
           content: revise,
         },
         {
@@ -102,18 +101,22 @@ const Comment = ({ boardId, profile }) => {
       window.alert(err);
     }
     // setIsFixing(false);
-    setEditCommentId(''); // 저장시 현재 수정중인 Comment의 Id를 ''으로 변경하여 초기화
-    setCommentData((prev) =>
-      prev.map((comment) => {
-        if (comment.commentId === id) {
-          return {
-            ...comment,
-            content: revise,
-          };
-        }
-        return comment;
-      })
-    );
+    setEditCommentId('');
+    // 저장시 현재 수정중인 Comment의 Id를 ''으로 변경하여 초기화
+    setCommentData((prev) => {
+      return {
+        data: prev.data.map((comment) => {
+          if (comment.commentId === id) {
+            return {
+              ...comment,
+              content: revise,
+            };
+          }
+          return comment;
+        }),
+        pageInfoDto: prev.pageInfoDto,
+      };
+    });
   };
 
   return (
@@ -185,27 +188,6 @@ const Comment = ({ boardId, profile }) => {
                     </span>
                   </>
                 )}
-                {/* <span
-                role="presentation"
-                onClick={() => {
-                  setRevise(comment.content);
-                  setEditCommentId(comment.commentId);
-                }}
-              >
-                수정
-              </span>
-              <span
-                role="presentation"
-                onClick={() => onDelteComment(comment.commentId)}
-              >
-                삭제
-              </span>
-              {editCommentId === comment.commentId ? (
-                <SSave onClick={onSave}>저장</SSave>
-              ) : (
-                ''
-              )} */}
-                {/* <BsThreeDotsVertical /> */}
               </div>
             </div>
           ))}
@@ -301,7 +283,7 @@ const SWrapper = styled.div`
         margin-right: 10px;
         font-size: 12px;
         color: gray;
-        width: 70px;
+        width: 80px;
         justify-content: center;
         display: flex;
         span {
@@ -329,12 +311,13 @@ const SWrapper = styled.div`
       margin: 3px 10px;
       font-size: 16px;
       font-weight: bold;
-    }
-    span {
-      :hover {
-        color: black;
-        cursor: pointer;
+      span {
+        :hover {
+          color: black;
+          cursor: pointer;
+        }
       }
+    }
     .comment_content {
       margin-top: 5px;
       font-size: 14px;
