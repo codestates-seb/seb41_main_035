@@ -335,11 +335,12 @@ const SWrapper = styled.div`
         color: black;
         cursor: pointer;
       }
-    .comment_content {
-      margin-top: 5px;
-      font-size: 14px;
-      width: 26vw;
-      height: 100%;
+      .comment_content {
+        margin-top: 5px;
+        font-size: 14px;
+        width: 26vw;
+        height: 100%;
+      }
     }
   }
 `;

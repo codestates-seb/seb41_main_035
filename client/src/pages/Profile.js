@@ -27,8 +27,9 @@ const Profile = () => {
     fetchData();
   }, []);
   const myCodi = useMemo(() => {
+    console.log(userId);
     return codi.filter((codi) => {
-      return codi.member?.memberId === 22;
+      return codi.member?.memberId === userId;
     });
   }, [codi]);
   console.log(myCodi);
