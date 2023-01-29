@@ -267,7 +267,8 @@ const SName = styled.div`
 `;
 
 const SNick = styled.div`
-  margin: 5px;
+  height: 40px;
+  margin-top: 5px;
 `;
 
 const SHeight = styled.div`
@@ -276,6 +277,7 @@ const SHeight = styled.div`
 
 const SHeightIn = styled.input`
   margin: 5px;
+  height: 20px;
   /* margin-left: 52px; */
 `;
 
@@ -293,6 +295,7 @@ const SNickVs = styled.div`
 
 const SWeightIn = styled.input`
   margin: 5px;
+  height: 20px;
 `;
 
 const SFollows = styled.div`
@@ -306,6 +309,7 @@ const SFollows = styled.div`
 const SFollowz = styled.button`
   margin: 5px;
   text-align: center;
+  margin-left: 15px;
 `;
 
 const SFollower = styled.div`
@@ -315,6 +319,7 @@ const SFollower = styled.div`
 const SFollowers = styled.button`
   margin: 5px;
   text-align: center;
+  margin-left: 18px;
 `;
 
 const SFix = styled.button`

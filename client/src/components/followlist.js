@@ -57,7 +57,7 @@ function FollowModal(props) {
                 <div className="comment_box" key={follow.memberId}>
                   <div className="comment-left">
                     <div className="user_avatar">
-                      <Avatar size={'30px'} image={follow.profileImageUrl} />
+                      <Avatar image={follow.profileImageUrl} />
                     </div>
                     <button
                       className="user_name"
@@ -145,6 +145,7 @@ const Contents = styled.div`
       overflow: hidden;
 
       img {
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
