@@ -41,18 +41,8 @@ public class MemberController {
     // 회원 목록 조회
     @GetMapping
     public ResponseEntity<?> getMembers(@Positive @RequestParam(defaultValue = "1") int page,
-                                        @Positive @RequestParam(defaultValue = "10") int size,
-                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                        @RequestParam(required = false) String tab) {
-        Page<MemberDto.Response> pageMembers;
-        if (tab != null) {
-            if (memberPrincipal == null) {
-                throw new ErrorLogicException(ErrorCode.AUTHENTICATION_FAILED);
-            }
-            pageMembers = followService.findFollows(memberPrincipal.getMemberId(), tab, page - 1, size);
-        } else {
-            pageMembers = memberService.findMembers(page - 1, size);
-        }
+                                        @Positive @RequestParam(defaultValue = "10") int size) {
+        Page<MemberDto.Response> pageMembers = memberService.findMembers(page - 1, size);
         return new ResponseEntity<>(
                 new MultiResponseDto<>(pageMembers.getContent(), pageMembers),
                 HttpStatus.OK
