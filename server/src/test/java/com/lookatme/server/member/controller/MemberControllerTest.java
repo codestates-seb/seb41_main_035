@@ -373,7 +373,7 @@ class MemberControllerTest {
 
         given(
                 followService.findFollows(
-                        memberPrincipal.getAccount(),
+                        memberPrincipal.getMemberId(),
                         tab,
                         page - 1,
                         size)

@@ -49,7 +49,7 @@ public class MemberController {
             if (memberPrincipal == null) {
                 throw new ErrorLogicException(ErrorCode.AUTHENTICATION_FAILED);
             }
-            pageMembers = followService.findFollows(memberPrincipal.getAccount(), tab, page - 1, size);
+            pageMembers = followService.findFollows(memberPrincipal.getMemberId(), tab, page - 1, size);
         } else {
             pageMembers = memberService.findMembers(page - 1, size);
         }
@@ -87,6 +87,19 @@ public class MemberController {
         }
         memberService.deleteMember(memberId);
         return new ResponseEntity<>("회원탈퇴 되었습니다", HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/follow")
+    public ResponseEntity<?> getFollowMembers(@Positive @RequestParam(defaultValue = "1") int page,
+                                              @Positive @RequestParam(defaultValue = "10") int size,
+                                              @RequestParam long memberId,
+                                              @RequestParam String tab) {
+        Page<MemberDto.Response> pageMembers;
+        pageMembers = followService.findFollows(memberId, tab, page - 1, size);
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(pageMembers.getContent(), pageMembers),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/follow")
