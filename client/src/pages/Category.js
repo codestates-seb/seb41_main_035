@@ -42,7 +42,6 @@ const Category = () => {
     fetchData();
   }, [check]);
 
-
   const currentCategoryProducts = useMemo(() => {
     return data.filter((item) => {
       return item?.products.some(
