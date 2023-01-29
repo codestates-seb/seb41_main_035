@@ -8,6 +8,7 @@ import Slider from '../components/Slider';
 const Home = () => {
   const location = useLocation();
   const [data, setData] = useState([]);
+  console.log(data);
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
@@ -35,7 +36,7 @@ const Home = () => {
     let newArr = [...data]; //전체 data배열에 추가
     let newestResult = newArr.sort((a, b) => {
       //데이터 가공
-      return a.boardId - b.boardId;
+      return a.likeCnt - b.likeCnt;
     });
     setData(newestResult); //다시 data 넣기
   };
@@ -43,7 +44,6 @@ const Home = () => {
   return (
     <>
       <SWrapper>
-        {/* <Sidebar /> */}
         <div className="home">
           <Slider />
           <div className="main post">
@@ -108,6 +108,12 @@ const Filter = styled.div`
     background-color: white;
     cursor: pointer;
     font-family: 'Song Myung', serif;
+    :hover {
+      border: 2px solid #1a6aa4;
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+    }
     &:focus {
       border: 2px solid #1a6aa4;
       border-top: 0;
@@ -121,21 +127,9 @@ const Filter = styled.div`
         font-size: 1.3rem;
       }
     }
-    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-      & {
-        width: 60px;
-        margin: 25px 0px;
-        font-size: 1rem;
-      }
-    }
   }
   p {
     margin: 25px;
-    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-      & {
-        margin: 0px;
-      }
-    }
     @media only screen and (max-width: ${BREAK_POINT_PC}px) {
       & {
         margin: 10px;
