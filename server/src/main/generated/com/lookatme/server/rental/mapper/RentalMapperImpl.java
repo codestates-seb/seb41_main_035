@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-29T11:43:09+0900",
+    date = "2023-01-29T11:01:15+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -53,7 +53,7 @@ public class RentalMapperImpl implements RentalMapper {
 
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
 
-        rentalResponseDto.setRentalId( rental.getRentalId() );
+        rentalResponseDto.setRentalId( (int) rental.getRentalId() );
         rentalResponseDto.setSize( rental.getSize() );
         rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
         rentalResponseDto.setAvailable( rental.isAvailable() );

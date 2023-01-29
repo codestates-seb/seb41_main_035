@@ -85,12 +85,11 @@ class FollowServiceTest {
     @Test
     void findFollowerTest_badTabRequest() {
         // Given
-        Account member_1_Account = new Account("email_1@com", OauthPlatform.NONE);
         String tab = "존재하지 않는 탭"; // followee / follower 탭만 처리 가능함
 
         // When
         Throwable exception = catchThrowable(
-                () -> followService.findFollows(member_1_Account, tab, 1, 10)
+                () -> followService.findFollows(1L, tab, 1, 10)
         );
 
         // Then
