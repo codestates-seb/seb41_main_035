@@ -143,9 +143,15 @@ public class BoardService {
     public BoardResponseDto findBoard(long boardId, long loginMemberId) {
         Board board = findBoardEntity(boardId);
         Member writer = board.getMember();
+        Member loginMember = findMember(loginMemberId);
         if (loginMemberId != -1) {
+            // 게시글 작성자가 내가 팔로우 한 사람인지 유무 체크
             if (followService.isFollowee(loginMemberId, writer.getMemberId())) {
                 writer.setStatusToFollowingMember();
+            }
+            // 내가 좋아요를 누른 게시글인지 유무 체크
+            if (likesService.isLikePost(loginMember, board)) {
+                board.setLike(true);
             }
         }
         return mapper.boardToBoardResponse(board);
@@ -158,14 +164,20 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Page<BoardResponseDto> findBoards(int page, int size, long memberId) {
-        Page<Board> boardPage = boardRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Board> boardPage = boardRepository.findAll(pageRequest);
         if (memberId != -1) {
+            Member loginMember = findMember(memberId);
             Set<Long> followMemberIdList = followService.getFollowMemberIdSet(memberId); // 현재 로그인 한 회원이 팔로우 중인 회원 id list
-            boardPage.getContent().stream()
-                    .map(Board::getMember)
-                    .forEach(member -> {
+            Set<Long> likeBoardIdSet = likesService.getLikeBoardIdSet(loginMember, pageRequest);
+            boardPage.getContent().forEach(
+                    board -> {
+                        Member member = board.getMember();
                         if (followMemberIdList.contains(member.getMemberId())) {
                             member.setStatusToFollowingMember();
+                        }
+                        if (likeBoardIdSet.contains(board.getBoardId())) {
+                            board.setLike(true);
                         }
                     });
         }
@@ -201,7 +213,7 @@ public class BoardService {
     }
 
     private Board findBoardEntity(long boardId) {
-        return boardRepository.findById(boardId)
+        return boardRepository.findByBoardId(boardId)
                 .orElseThrow(BoardNotFoundException::new);
     }
 }

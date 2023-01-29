@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardResponseDto {
@@ -25,6 +26,8 @@ public class BoardResponseDto {
     private LocalDateTime updatedDate;
 
     private int likeCnt;
+
+    private boolean like;
 
     private MemberDto.ResponseWithFollow member;
 

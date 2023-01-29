@@ -35,6 +35,9 @@ public class Board extends BaseTimeEntity {
 
     private int likeCnt;
 
+    @Transient
+    private boolean like; // 회원이 해당 게시글을 좋아요 눌렀는지 유무 (테이블 반영 X)
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardProduct> boardProducts = new ArrayList<>();
 
