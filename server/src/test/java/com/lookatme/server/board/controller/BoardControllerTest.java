@@ -129,6 +129,7 @@ class BoardControllerTest {
                                         fieldWithPath("createdDate").description("게시글 작성 시각"),
                                         fieldWithPath("updatedDate").description("게시글 수정 시각"),
                                         fieldWithPath("likeCnt").description("추천수"),
+                                        fieldWithPath("like").description("게시글 좋아요 여부"),
                                         fieldWithPath("member.memberId").description("작성자 회원 번호"),
                                         fieldWithPath("member.email").description("작성자 이메일"),
                                         fieldWithPath("member.oauthPlatform").description("작성자 가입 플랫폼"),
@@ -209,6 +210,7 @@ class BoardControllerTest {
                                         fieldWithPath("data[].createdDate").description("게시글 작성 시각"),
                                         fieldWithPath("data[].updatedDate").description("게시글 수정 시각"),
                                         fieldWithPath("data[].likeCnt").description("추천수"),
+                                        fieldWithPath("data[].like").description("게시글 좋아요 여부"),
                                         fieldWithPath("data[].member.memberId").description("작성자 회원 번호"),
                                         fieldWithPath("data[].member.email").description("작성자 이메일"),
                                         fieldWithPath("data[].member.oauthPlatform").description("작성자 가입 플랫폼"),
@@ -326,6 +328,7 @@ class BoardControllerTest {
                                         fieldWithPath("createdDate").description("게시글 작성 시각"),
                                         fieldWithPath("updatedDate").description("게시글 수정 시각"),
                                         fieldWithPath("likeCnt").description("추천수"),
+                                        fieldWithPath("like").description("게시글 좋아요 여부"),
                                         fieldWithPath("member.memberId").description("작성자 회원 번호"),
                                         fieldWithPath("member.email").description("작성자 이메일"),
                                         fieldWithPath("member.oauthPlatform").description("작성자 가입 플랫폼"),
@@ -444,6 +447,7 @@ class BoardControllerTest {
                                         fieldWithPath("createdDate").description("게시글 작성 시각"),
                                         fieldWithPath("updatedDate").description("게시글 수정 시각"),
                                         fieldWithPath("likeCnt").description("추천수"),
+                                        fieldWithPath("like").description("게시글 좋아요 여부"),
                                         fieldWithPath("member.memberId").description("작성자 회원 번호"),
                                         fieldWithPath("member.email").description("작성자 이메일"),
                                         fieldWithPath("member.oauthPlatform").description("작성자 가입 플랫폼"),
@@ -504,17 +508,17 @@ class BoardControllerTest {
             MemberDto.ResponseWithFollow member,
             List<BoardProductsResponseDto> products,
             List<CommentResponseDtoV2> comments) {
-        return new BoardResponseDto(
-                1L,
-                "게시글 사진 링크",
-                "게시글 본문",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                0,
-                member,
-                products,
-                comments
-        );
+        return BoardResponseDto.builder()
+                .boardId(1L)
+                .userImage("게시글 사진 링크")
+                .content("게시글 본문")
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
+                .likeCnt(0)
+                .like(false)
+                .member(member)
+                .products(products)
+                .comments(comments).build();
     }
 
     private BoardProductsResponseDto createProductResponse() {

@@ -59,7 +59,7 @@ public class CommentService {
     }
 
     private Board findValidatePost(final int boardId) {
-        return boardRepository.findById(boardId)
+        return boardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
     }
 

@@ -3,6 +3,7 @@ package com.lookatme.server.board.mapper;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
+import com.lookatme.server.board.dto.BoardResponseDto.BoardResponseDtoBuilder;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.entity.Board.BoardBuilder;
 import com.lookatme.server.board.entity.BoardProduct;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-29T11:01:15+0900",
+    date = "2023-01-29T18:39:44+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
 )
 @Component
@@ -60,19 +61,20 @@ public class BoardMapperImpl implements BoardMapper {
             return null;
         }
 
-        BoardResponseDto boardResponseDto = new BoardResponseDto();
+        BoardResponseDtoBuilder boardResponseDto = BoardResponseDto.builder();
 
-        boardResponseDto.setProducts( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
-        boardResponseDto.setBoardId( (int) board.getBoardId() );
-        boardResponseDto.setUserImage( board.getUserImage() );
-        boardResponseDto.setContent( board.getContent() );
-        boardResponseDto.setCreatedDate( board.getCreatedDate() );
-        boardResponseDto.setUpdatedDate( board.getUpdatedDate() );
-        boardResponseDto.setLikeCnt( board.getLikeCnt() );
-        boardResponseDto.setMember( memberToResponseWithFollow( board.getMember() ) );
-        boardResponseDto.setComments( commentListToCommentResponseDtoV2List( board.getComments() ) );
+        boardResponseDto.products( boardProductListToBoardProductsResponseDtoList( board.getBoardProducts() ) );
+        boardResponseDto.boardId( board.getBoardId() );
+        boardResponseDto.userImage( board.getUserImage() );
+        boardResponseDto.content( board.getContent() );
+        boardResponseDto.createdDate( board.getCreatedDate() );
+        boardResponseDto.updatedDate( board.getUpdatedDate() );
+        boardResponseDto.likeCnt( board.getLikeCnt() );
+        boardResponseDto.like( board.isLike() );
+        boardResponseDto.member( memberToResponseWithFollow( board.getMember() ) );
+        boardResponseDto.comments( commentListToCommentResponseDtoV2List( board.getComments() ) );
 
-        return boardResponseDto;
+        return boardResponseDto.build();
     }
 
     @Override
@@ -96,7 +98,7 @@ public class BoardMapperImpl implements BoardMapper {
 
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
 
-        rentalResponseDto.setRentalId( (int) rental.getRentalId() );
+        rentalResponseDto.setRentalId( rental.getRentalId() );
         rentalResponseDto.setSize( rental.getSize() );
         rentalResponseDto.setRentalPrice( rental.getRentalPrice() );
         rentalResponseDto.setAvailable( rental.isAvailable() );
