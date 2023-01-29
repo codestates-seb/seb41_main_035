@@ -351,15 +351,8 @@ class MemberControllerTest {
     @Test
     void getMembersTest() throws Exception {
         // Given
-        Account account = new Account("email@com", OauthPlatform.NONE);
-        MemberPrincipal memberPrincipal = new MemberPrincipal(
-                1L,
-                account,
-                List.of("USER")
-        );
         int page = 1;
         int size = 10;
-        String tab = "followee";
 
         List<Member> memberList = List.of(savedMember);
         savedMember.getFollowers().add(new Follow(null, null));
@@ -371,13 +364,7 @@ class MemberControllerTest {
         int end = Math.min((start + pageRequest.getPageSize()), memberList.size());
         Page<MemberDto.Response> memberPage = new PageImpl<>(responseList.subList(start, end), pageRequest, responseList.size());
 
-        given(
-                followService.findFollows(
-                        memberPrincipal.getAccount(),
-                        tab,
-                        page - 1,
-                        size)
-        ).willReturn(memberPage);
+        given(memberService.findMembers(page - 1, size)).willReturn(memberPage);
 
 
         // When
@@ -385,9 +372,6 @@ class MemberControllerTest {
                 get("/members")
                         .param("page", Integer.toString(page))
                         .param("size", Integer.toString(size))
-                        .param("tab", tab
-                        )
-                        .header("Authorization", accessToken)
         );
 
         // Then
@@ -400,8 +384,73 @@ class MemberControllerTest {
                         requestParameters(
                                 List.of(
                                         parameterWithName("page").description("페이지"),
+                                        parameterWithName("size").description("페이지 당 데이터 개수")
+                                )
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("data[].memberId").type(NUMBER).description("회원 번호"),
+                                        fieldWithPath("data[].email").type(STRING).description("이메일"),
+                                        fieldWithPath("data[].nickname").type(STRING).description("닉네임"),
+                                        fieldWithPath("data[].oauthPlatform").type(STRING).description("가입 플랫폼(NONE/GOOGLE)"),
+                                        fieldWithPath("data[].profileImageUrl").type(STRING).description("프로필 사진 주소"),
+                                        fieldWithPath("data[].height").type(NUMBER).description("키"),
+                                        fieldWithPath("data[].weight").type(NUMBER).description("몸무게"),
+                                        fieldWithPath("data[].followerCnt").type(NUMBER).description("팔로워 수"),
+                                        fieldWithPath("data[].followeeCnt").type(NUMBER).description("팔로우 수"),
+                                        fieldWithPath("data[].delete").type(BOOLEAN).description("회원 탈퇴 유무"),
+                                        fieldWithPath("pageInfoDto.page").type(NUMBER).description("페이지"),
+                                        fieldWithPath("pageInfoDto.size").type(NUMBER).description("페이지 당 데이터 개수"),
+                                        fieldWithPath("pageInfoDto.totalElements").type(NUMBER).description("전체 데이터 개수"),
+                                        fieldWithPath("pageInfoDto.totalPages").type(NUMBER).description("전체 페이지")
+
+                                )
+                        )
+                ));
+    }
+
+    @DisplayName("회원 팔로우 목록 조회 테스트")
+    @Test
+    void getFollowMembersTest() throws Exception {
+        // Given
+        long memberId = 2L;
+        String tab = "followee";
+        int page = 1;
+        int size = 10;
+
+        List<Member> memberList = List.of(savedMember);
+        savedMember.getFollowers().add(new Follow(null, null));
+        List<MemberDto.Response> responseList = mapper.memberListToMemberResponseList(memberList);
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), memberList.size());
+        Page<MemberDto.Response> memberPage = new PageImpl<>(responseList.subList(start, end), pageRequest, responseList.size());
+
+        given(followService.findFollows(memberId, tab, page - 1, size)).willReturn(memberPage);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                get("/members/follow")
+                        .param("page", Integer.toString(page))
+                        .param("size", Integer.toString(size))
+                        .param("memberId", Long.toString(memberId))
+                        .param("tab", tab)
+        );
+
+        // Then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "get-follow-members",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestParameters(
+                                List.of(
+                                        parameterWithName("page").description("페이지"),
                                         parameterWithName("size").description("페이지 당 데이터 개수"),
-                                        parameterWithName("tab").description("필터 기준(followee/follower)")
+                                        parameterWithName("tab").description("조회 타입(followee, follower)"),
+                                        parameterWithName("memberId").description("조회할 회원 번호")
                                 )
                         ),
                         responseFields(

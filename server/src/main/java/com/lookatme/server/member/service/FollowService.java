@@ -58,15 +58,15 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MemberDto.Response> findFollows(Account account, String tab, int page, int size) {
+    public Page<MemberDto.Response> findFollows(long memberId, String tab, int page, int size) {
         List<Member> memberList;
         switch (tab) {
             case "followee":
-                memberList = followRepository.findByFrom_Account(account).stream()
+                memberList = followRepository.findByFrom_MemberId(memberId).stream()
                         .map(Follow::getTo).collect(Collectors.toList());
                 break;
             case "follower":
-                memberList = followRepository.findByTo_Account(account).stream()
+                memberList = followRepository.findByTo_MemberId(memberId).stream()
                         .map(Follow::getFrom).collect(Collectors.toList());
                 break;
             default:
