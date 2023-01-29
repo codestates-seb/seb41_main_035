@@ -83,10 +83,6 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public void deleteProducts() {
-        productRepository.deleteAll();
-    }
-
     public Page<Product> findProducts(int page, int size) {
         return productRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
     }
@@ -187,11 +183,9 @@ public class ProductService {
         if (patch.getProductImage() != null) {
             itemImageUrl = fileService.upload(patch.getProductImage(), FileDirectory.item);
         }
-        savedProduct.updateProductV2(
+        savedProduct.updateProduct(
                 patch.getProductName(),
-                itemImageUrl,
-                findCategory(patch.getCategory()),
-                findBrand(patch.getBrand())
+                itemImageUrl
         );
         return productMapper.productToProductResponseV2(savedProduct);
     }
