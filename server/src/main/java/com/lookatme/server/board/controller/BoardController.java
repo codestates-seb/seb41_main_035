@@ -4,10 +4,9 @@ import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
 import com.lookatme.server.board.dto.BoardResponseDto;
-import com.lookatme.server.board.entity.Board;
-import com.lookatme.server.board.mapper.BoardMapper;
 import com.lookatme.server.board.service.BoardService;
 import com.lookatme.server.common.dto.MultiResponseDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,25 +19,21 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping("/boards")
 public class BoardController {
 
     private final BoardService boardService;
-    private final BoardMapper boardMapper;
-
-    public BoardController(BoardService boardService, BoardMapper boardMapper) {
-        this.boardService = boardService;
-        this.boardMapper = boardMapper;
-    }
 
     @GetMapping("/{board-Id}")
-    public ResponseEntity<?> getBoard(@Positive @PathVariable("board-Id") int boardId,
+    public ResponseEntity<?> getBoard(@Positive @PathVariable("board-Id") long boardId,
                                       @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
-        Board board = boardService.findBoard(boardId, loginMemberId);
-        return new ResponseEntity<>(boardMapper.boardToBoardResponse(board), HttpStatus.OK);
+        return new ResponseEntity<>(
+                boardService.findBoard(boardId, loginMemberId),
+                HttpStatus.OK);
     }
 
     @GetMapping
@@ -62,7 +57,7 @@ public class BoardController {
 
     @PatchMapping("/{board-Id}")
     public ResponseEntity<?> patchBoard(BoardPatchDto patch,
-                                        @PathVariable("board-Id") int boardId,
+                                        @PathVariable("board-Id") long boardId,
                                         @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         return new ResponseEntity<>(
                 boardService.updateBoard(patch, boardId, memberPrincipal.getMemberId()),
@@ -70,7 +65,8 @@ public class BoardController {
     }
 
     @DeleteMapping("/{board-Id}")
-    public ResponseEntity<?> deletePost(@Positive @PathVariable("board-Id") int boardId) {
+    public ResponseEntity<?> deletePost(@Positive @PathVariable("board-Id") long boardId,
+                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         boardService.deleteBoard(boardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

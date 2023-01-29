@@ -50,7 +50,7 @@ public class ControllerAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleException(Exception e) {
-        e.printStackTrace();
-        return e.getMessage(); // ******* 테스트용 *******
+        log.error(ERROR_MESSAGE, e.getMessage());
+        return e.getMessage();
     }
 }

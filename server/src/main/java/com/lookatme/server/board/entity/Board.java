@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 @NamedEntityGraph(
         name = "board-entity-graph",
         attributeNodes = {
@@ -40,7 +39,10 @@ public class Board extends BaseTimeEntity {
     private List<BoardProduct> boardProducts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(
+            name = "member_id",
+            foreignKey = @ForeignKey(name = "FK_member")
+    )
     private Member member;
 
     @OneToMany(mappedBy = "board")

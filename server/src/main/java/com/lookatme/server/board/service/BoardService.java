@@ -70,7 +70,6 @@ public class BoardService {
                         .board(board)
                         .product(savedProduct)
                         .price(postProduct.getPrice())
-                        .size(postProduct.getSize())
                         .link(postProduct.getLink()).build();
                 board.getBoardProducts().add(boardProduct);
 
@@ -89,8 +88,8 @@ public class BoardService {
         return mapper.boardToBoardResponse(savedBoard);
     }
 
-    public BoardResponseDto updateBoard(BoardPatchDto patch, int boardId, long memberId) {
-        Board savedBoard = findBoard(boardId);
+    public BoardResponseDto updateBoard(BoardPatchDto patch, long boardId, long memberId) {
+        Board savedBoard = findBoardEntity(boardId);
         // 로그인 한 작성자가 아니면 수정할 수 없음
         if (savedBoard.getMember().getMemberId() != memberId) {
             throw new ErrorLogicException(ErrorCode.FORBIDDEN);
@@ -102,7 +101,6 @@ public class BoardService {
                     if (boardProduct.getProduct().getProductId() == product.getProductId()) {
                         boardProduct.updateProductInfo(
                                 product.getLink(),
-                                product.getSize(),
                                 product.getPrice()
                         );
                         break;
@@ -128,8 +126,8 @@ public class BoardService {
         return mapper.boardToBoardResponse(savedBoard);
     }
 
-    public void deleteBoard(int boardId) {
-        boardRepository.delete(findBoard(boardId));
+    public void deleteBoard(long boardId) {
+        boardRepository.delete(findBoardEntity(boardId));
     }
 
     public void deleteBoards() {
@@ -137,21 +135,20 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Board findBoard(long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(BoardNotFoundException::new);
+    public BoardResponseDto findBoard(long boardId) {
+        return mapper.boardToBoardResponse(findBoardEntity(boardId));
     }
 
     @Transactional(readOnly = true)
-    public Board findBoard(long boardId, long loginMemberId) {
-        Board board = findBoard(boardId);
+    public BoardResponseDto findBoard(long boardId, long loginMemberId) {
+        Board board = findBoardEntity(boardId);
         Member writer = board.getMember();
         if (loginMemberId != -1) {
             if (followService.isFollowee(loginMemberId, writer.getMemberId())) {
                 writer.setStatusToFollowingMember();
             }
         }
-        return board;
+        return mapper.boardToBoardResponse(board);
     }
 
     @Transactional(readOnly = true)
@@ -176,20 +173,10 @@ public class BoardService {
         return new PageImpl<>(response, boardPage.getPageable(), boardPage.getTotalElements());
     }
 
-    private Member findMember(long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
-    }
-
-    private Product findProduct(long productId) {
-        return productRepository.findByProductId(productId)
-                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
-    }
-
     @Transactional
     public BoardResponseDto likeBoard(final MemberPrincipal memberPrincipal, final long boardId) {
         Member member = findMember(memberPrincipal.getMemberId());
-        Board board = findBoard(boardId);
+        Board board = findBoardEntity(boardId);
 
         if (likesRepository.findByBoardAndMember(board, member) == null) {
             board.setLikeCnt(board.getLikeCnt() + 1);
@@ -200,5 +187,21 @@ public class BoardService {
         }
 
         return mapper.boardToBoardResponse(board);
+    }
+
+    // 내부에서 사용하는 용도 //
+    private Member findMember(long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    private Product findProduct(long productId) {
+        return productRepository.findByProductId(productId)
+                .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    private Board findBoardEntity(long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
     }
 }

@@ -29,15 +29,24 @@ public class Rental extends BaseTimeEntity {
     private boolean available = true; // 렌탈 가능 유무
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_Id")
+    @JoinColumn(
+            name = "product_id",
+            foreignKey = @ForeignKey(name = "FK_product")
+    )
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_Id")
+    @JoinColumn(
+            name = "member_id",
+            foreignKey = @ForeignKey(name = "FK_member")
+    )
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_Id")
+    @JoinColumn(
+            name = "board_id",
+            foreignKey = @ForeignKey(name = "FK_board")
+    )
     private Board board;
 
     public void updateRental(String size, int rentalPrice, boolean available) {
