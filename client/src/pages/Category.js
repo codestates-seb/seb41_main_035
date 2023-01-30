@@ -29,16 +29,17 @@ const Category = () => {
       click.style.display = 'none';
     }
   };
+  //렌탈 가능한 상품만 받아서 true일떄는 그 데이터로
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://13.125.30.88/boards`);
+      setData(response.data.data);
+    } catch {
+      window.alert('오류가 발생했습니다.');
+    }
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://13.125.30.88/boards`);
-        setData(response.data.data);
-      } catch {
-        window.alert('오류가 발생했습니다.');
-      }
-    };
     fetchData();
   }, [check]);
 
@@ -105,9 +106,30 @@ const Category = () => {
                 정렬 순서
               </button>
               <div id="drop-content">
-                <button onClick={onCheap}>가격 낮은순</button>
-                <button onClick={onExpensive}>가격 높은순</button>
-                <button onClick={onNew}>최신순</button>
+                <button
+                  onClick={() => {
+                    onCheap();
+                    onDpMenu();
+                  }}
+                >
+                  가격 낮은순
+                </button>
+                <button
+                  onClick={() => {
+                    onExpensive();
+                    onDpMenu();
+                  }}
+                >
+                  가격 높은순
+                </button>
+                <button
+                  onClick={() => {
+                    onNew();
+                    onDpMenu();
+                  }}
+                >
+                  최신순
+                </button>
               </div>
             </div>
           </Filter>

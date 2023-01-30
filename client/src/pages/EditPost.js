@@ -39,6 +39,9 @@ const EditPost = () => {
             <textarea placeholder="게시글을 작성하세요."></textarea>
           </div>
         </SMid>
+        {editData.products.map((index) => {
+          return <PostUploadBar key={index} index={index} />;
+        })}
 
         {/* {editData &&
           editData.map((content, index) => {

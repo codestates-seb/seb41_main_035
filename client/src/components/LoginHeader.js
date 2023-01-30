@@ -11,6 +11,7 @@ import memberstore from '../store/memberstore';
 import axios from 'axios';
 import Logo from '../svg/Logo.svg';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import Hambar from './HamBar';
 const backendUrl = 'http://13.125.30.88/';
 
 const LoginHeader = () => {
@@ -18,10 +19,13 @@ const LoginHeader = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { userId, setUserId } = userStore((state) => state);
+  const [isBarOpen, setIsBarOpen] = useState(false);
   const onClickButton = () => {
     setIsOpen(true);
   };
-
+  const onBarOpen = () => {
+    setIsBarOpen((prev) => !prev);
+  };
   const Logout = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
@@ -81,7 +85,7 @@ const LoginHeader = () => {
                 </button>
               </div>
             )}
-            <GoThreeBars className="menu-bar" />
+            <GoThreeBars className="menu-bar" onClick={onBarOpen} />
           </div>
         </SHeader>
         {isOpen && (
@@ -92,7 +96,14 @@ const LoginHeader = () => {
             }}
           />
         )}
-        {/* {isChatList && <ChattingList onChatListOpen={onChatListOpen} />} */}
+        {isBarOpen && (
+          <Hambar
+            onBarOpen={onBarOpen}
+            userId={userId}
+            Logout={Logout}
+            onClickButton={onClickButton}
+          />
+        )}
       </SWrapper>
     </>
   );
@@ -136,10 +147,7 @@ const SHeader = styled.div`
     }
   }
   .title {
-    /* font-size: 40px; */
     cursor: pointer;
-    /* font-family: 'Song Myung', serif;
-    color: #196ba5; */
   }
 
   .right {
@@ -148,10 +156,14 @@ const SHeader = styled.div`
     justify-content: flex-end;
     margin-right: 20px;
     margin-top: 40px;
+
     svg {
       cursor: pointer;
       color: #565656;
       padding: 0 15px;
+      :hover {
+        color: lightgray;
+      }
     }
     button {
       width: 70px;
@@ -161,6 +173,9 @@ const SHeader = styled.div`
       color: #5f6060;
       cursor: pointer;
       background-color: white;
+      :hover {
+        color: lightgray;
+      }
     }
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
       & {
@@ -191,6 +206,9 @@ const SHeader = styled.div`
         margin-right: 20px;
       }
     }
+  }
+  svg {
+    cursor: pointer;
   }
 `;
 

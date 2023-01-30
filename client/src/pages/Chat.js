@@ -4,8 +4,8 @@ import Avatar from '../components/Avatar';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
-import { token } from '../constants/index';
-import userStore from '../store/userStore';
+import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+
 const Chat = () => {
   const [chatData, setChatData] = useState([]); //get
   const [sentData, setSentData] = useState([]); //post
@@ -14,27 +14,13 @@ const Chat = () => {
   const url = 'http://13.125.30.88';
   const sentId = JSON.parse(localStorage.getItem('sentId'));
   const name = JSON.parse(localStorage.getItem('name'));
-
+  const myId = JSON.parse(localStorage.getItem('myId'));
+  console.log(myId);
+  const sentname = chatData[0]?.receiverNickname;
   const onChatChange = (e) => {
     setSentData(e.currentTarget.value);
   };
   const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        url + `/message/received/${sentId}?page=1&size=100`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setChatData(response.data.data);
-      console.log(response.data.data);
-    } catch (err) {
-      return err;
-    }
-  };
-  const fetchListClickData = async () => {
     try {
       const response = await axios.get(
         url + `/message/received/${idData}?page=1&size=100`,
@@ -45,13 +31,28 @@ const Chat = () => {
         }
       );
       setChatData(response.data.data);
-      console.log(response.data.data);
+    } catch (err) {
+      return err;
+    }
+  };
+  const fetchListClickData = async () => {
+    try {
+      const response = await axios.get(
+        url + `/message/received/${sentId}?page=1&size=100`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setChatData(response.data.data);
     } catch (err) {
       return err;
     }
   };
   useEffect(() => {
     fetchData();
+    fetchListData();
     fetchListClickData();
   }, [sentId, idData]);
   //목록조회
@@ -67,9 +68,6 @@ const Chat = () => {
       return err;
     }
   };
-  useEffect(() => {
-    fetchListData();
-  }, []);
   console.log(listData);
   console.log(chatData);
   const onPostChat = () => {
@@ -81,73 +79,101 @@ const Chat = () => {
       },
       data: JSON.stringify({
         content: sentData,
-        receiverNickname: name,
+        receiverNickname: sentname,
       }),
     })
       .then((res) => {
         if (res) {
           fetchData();
-          fetchListData(); //새로고침
+          fetchListData();
+          fetchListClickData(); //새로고침
         }
       })
       .catch((err) => {
         return err;
       });
   };
+  const onDelteMyChat = (id) => {
+    if (window.confirm('삭제 하시겠습니까?')) {
+      axios(url + `//message/received/${id}`, {
+        method: 'delete',
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then((res) => {
+          if (res) {
+            fetchData();
+            fetchListData();
+            fetchListClickData();
+          }
+        })
+        .catch((err) => console.log('Error', err.message));
+    }
+  };
   return (
     <>
       <SWrapper>
-        <div className="chatlist-container">
-          <p>채팅</p>
-          {listData.map((chat) => (
-            <SChatList
-              key={chat.messageRoom}
-              onClick={() => setIdData(chat.receiverId)}
-            >
-              <div className="chat-box">
-                <Avatar size="45px" image={chat.receiverProfileImageUrl} />
-                <div className="right content">
-                  <div className="user-name">{chat.receiverNickname}</div>
-                  <div className="content_and_time">
-                    <div className="chat-last_content">{chat.content}</div>
-                    <div className="chat-time">
-                      {new Date(chat.createdDate).toLocaleString()}
+        <div className="chat">
+          <div className="chatlist-container">
+            <p>Chatting List</p>
+            {listData.map((chat) => (
+              <SChatList
+                key={chat.messageRoom}
+                onClick={() => setIdData(chat.receiverId)}
+              >
+                <div className="chat-box">
+                  <Avatar size="45px" image={chat.receiverProfileImageUrl} />
+                  <div className="right content">
+                    <div className="user-name">{chat.receiverNickname}</div>
+                    <div className="content_and_time">
+                      <div className="chat-last_content">{chat.content}</div>
+                      <div className="chat-time">
+                        {new Date(chat.createdDate).toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </SChatList>
-          ))}
-        </div>
-        <div className="chat-container">
-          <div className="top">
-            <div className="user-info">
-              <Avatar size="45px" />
-              <span className="user-name">{name}</span>
-            </div>
-          </div>
-          <SContent>
-            {chatData.map((chat) => (
-              <div className="chat-content" key={chat.messageId}>
-                <Avatar size="40px" />
-                <div className="user-content">
-                  <div className="user-content_top">
-                    <span className="user-name">{chat.senderNickname}</span>
-                    <span className="user-send-time">
-                      {new Date(chat.createdDate).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="send-content">{chat.content}</div>
-                </div>
-              </div>
+              </SChatList>
             ))}
-          </SContent>
-          <SInputContent>
-            <textarea rows="1" cols="33" onChange={onChatChange} />
-            <button disabled={!sentData} onClick={onPostChat}>
-              <HiOutlinePaperAirplane />
-            </button>
-          </SInputContent>
+          </div>
+          <div className="chat-container">
+            <div className="top">
+              <Avatar
+                size="40px"
+                image={chatData[0]?.receiverProfileImageUrl}
+              />
+              <span className="user-name">{chatData[0]?.receiverNickname}</span>
+            </div>
+            <SContent>
+              {chatData.map((chat) => (
+                <div className="chat-content" key={chat.messageId}>
+                  <Avatar size="40px" image={chat.senderProfileImageUrl} />
+                  <div
+                    className="user-content"
+                    role="presentation"
+                    onClick={() => {
+                      onDelteMyChat(chat.messageId);
+                    }}
+                  >
+                    <div className="user-content_top">
+                      <span className="user-name">{chat.senderNickname}</span>
+                      <span className="user-send-time">
+                        {new Date(chat.createdDate).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="send-content">{chat.content}</div>
+                  </div>
+                </div>
+              ))}
+            </SContent>
+            <SInputContent>
+              <textarea rows="1" cols="33" onChange={onChatChange} />
+              <button disabled={!sentData} onClick={onPostChat}>
+                <HiOutlinePaperAirplane />
+              </button>
+            </SInputContent>
+          </div>
         </div>
       </SWrapper>
     </>
@@ -160,18 +186,22 @@ const SWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  /* flex-direction: row; */
   margin-top: 20px;
+
+  .chat {
+    display: flex;
+    margin-left: 20px;
+  }
   p {
     margin-left: 40px;
     font-size: 25px;
-    background-color: #cadde5;
   }
   .chatlist-container {
     margin: 10px 0px 50px 0px;
-    width: 55vh;
+    width: 330px;
     height: 75vh;
-    background-color: #cadde5;
+    background-color: #e1f2f9;
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -186,40 +216,27 @@ const SWrapper = styled.div`
   }
   .chat-container {
     margin: 10px 0px 50px 0px;
-    width: 55vh;
+    padding-left: 10px;
+    width: 480px;
     height: 75vh;
-    background-color: #cadde5;
+    background-color: #e1f2f9;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+      & {
+        width: 350px;
+      }
+    }
     .top {
       display: flex;
       align-items: center;
-      width: 90%;
-      margin-top: 10px;
+      width: 80%;
       font-size: 30px;
-      /* justify-content: space-between; */
-      background-color: #cadde5;
+      margin-top: -5px;
       justify-content: flex-start; //추가
-
-      .user-info {
-        display: flex;
-        padding-right: 20px;
-        background-color: #cadde5;
-        .user-name {
-          padding-left: 20px;
-          background-color: #cadde5;
-        }
-        div {
-          background-color: #cadde5;
-        }
-      }
-      svg {
-        cursor: pointer;
-        background-color: #cadde5;
-        //추가
-        margin: -5px 20px 0px -20px;
+      .user-name {
+        padding-left: 20px;
       }
     }
   }
@@ -227,12 +244,11 @@ const SWrapper = styled.div`
 const SChatList = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #cadde5;
   .chat-box {
     cursor: pointer;
     width: 85%;
     height: 9.5vh;
-    background-color: #f4f1e0;
+    background-color: white;
     display: flex;
     align-items: center;
     padding-left: 10px;
@@ -244,78 +260,22 @@ const SChatList = styled.div`
       flex-grow: 1;
     }
     .content_and_time {
-      margin-top: 14px;
+      margin-top: 5px;
       width: 90%;
       display: flex;
       justify-content: space-between;
-    }
-  }
-`;
-const SIIWrapper = styled.div`
-  /* position: fixed; */
-  width: 100%;
-  //추가 height 100%
-  height: 100%;
-  top: 5%;
-  background-color: rgba(0, 0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* z-index: 99999; //추가 */
-  margin-top: 20px;
-  .close-container {
-    /* margin-top: 30px; */
-    background-color: rgba(0, 0, 0, 0);
-    transform: translate(700%, 10%);
-    font-size: 30px;
-    cursor: pointer;
-    margin-left: 50px; //추가
-  }
-  .chat-container {
-    margin: 10px 0px 50px 0px;
-    width: 55vh;
-    height: 75vh;
-    background-color: #cadde5;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .top {
-      display: flex;
       align-items: center;
-      width: 90%;
-      margin-top: 10px;
-      font-size: 30px;
-      /* justify-content: space-between; */
-      background-color: #cadde5;
-      justify-content: flex-start; //추가
-
-      .user-info {
-        display: flex;
-        padding-right: 20px;
-        background-color: #cadde5;
-        .user-name {
-          padding-left: 20px;
-          background-color: #cadde5;
-        }
-        div {
-          background-color: #cadde5;
-        }
-      }
-      svg {
-        cursor: pointer;
-        background-color: #cadde5;
-        //추가
-        margin: -5px 20px 0px -20px;
-      }
+    }
+    .chat-time {
+      font-size: 10px;
     }
   }
 `;
+
 const SContent = styled.div`
-  width: 80%;
+  width: 90%;
   height: 50vh;
-  background-color: #f4f1e0;
+  background-color: white;
   margin: 10px 0px 20px 0px;
   overflow: auto;
   border-radius: 8px; //추가
@@ -337,16 +297,16 @@ const SContent = styled.div`
   }
 `;
 const SInputContent = styled.div`
-  width: 80%;
+  width: 90%;
   height: 6vh;
-  background-color: #f4f1e0;
+  background-color: white;
   margin-bottom: 30px;
   display: flex;
   border-radius: 8px; //추가
   textarea {
     border: none;
     resize: none;
-    background-color: #f4f1e0;
+    background-color: white;
     font-size: 20px;
     border-radius: 8px; //추가
 
@@ -360,8 +320,9 @@ const SInputContent = styled.div`
     transform: rotate(90deg);
   }
   button {
-    background-color: #f4f1e0;
+    background-color: white;
     border: none;
+    border-radius: 8px;
   }
 `;
 export default Chat;
