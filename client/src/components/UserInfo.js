@@ -206,6 +206,7 @@ const UserInfo = () => {
 
 const SWrapper = styled.div`
   width: 100%;
+
   .commentWrap {
     input {
       width: 84%;
@@ -222,9 +223,12 @@ const SWrapper = styled.div`
 const SProfileWrapper = styled.div`
   display: flex;
   width: 100%;
+  /* background-color: #faf6e9; */
   height: 30vh;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
+
   .userinfo {
     display: flex;
     flex-grow: 6;
@@ -237,6 +241,10 @@ const SPicture = styled.div`
   display: flex;
   align-items: flex-end;
   flex-direction: column;
+  border-radius: 100px;
+  img {
+    border-radius: 10px 10px;
+  }
   input {
     margin-right: -60px;
   }
@@ -248,7 +256,7 @@ const SDetail = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 10px;
+  margin-left: 20px;
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     width: 44%;
   }
@@ -319,6 +327,7 @@ const SWeightIn = styled.input`
 
 const SFollows = styled.div`
   margin: 5px;
+  font-size: 18px;
   .follow {
     display: flex;
     flex-direction: column;
@@ -329,16 +338,25 @@ const SFollowz = styled.button`
   margin: 5px;
   text-align: center;
   margin-left: 15px;
+  background-color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 `;
 
 const SFollower = styled.div`
   margin: 5px;
+  font-size: 20px;
 `;
 
 const SFollowers = styled.button`
   margin: 5px;
   text-align: center;
   margin-left: 18px;
+  background-color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 `;
 
 const SFix = styled.button`

@@ -9,8 +9,6 @@ import Slider from '../components/Slider';
 const Home = () => {
   const location = useLocation();
   const [data, setData] = useState([]);
-  console.log(data);
-
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
@@ -45,7 +43,21 @@ const Home = () => {
     });
     setData(newestResult); //다시 data 넣기
   };
-
+  const onCheap = () => {
+    let newArr = [...data];
+    let newestResult = newArr.sort((a, b) => {
+      return a.products[0].price - b.products[0].price;
+    });
+    setData(newestResult);
+  };
+  const onRent = () => {
+    axios({
+      method: 'get', // 통신 방식
+      url: 'http://13.125.30.88/boards/search/available', // 서버
+    }).then(function (response) {
+      setData(response.data.data);
+    });
+  };
   return (
     <>
       <SWrapper>
@@ -61,9 +73,13 @@ const Home = () => {
                 New
               </button>
               <p>/</p>
-              <button className="filter button">Rent</button>
+              <button className="filter button" onClick={onCheap}>
+                Cheap
+              </button>
               <p>/</p>
-              <button className="filter button">Follow</button>
+              <button className="filter button" onClick={onRent}>
+                Rent
+              </button>
             </Filter>
             <PostBox data={data} />
           </div>
@@ -112,7 +128,7 @@ const Filter = styled.div`
     border: none;
     background-color: white;
     cursor: pointer;
-    font-family: 'Song Myung', serif;
+    font-family: 'Gothic A1', sans-serif;
     :hover {
       border: 2px solid #1a6aa4;
       border-top: 0;

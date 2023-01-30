@@ -1,10 +1,10 @@
 const CATEGORY_CODE = {
-  outer: '아우터',
-  top: '상의',
-  bottom: '하의',
-  onepiece: '원피스',
-  hat: '모자',
-  shoes: '신발',
+  outer: 'Outer',
+  top: 'Top',
+  bottom: 'Bottom',
+  onepiece: 'Onepiece',
+  hat: 'Hat',
+  shoes: 'Shoes',
 };
 export default CATEGORY_CODE;
 export const token = localStorage.getItem('accessToken');

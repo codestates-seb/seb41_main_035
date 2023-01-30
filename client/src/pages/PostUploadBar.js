@@ -175,17 +175,18 @@ const SWrapper = styled.div`
   .category {
     margin: 20px;
     font-size: 12px;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
 `;
 
 const SContainer = styled.div`
-  height: 150px;
-  background-color: #eee6ca;
+  height: 130px;
+  background-color: #faf6e9;
   display: flex;
   justify-content: space-around;
   align-items: baseline;
-  margin: 10px 0px; //* 추가
+  margin: 10px 0px;
+
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 6px;
   /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
@@ -197,18 +198,18 @@ const SMidle = styled.div`
   font-size: 14px;
   /* margin: 10px 0px; */
   /* width: 350px; */
-  background-color: #eee6ca;
+  background-color: #faf6e9;
 
   .item-top {
     display: flex;
     margin: 10px 10px 15px 10px;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
     .item-brand {
-      background-color: #eee6ca;
+      background-color: #faf6e9;
     }
     .item-name {
       margin-left: 15px;
-      background-color: #eee6ca;
+      background-color: #faf6e9;
     }
   }
   .item-top input {
@@ -218,9 +219,9 @@ const SMidle = styled.div`
   .item-mid {
     display: flex;
     margin: 10px 10px 15px 10px;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
     .item-size {
-      background-color: #eee6ca;
+      background-color: #faf6e9;
     }
   }
   .item-mid input {
@@ -229,7 +230,7 @@ const SMidle = styled.div`
 
   .item-price {
     margin-left: 15px;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   .item-price > input {
     margin-left: 22px;
@@ -237,7 +238,7 @@ const SMidle = styled.div`
 
   .item-site {
     margin-left: 10px;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   .item-site > input {
     margin-left: 10px;
@@ -248,19 +249,19 @@ const SMidle = styled.div`
 const SRentalcheck = styled.div`
   font-size: 14px;
   margin: 10px;
-  background-color: #eee6ca;
+  background-color: #faf6e9;
   .check {
     margin: 10px 0px;
     display: flex;
     align-items: center;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   .check > input {
     width: 1.8vw;
     height: 1.8vh;
   }
   .rental-price {
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   .rental-price > input {
     margin-left: 10px;

@@ -18,7 +18,7 @@ const CssSlider = styled.div`
   display: flex;
   justify-content: center;
   .container {
-    width: 60%;
+    width: 70%;
     margin-top: 40px;
     overflow: hidden;
     border-radius: 10px;
