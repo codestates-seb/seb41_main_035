@@ -92,7 +92,7 @@ const SWrapper = styled.div`
 const Filter = styled.div`
   display: flex;
   justify-content: center;
-  height: 500px;
+  /* height: 500px; */
   button {
     margin: 50px;
     font-size: 20px;
@@ -148,7 +148,7 @@ const SCodi = styled.div`
 const Sline = styled.hr`
   display: flex;
   justify-content: center;
-  width: 90%;
+  width: 95%;
   margin-right: 20px;
 `;
 

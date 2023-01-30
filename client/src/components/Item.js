@@ -4,6 +4,7 @@ import Avatar from '../components/Avatar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
 const Item = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -12,22 +13,24 @@ const Item = () => {
   const [isRent, setIsRent] = useState(true);
 
   // console.log(itemData.products[1].rental);
+
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem('accessToken');
       try {
-        const response = await axios.get(url + `/boards/` + [params.boardId]);
+        const response = await axios.get(url + `/boards/` + [params.boardId], {
+          headers: { Authorization: token },
+        });
+        console.log(token);
         setItemData(response.data);
+        console.log(response.data);
       } catch (err) {
         return err;
       }
     };
     fetchData();
   }, []);
-  // Object.keys(itemData.products.rental)?.forEach((el) =>
-  //   console.log(el[rental])
-  // );
-  // console.log(Object.keys(itemData.products.rental));
-
+  console.log(itemData);
   const onMoveLink = (link) => {
     window.open(link, '', '');
   };
@@ -39,6 +42,7 @@ const Item = () => {
       'width=700px,height=800px,scrollbars=yes'
     );
   }
+  console.log(itemData);
   return (
     <SItemContainer>
       {itemData.products?.map((item) => (
@@ -47,7 +51,7 @@ const Item = () => {
           key={item.productId}
           role="presentation"
           onClick={() => {
-            onMoveLink(item.link);
+            // onMoveLink(item.link);
           }}
         >
           <div className="item_picture">
@@ -85,7 +89,6 @@ const SItemContainer = styled.div`
   overflow: auto;
   height: 110px;
   margin-bottom: 10px;
-
   .item_box {
     height: 85px;
     margin-bottom: 13px;

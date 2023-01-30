@@ -151,14 +151,6 @@ const PostView = () => {
               </div>
               <div className="post">{detailData.content}</div>
               <div className="edit-delete">
-                <span
-                  role="presentation"
-                  onClick={() => {
-                    navigate(`/edit`);
-                  }}
-                >
-                  Edit
-                </span>
                 <span role="presentation" onClick={onPostDelete}>
                   Delete
                 </span>
