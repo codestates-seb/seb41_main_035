@@ -21,6 +21,10 @@ const PostBox = ({ data }) => {
   // like State 를 number[] 형태의 배열로 - 값을 0 으로 채워주고
   // const [like, setLike] = useState(new Array(data?.length).fill(0));
   const [like, setLike] = useState(data.map((item) => item.likeCnt));
+
+  const [isLike, setIsLike] = useState(data.like);
+  console.log(isLike);
+
   const onClickGood = async (id, index) => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
@@ -32,6 +36,7 @@ const PostBox = ({ data }) => {
       }
     );
     if (res && res?.data) {
+      //카운트증가부분
       setLike((prev) =>
         prev.map((item, idx) => {
           if (idx === index) {
@@ -41,6 +46,7 @@ const PostBox = ({ data }) => {
           return item;
         })
       );
+      setIsLike((prev) => !prev); // 좋아요 상태 변경
     }
   };
 
@@ -85,8 +91,8 @@ const PostBox = ({ data }) => {
               role="presentation"
               onClick={() => onClickGood(post.boardId, index)}
             >
-              {/* {like ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />} */}
-              {like[index] ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+              {isLike ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+              {/* {like[index] ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />} */}
             </div>
           </PostBoxOne>
         ))}
