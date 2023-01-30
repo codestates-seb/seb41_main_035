@@ -25,7 +25,7 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      {/* <SLeftBoard /> */}
+      <SLeftBoard />
     </SWrapper>
   );
 };
@@ -33,7 +33,7 @@ const Sidebar = () => {
 const SWrapper = styled.div`
   position: fixed;
   display: flex;
-  width: 20%;
+  width: 23%;
   justify-content: flex-end;
   min-width: 110px;
 
@@ -71,13 +71,10 @@ const ItemList = styled.div`
 const SList = styled.div``;
 
 //선 부분
-// const SLeftBoard = styled.div`
-//   position: fixed;
-//   border-left: 2px solid gray;
-//   margin: 50px 0px 0px 110px;
-//   height: 340px;
-//   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-//     display: none;
-//   }
-// `;
+const SLeftBoard = styled.div`
+  position: fixed;
+  border-left: 2px solid gray;
+  margin: 50px 0px 0px 110px;
+  height: 340px;
+`;
 export default Sidebar;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BsPencilSquare, BsBookmarkHeart } from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const About = () => {
   return (
@@ -43,15 +44,17 @@ const Swrapper = styled.div`
   display: flex;
   justify-content: center;
   color: #565656;
+  margin-left: 200px;
+  min-width: 500px;
   .container {
-    height: 100vh;
+    height: 800px;
   }
   .title {
-    margin-top: 100px;
-    font-size: 55px;
+    margin-top: 70px;
+    font-size: 50px;
   }
   .body {
-    font-size: 30px;
+    font-size: 25px;
     margin-top: 50px;
     font-weight: 500;
   }

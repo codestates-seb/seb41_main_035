@@ -75,7 +75,7 @@ const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   .profil {
-    width: 78%;
+    width: 73%;
     display: flex;
     justify-content: flex-start;
     @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
@@ -85,17 +85,24 @@ const SWrapper = styled.div`
       }
     }
   }
+  .main-post {
+    width: 70%;
+  }
 `;
 const Filter = styled.div`
   display: flex;
   justify-content: center;
-  height: 150px;
+  height: 500px;
   button {
     margin: 50px;
-    font-size: 30px;
-    width: 170px;
+    font-size: 20px;
+    width: 140px;
     height: 40px;
     background-color: #ece9ca;
+    display: flex;
+    align-items: center;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 10px;
   }
 `;
 
@@ -141,6 +148,8 @@ const SCodi = styled.div`
 const Sline = styled.hr`
   display: flex;
   justify-content: center;
+  width: 90%;
+  margin-right: 20px;
 `;
 
 export default Profile;

@@ -1,15 +1,17 @@
 import styled, { keyframes } from 'styled-components';
-import slideImg01 from '../svg/2109.i121.033.S.m005.c13.isometric fashion clothes infographics.jpg';
-import slideImg02 from '../svg/SiteInfo.webp';
+// import slideImg01 from '../svg/2109.i121.033.S.m005.c13.isometric fashion clothes infographics.jpg';
+import slideImg01 from '../svg/Service1.png';
+// import slideImg02 from '../svg/SiteInfo.webp';
+import slideImg02 from '../svg/Service.png';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 
 const slideAction = keyframes`
 0%{transform:translateX(0);}
 45%{transform:translateX(0);}
-48% { transform: translateX(calc(100%*-1)) } 
-97% { transform: translateX(calc(100%*-1)) } 
-100%{transform: translateX(calc(100% *-2))}
+48% {transform:translateX(calc(100%*-1))} 
+97% {transform:translateX(calc(100%*-1))} 
+100%{transform:translateX(calc(100% *-2))}
 `;
 
 const CssSlider = styled.div`
@@ -29,7 +31,7 @@ const ListSlider = styled.ul`
   height: 100%;
   white-space: nowrap;
   font-size: 0;
-  animation: ${slideAction} 10s linear infinite;
+  animation: ${slideAction} 8s linear infinite;
   li {
     display: inline-block;
     width: 100%;

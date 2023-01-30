@@ -243,7 +243,8 @@ const SPicture = styled.div`
 `;
 
 const SDetail = styled.div`
-  width: 40%;
+  width: 30%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
