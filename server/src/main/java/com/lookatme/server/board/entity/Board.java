@@ -22,7 +22,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "boards")
-public class Board extends BaseTimeEntity {
+public class
+Board extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long boardId;

@@ -1,6 +1,8 @@
 package com.lookatme.server.product.repository;
 
+import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.product.entity.Product;
+import com.lookatme.server.rental.entity.Rental;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -15,6 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByProductName(String productName);
 
     boolean existsByProductName(String productName);
+
+//    Page<Product> findByProduct_Rentals(Rental rental, Pageable pageable);
 
     @EntityGraph(value = "product-entity-graph")
     Optional<Product> findByProductId(long productId);

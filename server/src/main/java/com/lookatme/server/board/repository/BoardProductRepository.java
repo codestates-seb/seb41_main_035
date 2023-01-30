@@ -6,23 +6,12 @@ import com.lookatme.server.product.entity.Category;
 import com.lookatme.server.rental.entity.Rental;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardProductRepository extends JpaRepository<BoardProduct, Long> {
+    Page<BoardProduct> findByProduct_Category(Category category, Pageable pageable);
 
-    @EntityGraph(value = "board-entity-graph")
-    Optional<Board> findById(long boardId);
-
-    Optional<Board> findByBoardId(long boardId);
-
-//    Page<Board>
-
-
-
-    @EntityGraph(value = "board-entity-graph")
-    Page<Board> findAll(Pageable pageable);
+    Page<BoardProduct> findByProduct_ProductName(String productName, Pageable pageable);
 }

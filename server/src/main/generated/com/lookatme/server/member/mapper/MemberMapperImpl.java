@@ -3,6 +3,7 @@ package com.lookatme.server.member.mapper;
 import com.lookatme.server.member.dto.MemberDto.Post;
 import com.lookatme.server.member.dto.MemberDto.Response;
 import com.lookatme.server.member.dto.MemberDto.ResponseWithFollow;
+import com.lookatme.server.member.dto.MemberDto.SimpleResponse;
 import com.lookatme.server.member.entity.Member;
 import com.lookatme.server.member.entity.Member.MemberBuilder;
 import com.lookatme.server.member.entity.OauthPlatform;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-29T11:01:15+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Eclipse Adoptium)"
+    date = "2023-01-30T11:30:02+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.17 (Azul Systems, Inc.)"
 )
 @Component
 public class MemberMapperImpl implements MemberMapper {
@@ -103,6 +104,27 @@ public class MemberMapperImpl implements MemberMapper {
         ResponseWithFollow responseWithFollow = new ResponseWithFollow( memberId, email, oauthPlatform, nickname, profileImageUrl, height, weight, followerCnt, followeeCnt, follow, delete );
 
         return responseWithFollow;
+    }
+
+    @Override
+    public SimpleResponse memberToSimpleMemberResponse(Member member) {
+        if ( member == null ) {
+            return null;
+        }
+
+        long memberId = 0L;
+        String nickname = null;
+        String profileImageUrl = null;
+        boolean delete = false;
+
+        memberId = member.getMemberId();
+        nickname = member.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
+        delete = member.isDelete();
+
+        SimpleResponse simpleResponse = new SimpleResponse( memberId, nickname, profileImageUrl, delete );
+
+        return simpleResponse;
     }
 
     @Override
