@@ -3,6 +3,7 @@ import axios from 'axios';
 import userStore from '../store/userStore';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import FollowModal from './followlist';
 const backendUrl = 'http://13.125.30.88/';
 import { BREAK_POINT_TABLET } from '../constants/index';
 
@@ -18,6 +19,16 @@ const UserInfo = () => {
   const [height, setHeight] = useState(0);
   const [weight, setWeight] = useState(0);
   const [profileImg, setProfileImg] = useState('');
+  const [isFollowOpen, setIsFollowOpen] = useState(false);
+  const [isFollowerOpen, setIsFollowerOpen] = useState(false);
+
+  const onFollowClickButton = () => {
+    setIsFollowOpen(true);
+  };
+
+  const onFollowerClickButton = () => {
+    setIsFollowerOpen(true);
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -149,11 +160,13 @@ const UserInfo = () => {
             <SFollow>
               <div className="follow">
                 <SFollows>팔로우</SFollows>
-                <SFollowz>{follow}</SFollowz>
+                <SFollowz onClick={onFollowClickButton}>{follow}</SFollowz>
               </div>
               <div className="follow">
                 <SFollower>팔로워</SFollower>
-                <SFollowers>{follower}</SFollowers>
+                <SFollowers onClick={onFollowerClickButton}>
+                  {follower}
+                </SFollowers>
               </div>
             </SFollow>
           </SDetail>
@@ -167,6 +180,26 @@ const UserInfo = () => {
           {isFixing ? <SSave onClick={save}>저장</SSave> : ''}
         </SButton>
       </SProfileWrapper>
+      {isFollowOpen && (
+        <FollowModal
+          open={isFollowOpen}
+          onClose={() => {
+            setIsFollowOpen(false);
+          }}
+          isFollow={true}
+          user={userId}
+        />
+      )}
+      {isFollowerOpen && (
+        <FollowModal
+          open={isFollowerOpen}
+          onClose={() => {
+            setIsFollowerOpen(false);
+          }}
+          isFollow={false}
+          user={userId}
+        />
+      )}
     </SWrapper>
   );
 };
@@ -286,7 +319,7 @@ const SFollows = styled.div`
   }
 `;
 
-const SFollowz = styled.div`
+const SFollowz = styled.button`
   margin: 5px;
   text-align: center;
 `;
@@ -295,7 +328,7 @@ const SFollower = styled.div`
   margin: 5px;
 `;
 
-const SFollowers = styled.div`
+const SFollowers = styled.button`
   margin: 5px;
   text-align: center;
 `;

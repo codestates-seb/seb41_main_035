@@ -1,8 +1,8 @@
 package com.lookatme.server.board.dto;
 
 import com.lookatme.server.comment.dto.CommentResponseDtoV2;
-import com.lookatme.server.member.dto.MemberDto;
 import com.lookatme.server.product.dto.BoardProductsResponseDto;
+import com.lookatme.server.member.dto.MemberDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,11 +10,12 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardResponseDto {
 
-    private int boardId;
+    private long boardId;
 
     private String userImage;
 
@@ -25,6 +26,8 @@ public class BoardResponseDto {
     private LocalDateTime updatedDate;
 
     private int likeCnt;
+
+    private boolean like;
 
     private MemberDto.ResponseWithFollow member;
 

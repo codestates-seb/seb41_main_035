@@ -42,6 +42,7 @@ const Profile = () => {
     fetchData();
   }, []);
   const myCodi = useMemo(() => {
+    console.log(userId);
     return codi.filter((codi) => {
       return codi.member?.memberId === Number(userId);
     });

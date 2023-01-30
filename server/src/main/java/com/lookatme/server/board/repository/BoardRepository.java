@@ -11,10 +11,11 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @EntityGraph(value = "board-entity-graph")
-    Optional<Board> findById(long boardId);
-
     Optional<Board> findByBoardId(long boardId);
 
     @EntityGraph(value = "board-entity-graph")
     Page<Board> findAll(Pageable pageable);
+
+    Page<Board> findByMember_Nickname(Pageable pageable, String nickname);
+
 }
