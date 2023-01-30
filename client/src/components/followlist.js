@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -17,7 +18,6 @@ function FollowModal(props) {
   useEffect(() => {
     // eslint-disable-next-line react/prop-types
     const user = props.user;
-    console.log(user);
     const getFollow = async () => {
       try {
         const token = localStorage.getItem('accessToken');
@@ -51,6 +51,11 @@ function FollowModal(props) {
           onClick={closeButton}
         />
         <Contents>
+          {props.isFollow ? (
+            <div className="title">Follow</div>
+          ) : (
+            <div className="title">Follower</div>
+          )}
           <div className="comment_container">
             {followData &&
               followData?.map((follow) => (
@@ -91,8 +96,8 @@ const Overlay = styled.div`
 `;
 
 const ModalWrap = styled.div`
-  width: 400px;
-  height: 500px;
+  width: 300px;
+  height: 400px;
   border-radius: 15px;
   background-color: #fff;
   position: absolute;
@@ -102,7 +107,7 @@ const ModalWrap = styled.div`
 `;
 
 const Contents = styled.div`
-  margin: 50px 30px;
+  margin-right: 30px;
   h1 {
     font-size: 30px;
     font-weight: 600;
@@ -157,6 +162,15 @@ const Contents = styled.div`
       margin: 3px 10px;
       font-size: 16px;
       font-weight: bold;
+      width: 150px;
+      all: unset;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px 3px;
+      :hover {
+        color: #196ba5;
+        background-color: #f4f1e0;
+      }
     }
     span {
       :hover {
@@ -170,6 +184,11 @@ const Contents = styled.div`
         height: 100%;
       }
     }
+  }
+  .title {
+    font-size: 35px;
+    display: flex;
+    flex-direction: column;
   }
 `;
 

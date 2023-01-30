@@ -28,6 +28,9 @@ public enum ErrorCode {
     MEMBER_SELF_FOLLOW("자기 자신을 팔로우 할 수 없습니다", HttpStatus.BAD_REQUEST),
     MEMBER_NOT_FOLLOW("팔로우 한 회원이 아닙니다", HttpStatus.BAD_REQUEST),
 
+    // Category
+    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+
     // Security & JWT
     TOKEN_LOGOUT("로그아웃된 토큰입니다.", HttpStatus.FORBIDDEN), // Forbidden = 사용자가 누구인지 알고있으나 권한이 없음
     TOKEN_INVALID("사용할 수 없는 토큰입니다.", HttpStatus.UNAUTHORIZED), // Unauthorized = 비인증 상태

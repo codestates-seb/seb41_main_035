@@ -4,19 +4,16 @@ import Avatar from './Avatar';
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { BREAK_POINT_TABLET } from '../constants/index';
+import { BREAK_POINT_TABLET, token } from '../constants/index';
 import axios from 'axios';
-
 const backendUrl = 'http://13.125.30.88/';
-
-// 게시물 하나에 해당하는 컴포넌트 -   // 게시물 하나에 대한 정보를 나타냄
+// 게시물 하나에 해당하는 컴포넌트 -게시물 하나에 대한 정보를 나타냄
 const Post = ({ post }) => {
   const navigate = useNavigate();
   // 게시물좋아요 카운트
   const [likeCnt, setLikeCnt] = useState(post.likeCnt);
   // 게시물좋아요 여부 ture, false
   const [isLike, setIsLike] = useState(post.like);
-
   const onClickGood = async (id) => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(

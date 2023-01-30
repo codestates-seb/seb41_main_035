@@ -5,6 +5,7 @@ import {
   BsPersonPlus,
   BsPersonCheck,
   BsBookmarkHeart,
+  BsBookmarkHeartFill,
 } from 'react-icons/bs';
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
@@ -19,6 +20,7 @@ const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+
   const url = 'http://13.125.30.88';
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
@@ -27,6 +29,22 @@ const PostView = () => {
   localStorage.setItem('sentId', JSON.stringify(sentId));
   localStorage.setItem('name', JSON.stringify(name));
   localStorage.setItem('boardId', JSON.stringify(boardId));
+  //좋아요부분
+  const onClickGood = async (id) => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `${url}/boards/${id}/like`, // 좋아요 API
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res && res?.data) {
+      setDetailData((prev) => {
+        return { ...prev, like: !prev.like };
+      });
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('accessToken');
@@ -67,7 +85,6 @@ const PostView = () => {
     const res = await axios.post(
       `/members/follow?op=${detailData.member.memberId}&type=down`,
       {},
-
       {
         headers: { Authorization: token },
       }
@@ -143,7 +160,18 @@ const PostView = () => {
                     ) : (
                       <BsPersonPlus size="20" onClick={follow} />
                     )}
-                    <BsBookmarkHeart size="20" />
+                    {/* 좋아요기능 */}
+                    <div
+                      className="container add"
+                      role="presentation"
+                      onClick={() => onClickGood(detailData.boardId)}
+                    >
+                      {detailData.like ? (
+                        <BsBookmarkHeartFill size="20" />
+                      ) : (
+                        <BsBookmarkHeart size="20" />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

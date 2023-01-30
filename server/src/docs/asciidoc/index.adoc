@@ -394,3 +394,22 @@ include::{snippets}/delete-board/path-parameters.adoc[]
 
 .http-response
 include::{snippets}/delete-board/http-response.adoc[]
+
+=== 게시글 좋아요
+.curl-request
+include::{snippets}/like-board/curl-request.adoc[]
+
+.http-request
+include::{snippets}/like-board/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/like-board/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/like-board/http-response.adoc[]
+
+.response-body
+include::{snippets}/like-board/response-body.adoc[]
+
+.response-fields
+include::{snippets}/like-board/response-fields.adoc[]

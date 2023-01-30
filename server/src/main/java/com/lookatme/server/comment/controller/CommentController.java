@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<MultiResponseDto> getComments(@PathVariable("boardId") int boardId,
+    public ResponseEntity<MultiResponseDto> getComments(@PathVariable("boardId") long boardId,
                                                         @RequestParam("page") final int page,
                                                         @RequestParam("size") final int size) {
         return new ResponseEntity<>(commentService.getComments(boardId, page - 1, size), HttpStatus.OK);

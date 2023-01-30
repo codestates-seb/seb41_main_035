@@ -57,7 +57,6 @@ const Category = () => {
       fetchData();
     }
   }, [check]);
-  console.log(check);
   const currentCategoryProducts = useMemo(() => {
     return data.filter((item) => {
       return item?.products.some(
@@ -66,6 +65,7 @@ const Category = () => {
     });
   }, [data, category]); // 종속성으로 category 를 넣고,category가 변경되면 이 변수값이 업데이트
   console.log(currentCategoryProducts);
+
   //렌탈가능
   const onCheck = () => {
     const checkbox = document.getElementById('checkbox');
@@ -157,6 +157,7 @@ const Category = () => {
 const SWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+
   .category {
     width: 73%;
     display: flex;
