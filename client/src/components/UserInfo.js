@@ -229,7 +229,6 @@ const SProfileWrapper = styled.div`
     display: flex;
     flex-grow: 6;
     justify-content: center;
-    align-items: center;
   }
 `;
 
@@ -280,11 +279,6 @@ const SName = styled.div`
   font-size: x-large;
 `;
 
-const SNick = styled.div`
-  height: 40px;
-  margin-top: 5px;
-`;
-
 const SNickIn = styled.input`
   margin: 5px;
   width: 100px;
@@ -299,7 +293,6 @@ const SHeight = styled.div`
 const SHeightIn = styled.input`
   margin: 5px;
   height: 20px;
-  width: 35px;
   /* margin-left: 52px; */
 `;
 
@@ -308,6 +301,12 @@ const SWeight = styled.div`
   width: 52px;
   height: 20px;
 `;
+
+const SNick = styled.div`
+  height: 40px;
+  margin-top: 5px;
+`;
+
 const SNickVs = styled.div`
   margin: 5px;
 `;
@@ -330,8 +329,6 @@ const SFollowz = styled.button`
   margin: 5px;
   text-align: center;
   margin-left: 15px;
-  background-color: white;
-  border: none;
 `;
 
 const SFollower = styled.div`
@@ -342,8 +339,6 @@ const SFollowers = styled.button`
   margin: 5px;
   text-align: center;
   margin-left: 18px;
-  background-color: white;
-  border: none;
 `;
 
 const SFix = styled.button`
