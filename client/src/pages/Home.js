@@ -2,19 +2,24 @@ import styled from 'styled-components';
 import PostBox from '../components/PostBox';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import { BREAK_POINT_PC, BREAK_POINT_TABLET, token } from '../constants/index';
 import axios from 'axios';
 import Slider from '../components/Slider';
+
 const Home = () => {
   const location = useLocation();
   const [data, setData] = useState([]);
   console.log(data);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
+      const token = localStorage.getItem('accessToken');
       try {
         if (location.pathname === '/') {
-          const response = await axios.get(`http://13.125.30.88/boards`);
+          const response = await axios.get(`http://13.125.30.88/boards`, {
+            headers: { Authorization: token },
+          });
           setData(response.data.data);
         }
       } catch {

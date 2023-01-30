@@ -12,6 +12,8 @@ const backendUrl = 'http://13.125.30.88/';
 
 function LoginModal(props) {
   const setUserId = userStore((state) => state.setUserId);
+  // 추가부분
+  const setNickname = userStore((state) => state.setNickname);
 
   const [signUp, setSignUp] = useState(false);
   const [id, setId] = useState('');
@@ -47,6 +49,11 @@ function LoginModal(props) {
       localStorage.setItem('refreshToken', res.headers.refresh);
       const user_id = res.data.memberId;
       setUserId(user_id);
+
+      // 추가부분
+      const user_nickname = res.data.nickname;
+      setNickname(user_nickname);
+
       // eslint-disable-next-line react/prop-types
       props.onClose();
     }

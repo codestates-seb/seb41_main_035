@@ -33,10 +33,9 @@ const Sidebar = () => {
 const SWrapper = styled.div`
   position: fixed;
   display: flex;
-  width: 23%;
+  width: 20%;
   justify-content: flex-end;
   min-width: 110px;
-
   /* 768px이하일때 사이드바 없애기 */
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     display: none;

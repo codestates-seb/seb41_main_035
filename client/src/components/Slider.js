@@ -1,7 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-// import slideImg01 from '../svg/2109.i121.033.S.m005.c13.isometric fashion clothes infographics.jpg';
 import slideImg01 from '../svg/Service1.png';
-// import slideImg02 from '../svg/SiteInfo.webp';
 import slideImg02 from '../svg/Service.png';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
