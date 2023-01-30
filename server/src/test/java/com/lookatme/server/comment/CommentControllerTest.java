@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.auth.utils.MemberAuthorityUtils;
-import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.dto.SimpleBoardResponseDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.comment.controller.CommentController;
@@ -357,7 +356,7 @@ public class CommentControllerTest {
                 .weight(70)
                 .build();
 
-        int boardId = 1;
+        long boardId = 1;
         Board board = Board.builder()
                 .boardId(boardId)
                 .userImage("image")
@@ -397,7 +396,7 @@ public class CommentControllerTest {
 
         List<CommentResponseDto> commentResponseDtos = List.of(commentResponseDto1, commentResponseDto2);
 
-        given(commentService.getComments(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).willReturn(new MultiResponseDto(commentResponseDtos, comments));
+        given(commentService.getComments(Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt())).willReturn(new MultiResponseDto(commentResponseDtos, comments));
 
         //when
         ResultActions actions =
