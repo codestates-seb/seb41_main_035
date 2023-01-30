@@ -3,23 +3,38 @@ import PostBox from '../components/PostBox';
 import UserInfo from '../components/UserInfo';
 import userStore from '../store/userStore';
 import { useParams } from 'react-router-dom';
-import dummyData from '../db/dummyData.json';
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
+import { BREAK_POINT_TABLET } from '../constants/index';
 const Profile = () => {
-  const data = dummyData.posts;
   const params = useParams();
   const userId = params.userId;
   const userStoreId = userStore((state) => state.userId);
   const [codi, setCodi] = useState([]);
-  // console.log(userId);
+  const [followData, setFollowData] = useState([]);
+  localStorage.setItem('myId', JSON.stringify(userStoreId));
+  console.log(userStoreId);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://13.125.30.88/boards/following/${userId}`
+  //       );
+  //       setFollowData(response.data.data);
+  //       console.log(response.data.data);
+  //     } catch {
+  //       window.alert('오류가 발생했습니다.');
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://13.125.30.88/boards`);
         setCodi(response.data.data);
-        console.log(response.data.data);
       } catch {
         window.alert('오류가 발생했습니다.');
       }
@@ -29,15 +44,13 @@ const Profile = () => {
   const myCodi = useMemo(() => {
     console.log(userId);
     return codi.filter((codi) => {
-      return codi.member?.memberId === userId;
+      return codi.member?.memberId === Number(userId);
     });
   }, [codi]);
-  console.log(myCodi);
   return (
     <>
       <SWrapper>
         <div className="profil">
-          {/* <Sidebar /> */}
           <div className="main post">
             <UserInfo />
             <Sline></Sline>
@@ -65,6 +78,12 @@ const SWrapper = styled.div`
     width: 78%;
     display: flex;
     justify-content: flex-start;
+    @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+      & {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   }
 `;
 const Filter = styled.div`
@@ -90,6 +109,12 @@ const SMyCodi = styled.button`
   border-radius: 20px;
   justify-content: center;
   display: flex;
+  border: none;
+  box-shadow: 1px 1px 6px gray;
+  cursor: pointer;
+  :hover {
+    box-shadow: 2px 2px 3px gray;
+  }
 `;
 
 const SLikeCodi = styled.button`
@@ -100,6 +125,12 @@ const SLikeCodi = styled.button`
   border-radius: 20px;
   justify-content: center;
   display: flex;
+  border: none;
+  box-shadow: 1px 1px 6px gray;
+  cursor: pointer;
+  :hover {
+    box-shadow: 2px 2px 3px gray;
+  }
 `;
 
 const SCodi = styled.div`

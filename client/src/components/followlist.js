@@ -57,7 +57,7 @@ function FollowModal(props) {
                 <div className="comment_box" key={follow.memberId}>
                   <div className="comment-left">
                     <div className="user_avatar">
-                      <Avatar image={follow.profileImageUrl} />
+                      <Avatar size={'30px'} image={follow.profileImageUrl} />
                     </div>
                     <button
                       className="user_name"
