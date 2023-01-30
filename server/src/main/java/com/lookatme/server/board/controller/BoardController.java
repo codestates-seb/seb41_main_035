@@ -76,4 +76,45 @@ public class BoardController {
                                        @AuthenticationPrincipal MemberPrincipal memberPrincipal){
         return new ResponseEntity<>(boardService.likeBoard(memberPrincipal,boardId), HttpStatus.OK);
     }
+
+    @GetMapping("/search/product")
+    public ResponseEntity<?> getBoardsByProductName(@RequestParam String productName,
+                                                    @Positive @RequestParam(defaultValue = "1") int page,
+                                                    @Positive @RequestParam(defaultValue = "25") int size,
+                                                    @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+
+        Page<BoardResponseDto> findBoards = boardService.findBoardsByproductName(productName, page-1, size);
+        List<BoardResponseDto> boards = findBoards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/category")
+    public ResponseEntity<?> findBoardsByCategoryName(@RequestParam String category,
+                                                      @Positive @RequestParam(defaultValue = "1") int page,
+                                                      @Positive @RequestParam(defaultValue = "25") int size,
+                                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+
+        Page<BoardResponseDto> findBoards = boardService.findBoardsByCategoryName(category, page-1, size);
+        List<BoardResponseDto> boards = findBoards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/available")
+    public ResponseEntity<?> findBoardsByCategoryName(@Positive @RequestParam(defaultValue = "1") int page,
+                                                      @Positive @RequestParam(defaultValue = "25") int size,
+                                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+
+        Page<BoardResponseDto> findBoards = boardService.findBoardsByRentalAvailable(page-1, size);
+        List<BoardResponseDto> boards = findBoards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
+    }
 }
