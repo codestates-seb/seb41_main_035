@@ -23,8 +23,8 @@ function FollowModal(props) {
         const token = localStorage.getItem('accessToken');
         // eslint-disable-next-line react/prop-types
         const follwurl = props.isFollow
-          ? `${backendUrl}members?tab=followee&page=1&size=10000&memberId=${user}`
-          : `${backendUrl}members?tab=follower&page=1&size=10000&memberId=${user}`;
+          ? `${backendUrl}members/follow?memberId=${user}&tab=followee`
+          : `${backendUrl}members/follow?memberId=${user}&tab=follower`;
         const res = await axios.get(
           follwurl,
           {

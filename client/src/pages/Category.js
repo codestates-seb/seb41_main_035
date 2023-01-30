@@ -17,7 +17,6 @@ const PRODUCT = {
 const Category = () => {
   const params = useParams();
   const category = params.categoryId;
-
   const [data, setData] = useState([]);
   const [check, setCheck] = useState(false);
   console.log(data);
@@ -29,7 +28,7 @@ const Category = () => {
       click.style.display = 'none';
     }
   };
-  //렌탈 가능한 상품만 받아서 true일떄는 그 데이터로
+
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://13.125.30.88/boards`);
@@ -38,11 +37,27 @@ const Category = () => {
       window.alert('오류가 발생했습니다.');
     }
   };
+  const fetchRentData = async () => {
+    try {
+      const response = await axios.get(
+        `http://13.125.30.88/boards/search/available`
+      );
+      setData(response.data.data);
+      console.log(response.data.data);
+    } catch {
+      window.alert('오류가 발생했습니다.');
+    }
+  };
+  //렌탈 가능한 상품만 받아서 true일떄는 그 데이터로
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchData();
+    if (check === true) {
+      fetchRentData();
+    } else if (check === false) {
+      fetchData();
+    }
   }, [check]);
-
+  console.log(check);
   const currentCategoryProducts = useMemo(() => {
     return data.filter((item) => {
       return item?.products.some(

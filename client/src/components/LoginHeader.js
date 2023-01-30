@@ -56,6 +56,7 @@ const LoginHeader = () => {
                 className="title"
                 role="presentation"
                 onClick={() => navigate(`/`)}
+                width="200px"
               />
             </div>
             <SearchBox />
