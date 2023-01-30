@@ -143,8 +143,8 @@ public class BoardService {
     public BoardResponseDto findBoard(long boardId, long loginMemberId) {
         Board board = findBoardEntity(boardId);
         Member writer = board.getMember();
-        Member loginMember = findMember(loginMemberId);
         if (loginMemberId != -1) {
+            Member loginMember = findMember(loginMemberId);
             // 게시글 작성자가 내가 팔로우 한 사람인지 유무 체크
             if (followService.isFollowee(loginMemberId, writer.getMemberId())) {
                 writer.setStatusToFollowingMember();
