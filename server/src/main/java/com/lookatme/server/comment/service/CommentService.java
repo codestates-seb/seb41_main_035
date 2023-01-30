@@ -58,7 +58,7 @@ public class CommentService {
                 .orElseThrow(() -> new CommentNotFoundException());
     }
 
-    private Board findValidatePost(final int boardId) {
+    private Board findValidatePost(final long boardId) {
         return boardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
     }
@@ -87,7 +87,7 @@ public class CommentService {
         return CommentResponseDto.of(findValidateComment(commentId));
     }
 
-    public MultiResponseDto getComments(final int boardId,
+    public MultiResponseDto getComments(final long boardId,
                                         final int page,
                                         final int size) {
         Page<Comment> comments = commentRepository.findCommentsByBoard(boardId,
