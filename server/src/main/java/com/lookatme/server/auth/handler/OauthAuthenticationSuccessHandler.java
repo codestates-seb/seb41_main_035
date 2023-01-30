@@ -94,8 +94,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
-                .port(3000)
+                .host("mainproject-035.s3-website.ap-northeast-2.amazonaws.com")
                 .path("/google")
                 .queryParams(queryParams)
                 .build()

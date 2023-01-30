@@ -56,6 +56,10 @@ public class Board extends BaseTimeEntity {
         this.content = content;
     }
 
+    public void setLikeStatusTrue() {
+        this.like = true;
+    }
+
     public Board() {
     }
 
