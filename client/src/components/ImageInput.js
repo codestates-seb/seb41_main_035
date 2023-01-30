@@ -67,8 +67,9 @@ ImageInput.propTypes = {
 };
 
 const SWrapper = styled.div`
-  width: 15vw;
-  height: 40vh;
+  width: 45%;
+  height: 41vh;
+  margin-left: 10px;
   .image-upload {
     margin: 10px;
   }
@@ -91,7 +92,7 @@ const SWrapper = styled.div`
   }
   img {
     width: 95%;
-    height: 275px;
+    height: 290px;
     margin: 20px 0px 20px 5px;
   }
 `;

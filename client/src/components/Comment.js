@@ -18,6 +18,7 @@ const Comment = ({ boardId, profile }) => {
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
+  console.log(contentValue);
   const onPostComment = () => {
     axios(url, {
       method: 'POST',
@@ -204,7 +205,7 @@ const SWrapper = styled.div`
   .line {
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid gray;
     line-height: 0.1em;
     margin: 10px 0;
   }
@@ -234,9 +235,9 @@ const SWrapper = styled.div`
       display: flex;
       width: 100%;
       justify-content: center;
-      /* border-bottom: 1px solid gray; */
+      border: 1px solid lightgray;
       /* background-color: white; */
-      background-color: #f7f5ec;
+      /* background-color: #f7f5ec; */
       margin-left: 2px;
       border-radius: 5px;
 
@@ -245,7 +246,7 @@ const SWrapper = styled.div`
         height: 4vh;
         border: none;
         /* border-bottom: 1px solid gray; */
-        background-color: #f7f5ec;
+        /* background-color: #f7f5ec; */
         &:focus {
           outline: none;
         }
@@ -257,7 +258,7 @@ const SWrapper = styled.div`
       }
     }
     button {
-      background-color: #f7f5ec;
+      background-color: white;
       border: none;
       cursor: pointer;
     }
@@ -288,6 +289,10 @@ const SWrapper = styled.div`
         display: flex;
         span {
           margin: 0px 5px;
+          cursor: pointer;
+          :hover {
+            color: black;
+          }
         }
       }
     }

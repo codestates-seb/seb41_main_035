@@ -194,16 +194,16 @@ const SHeader = styled.div`
 
 const SMid = styled.form`
   display: flex;
-  width: 100%; //* 추가
+  width: 100%;
   margin: 10px 0px;
-  background-color: #eee6ca;
+  background-color: #faf6e9;
   height: 375px;
   border-radius: 6px;
   /* @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     width: 540px;
   } */
   .input_box {
-    width: 80%; //* 추가
+    width: 45%;
     margin: 10px;
     display: flex;
     /* justify-content: end; */
@@ -213,10 +213,11 @@ const SMid = styled.form`
   textarea {
     font-size: 14px;
     box-sizing: border-box;
-    height: 310px;
+    height: 320px;
     width: 100%; //* 추가
     /* width: 28vw; */
     border: none;
+    margin-top: 10px;
     border-radius: 5px;
     background-color: #ffffff;
     resize: none; /* 사용자가 텍스트사이즈 임의 변경 불가 */
