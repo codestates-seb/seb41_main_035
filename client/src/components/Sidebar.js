@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { BREAK_POINT_TABLET } from '../constants/index';
-
 const Items = ['아우터', '상의', '하의', '원피스', '모자', '신발'];
 const links = ['outer', 'top', 'bottom', 'onepiece', 'hat', 'shoes'];
-
 const Sidebar = () => {
   const usenavigate = useNavigate();
   return (
@@ -40,10 +38,10 @@ const SWrapper = styled.div`
   min-width: 110px;
 
   /* 768px이하일때 사이드바 없애기 */
-  /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     display: none;
     visibility: hidden;
-  } */
+  }
 `;
 
 //전체부분
@@ -58,7 +56,7 @@ const SidebarBox = styled.div`
   }
 `;
 const ItemList = styled.div`
-  /* border-right: 2px solid black; */
+  border-right: 2px solid gray;
 
   .items {
     font-size: 15px;

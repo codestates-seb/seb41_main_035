@@ -24,6 +24,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     List<Follow> findByFrom_MemberId(long memberId);
 
+    List<Follow> findByTo_MemberId(long memberId);
+
     @Query("select f from Follow f where f.to.memberId=:memberId or f.from.memberId=:memberId")
     List<Follow> findFollowListByMemberId(@Param("memberId") long memberId);
 }

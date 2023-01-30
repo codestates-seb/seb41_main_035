@@ -30,8 +30,6 @@ public class BoardProduct extends BaseTimeEntity {
 
     private String link;
 
-    private String size;
-
     private int price;
 
     protected BoardProduct() {
@@ -42,9 +40,8 @@ public class BoardProduct extends BaseTimeEntity {
         this.product = product;
     }
 
-    public void updateProductInfo(String link, String size, int price) {
+    public void updateProductInfo(String link, int price) {
         this.link = link;
-        this.size = size;
         this.price = price;
     }
 

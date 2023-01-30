@@ -3,7 +3,9 @@ import axios from 'axios';
 import userStore from '../store/userStore';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import FollowModal from './followlist';
 const backendUrl = 'http://13.125.30.88/';
+import { BREAK_POINT_TABLET } from '../constants/index';
 
 const UserInfo = () => {
   const params = useParams();
@@ -17,6 +19,16 @@ const UserInfo = () => {
   const [height, setHeight] = useState(0);
   const [weight, setWeight] = useState(0);
   const [profileImg, setProfileImg] = useState('');
+  const [isFollowOpen, setIsFollowOpen] = useState(false);
+  const [isFollowerOpen, setIsFollowerOpen] = useState(false);
+
+  const onFollowClickButton = () => {
+    setIsFollowOpen(true);
+  };
+
+  const onFollowerClickButton = () => {
+    setIsFollowerOpen(true);
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -122,35 +134,39 @@ const UserInfo = () => {
           </SPicture>
           <SDetail>
             <SName>
-              <SNick>닉네임</SNick>
               {isFixing ? (
-                <SNickIn value={nickname} onChange={changeName}></SNickIn>
+                <>
+                  <SNick>닉네임 :</SNick>
+                  <SNickIn value={nickname} onChange={changeName}></SNickIn>
+                </>
               ) : (
                 <SNickVs>{nickname}</SNickVs>
               )}
             </SName>
             <SBody>
-              <SHeight>키</SHeight>
+              <SHeight>키 :</SHeight>
               {isFixing ? (
                 <SHeightIn value={height} onChange={changeHeight}></SHeightIn>
               ) : (
-                <StallVs>{height}</StallVs>
+                <StallVs>{height}cm</StallVs>
               )}
-              <SWeight>몸무게</SWeight>
+              <SWeight>몸무게 : </SWeight>
               {isFixing ? (
                 <SWeightIn value={weight} onChange={changeWeight}></SWeightIn>
               ) : (
-                <SWeightVs>{weight}</SWeightVs>
+                <SWeightVs>{weight}kg</SWeightVs>
               )}
             </SBody>
             <SFollow>
               <div className="follow">
                 <SFollows>팔로우</SFollows>
-                <SFollowz>{follow}</SFollowz>
+                <SFollowz onClick={onFollowClickButton}>{follow}</SFollowz>
               </div>
               <div className="follow">
                 <SFollower>팔로워</SFollower>
-                <SFollowers>{follower}</SFollowers>
+                <SFollowers onClick={onFollowerClickButton}>
+                  {follower}
+                </SFollowers>
               </div>
             </SFollow>
           </SDetail>
@@ -164,6 +180,26 @@ const UserInfo = () => {
           {isFixing ? <SSave onClick={save}>저장</SSave> : ''}
         </SButton>
       </SProfileWrapper>
+      {isFollowOpen && (
+        <FollowModal
+          open={isFollowOpen}
+          onClose={() => {
+            setIsFollowOpen(false);
+          }}
+          isFollow={true}
+          user={userId}
+        />
+      )}
+      {isFollowerOpen && (
+        <FollowModal
+          open={isFollowerOpen}
+          onClose={() => {
+            setIsFollowerOpen(false);
+          }}
+          isFollow={false}
+          user={userId}
+        />
+      )}
     </SWrapper>
   );
 };
@@ -197,9 +233,13 @@ const SProfileWrapper = styled.div`
 `;
 
 const SPicture = styled.div`
-  width: 70%;
+  width: 50%;
   display: flex;
-  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: column;
+  input {
+    margin-right: -60px;
+  }
 `;
 
 const SDetail = styled.div`
@@ -208,17 +248,22 @@ const SDetail = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* font-size: x-large; */
+  margin-left: 10px;
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    width: 44%;
+  }
 `;
 
 const SButton = styled.div`
   display: flex;
-  width: 15%;
+  width: 1%;
   flex-direction: column;
   margin: 40px;
   align-items: flex-end;
   height: 160px;
-  justify-content: space-between;
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    align-items: flex-start;
+  }
 `;
 
 const SFollow = styled.div`
@@ -235,8 +280,16 @@ const SName = styled.div`
 `;
 
 const SNick = styled.div`
+
+  height: 40px;
+  margin-top: 5px;
+
+const SNickIn = styled.input`
   margin: 5px;
-`;
+  width: 100px;
+  height: 30px;
+  font-size: 25px;
+
 
 const SHeight = styled.div`
   margin: 5px;
@@ -244,23 +297,29 @@ const SHeight = styled.div`
 
 const SHeightIn = styled.input`
   margin: 5px;
+
+  height: 20px;
   /* margin-left: 52px; */
+
 `;
 
 const SWeight = styled.div`
   margin: 5px;
+  width: 52px;
+  height: 20px;
 `;
-
-const SNickIn = styled.input`
+const SWeightIn = styled.input`
   margin: 5px;
+  width: 42px;
 `;
-
 const SNickVs = styled.div`
   margin: 5px;
 `;
 
+
 const SWeightIn = styled.input`
   margin: 5px;
+  height: 20px;
 `;
 
 const SFollows = styled.div`
@@ -271,28 +330,42 @@ const SFollows = styled.div`
   }
 `;
 
-const SFollowz = styled.div`
+const SFollowz = styled.button`
   margin: 5px;
   text-align: center;
+  margin-left: 15px;
 `;
 
 const SFollower = styled.div`
   margin: 5px;
 `;
 
-const SFollowers = styled.div`
+const SFollowers = styled.button`
   margin: 5px;
   text-align: center;
+  margin-left: 18px;
 `;
 
 const SFix = styled.button`
   width: 70px;
   border-radius: 20px;
+  border: none;
+  height: 30px;
+  cursor: pointer;
+  :hover {
+    box-shadow: 1px 1px 6px gray;
+  }
 `;
 
 const SSave = styled.button`
   width: 70px;
   border-radius: 20px;
+  border: none;
+  height: 30px;
+  cursor: pointer;
+  :hover {
+    box-shadow: 1px 1px 6px gray;
+  }
 `;
 
 const StallVs = styled.div`

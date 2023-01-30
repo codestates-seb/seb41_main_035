@@ -1,13 +1,15 @@
 package com.lookatme.server.product.dto;
 
 import com.lookatme.server.rental.dto.RentalResponseDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardProductsResponseDto {
 
     private long productId;
