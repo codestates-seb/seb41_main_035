@@ -1,6 +1,7 @@
 package com.lookatme.server.board.controller;
 
 import com.google.gson.Gson;
+import com.lookatme.server.auth.dto.MemberPrincipal;
 import com.lookatme.server.auth.jwt.JwtTokenizer;
 import com.lookatme.server.board.dto.BoardPatchDto;
 import com.lookatme.server.board.dto.BoardPostDto;
@@ -21,6 +22,7 @@ import com.lookatme.server.rental.dto.RentalResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -502,6 +504,89 @@ class BoardControllerTest {
                                 parameterWithName("boardId").description("게시글 번호")
                         )
                 ));
+    }
+
+    @DisplayName("게시글 좋아요")
+    @Test
+    void likeBoardTest() throws Exception{
+        MemberDto.ResponseWithFollow memberResponse = memberMapper.memberToMemberResponseWithFollow(savedMember);
+        BoardProductsResponseDto productResponse = createProductResponse();
+        CommentResponseDtoV2 commentResponse = createCommentResponse(memberMapper.memberToSimpleMemberResponse(savedMember));
+
+        BoardResponseDto boardResponse = BoardResponseDto.builder()
+                .boardId(1L)
+                .userImage("게시글 사진 링크")
+                .content("게시글 본문")
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
+                .likeCnt(1)
+                .like(false)
+                .member(memberResponse)
+                .products(List.of(productResponse))
+                .comments(List.of(commentResponse))
+                .build();
+
+        given(boardService.likeBoard(Mockito.any(MemberPrincipal.class), Mockito.anyLong())).willReturn(boardResponse);
+
+        // When
+        ResultActions actions = mockMvc.perform(
+                post("/boards/{boardId}/like", 1L)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        // Then
+        actions.andExpect(status().isOk())
+                .andDo(document(
+                        "like-board",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor(),
+                        pathParameters(
+                                parameterWithName("boardId").description("게시글 번호")
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("boardId").description("게시글 번호"),
+                                        fieldWithPath("userImage").description("게시글 사진 링크"),
+                                        fieldWithPath("content").description("게시글 본문"),
+                                        fieldWithPath("createdDate").description("게시글 작성 시각"),
+                                        fieldWithPath("updatedDate").description("게시글 수정 시각"),
+                                        fieldWithPath("likeCnt").description("추천수"),
+                                        fieldWithPath("like").description("게시글 좋아요 여부"),
+                                        fieldWithPath("member.memberId").description("작성자 회원 번호"),
+                                        fieldWithPath("member.email").description("작성자 이메일"),
+                                        fieldWithPath("member.oauthPlatform").description("작성자 가입 플랫폼"),
+                                        fieldWithPath("member.nickname").description("작성자 닉네임"),
+                                        fieldWithPath("member.profileImageUrl").description("작성자 프로필 사진 링크"),
+                                        fieldWithPath("member.height").description("작성자 키"),
+                                        fieldWithPath("member.weight").description("작성자 몸무게"),
+                                        fieldWithPath("member.followerCnt").description("작성자 팔로워 수"),
+                                        fieldWithPath("member.followeeCnt").description("작성자 팔로우 수"),
+                                        fieldWithPath("member.follow").description("내가 팔로우 한 회원인지 (액세스 토큰 소유자 기준)"),
+                                        fieldWithPath("member.delete").description("탈퇴한 회원인지"),
+                                        fieldWithPath("products[].productId").description("상품 번호"),
+                                        fieldWithPath("products[].productName").description("상품명"),
+                                        fieldWithPath("products[].productImage").description("상품 사진 링크"),
+                                        fieldWithPath("products[].link").description("상품 구매 경로"),
+                                        fieldWithPath("products[].category").description("상품 카테고리"),
+                                        fieldWithPath("products[].brand").description("상품 브랜드"),
+                                        fieldWithPath("products[].price").description("상품 가격"),
+                                        fieldWithPath("products[].rental.rentalId").description("렌탈 번호"),
+                                        fieldWithPath("products[].rental.size").description("렌탈 상품 사이즈"),
+                                        fieldWithPath("products[].rental.rentalPrice").description("렌탈 가격"),
+                                        fieldWithPath("products[].rental.available").description("렌탈 가능 여부"),
+                                        fieldWithPath("comments[].commentId").description("댓글 번호"),
+                                        fieldWithPath("comments[].content").description("댓글 내용"),
+                                        fieldWithPath("comments[].createdDate").description("댓글 작성 시각"),
+                                        fieldWithPath("comments[].updatedDate").description("댓글 수정 시각"),
+                                        fieldWithPath("comments[].member.memberId").description("댓글 작성자 회원 번호"),
+                                        fieldWithPath("comments[].member.nickname").description("댓글 작성자 닉네임"),
+                                        fieldWithPath("comments[].member.profileImageUrl").description("댓글 작성자 프로필 사진"),
+                                        fieldWithPath("comments[].member.delete").description("댓글 작성자 탈퇴 유무")
+                                )
+                        )
+                ));
+
     }
 
     private BoardResponseDto createBoardResponse(
