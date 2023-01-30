@@ -165,38 +165,21 @@ public class BoardService {
     public Page<BoardResponseDto> findBoards(int page, int size) {
         return findBoards(page, size, -1); // 팔로우 유무 체크하지 않음
     }
-//    public Page<BoardResponseDto> findBoardsByCategoryName(String name, int page, int size) {
-//
-//        Page<BoardProduct> productPage = boardProductRepository.findByProduct_Category(findCategory(name), PageRequest.of(page, size, Sort.by("createdDate").descending()));
-//        List<BoardProduct> boardProducts = productPage.getContent();
-//        List<Board> boardList = new ArrayList<>();
-//
-//        for (BoardProduct boardProduct : boardProducts) {
-//            Board board = boardProduct.getBoard();
-//            Product product = boardProduct.getProduct();
-//            List<Rental> rentalList = rentalRepository.findByBoard_BoardIdAndProduct_ProductId(board.getBoardId(), product.getProductId());
-//            board.
-//                    boardList.add(board);
-//        }
-//
-//        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
-//        return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
-//    }
 
-//    public Page<BoardResponseDto> findBoardsByCategoryName(String name, int page, int size) {
-//
-//        Page<BoardProduct> productPage = boardProductRepository.findByProduct_Category(findCategory(name), PageRequest.of(page, size, Sort.by("createdDate").descending()));
-//        List<BoardProduct> boardProducts = productPage.getContent();
-//        List<Board> boardList = new ArrayList<>();
-//
-//        for (BoardProduct boardProduct : boardProducts) {
-//            Board board = boardProduct.getBoard();
-//            boardList.add(board);
-//        }
-//
-//        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
-//        return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
-//    }
+    public Page<BoardResponseDto> findBoardsByCategoryName(String name, int page, int size) {
+
+        Page<BoardProduct> productPage = boardProductRepository.findByProduct_Category(findCategory(name), PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        List<BoardProduct> boardProducts = productPage.getContent();
+        List<Board> boardList = new ArrayList<>();
+
+        for (BoardProduct boardProduct : boardProducts) {
+            Board board = boardProduct.getBoard();
+            boardList.add(board);
+        }
+
+        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
+        return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
+    }
 
     public Page<BoardResponseDto> findBoardsByproductName(String name, int page, int size) {
 

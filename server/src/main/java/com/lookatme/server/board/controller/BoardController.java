@@ -80,33 +80,33 @@ public class BoardController {
         return new ResponseEntity<>(boardService.likeBoard(memberPrincipal,boardId), HttpStatus.OK);
     }
 
-    @GetMapping("/search/product/{product_name}")
-    public ResponseEntity<?> getBoardsByProductName(@PathVariable("product_name") String name,
+    @GetMapping("/search/product")
+    public ResponseEntity<?> getBoardsByProductName(@RequestParam String productName,
                                                      @Positive @RequestParam(defaultValue = "1") int page,
                                                      @Positive @RequestParam(defaultValue = "25") int size,
                                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
 
-        Page<BoardResponseDto> findBoards = boardService.findBoardsByproductName(name, page-1, size);
+        Page<BoardResponseDto> findBoards = boardService.findBoardsByproductName(productName, page-1, size);
         List<BoardResponseDto> boards = findBoards.getContent();
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
     }
 
-//    @GetMapping("/search/categorys/{category_name}")
-//    public ResponseEntity<?> findBoardsByCategoryName(@PathVariable("category_name") String name,
-//                                       @Positive @RequestParam(defaultValue = "1") int page,
-//                                       @Positive @RequestParam(defaultValue = "25") int size,
-//                                       @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-//        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
-//
-//        Page<BoardResponseDto> findBoards = boardService.findBoardsByCategoryName(name, page-1, size);
-//        List<BoardResponseDto> boards = findBoards.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
-//    }
+    @GetMapping("/search/category")
+    public ResponseEntity<?> findBoardsByCategoryName(@RequestParam String category,
+                                       @Positive @RequestParam(defaultValue = "1") int page,
+                                       @Positive @RequestParam(defaultValue = "25") int size,
+                                       @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
+
+        Page<BoardResponseDto> findBoards = boardService.findBoardsByCategoryName(category, page-1, size);
+        List<BoardResponseDto> boards = findBoards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
+    }
 
     @GetMapping("/search/available")
     public ResponseEntity<?> findBoardsByCategoryName(@Positive @RequestParam(defaultValue = "1") int page,
@@ -121,33 +121,6 @@ public class BoardController {
                 new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
     }
 
-//    @GetMapping("/search/available")
-//    public ResponseEntity<?> findBoardsByCategoryName(@Positive @RequestParam(defaultValue = "1") int page,
-//                                                      @Positive @RequestParam(defaultValue = "25") int size,
-//                                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-//        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
-//
-//        List<Rental> rentalPage = rentalRepository.findByAvailableTrue();
-//        System.out.println("#############");
-//        System.out.println(rentalPage);
-//        Page<BoardResponseDto> findBoards = boardService.findBoardsByRentalAvailable(page-1, size);
-//        List<BoardResponseDto> boards = findBoards.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
-//    }
-//    @GetMapping("/search/available/{rental_available}")
-//    public ResponseEntity<?> findBoardsByCategoryName(@PathVariable("rental_available") boolean available,
-//                                                      @Positive @RequestParam(defaultValue = "1") int page,
-//                                                      @Positive @RequestParam(defaultValue = "25") int size,
-//                                                      @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-//        long loginMemberId = memberPrincipal == null ? -1 : memberPrincipal.getMemberId();
-//
-//        Page<BoardResponseDto> findBoards = boardService.findBoardsByRentalAvailable(available, page-1, size);
-//        List<BoardResponseDto> boards = findBoards.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(boards, findBoards), HttpStatus.OK);
-//    }
+
 
 }
