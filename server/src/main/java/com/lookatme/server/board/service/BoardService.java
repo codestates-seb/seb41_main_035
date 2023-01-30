@@ -123,6 +123,9 @@ public class BoardService {
             userImageUrl = fileService.upload(patch.getUserImage(), FileDirectory.post);
         }
         savedBoard.updateBoard(userImageUrl, patch.getContent());
+        if (likesService.isLikePost(savedBoard.getMember(), savedBoard)) {
+            savedBoard.setLikeStatusTrue();
+        }
         return mapper.boardToBoardResponse(savedBoard);
     }
 
@@ -151,7 +154,7 @@ public class BoardService {
             }
             // 내가 좋아요를 누른 게시글인지 유무 체크
             if (likesService.isLikePost(loginMember, board)) {
-                board.setLike(true);
+                board.setLikeStatusTrue();
             }
         }
         return mapper.boardToBoardResponse(board);
@@ -177,7 +180,7 @@ public class BoardService {
                             member.setStatusToFollowingMember();
                         }
                         if (likeBoardIdSet.contains(board.getBoardId())) {
-                            board.setLike(true);
+                            board.setLikeStatusTrue();
                         }
                     });
         }
@@ -193,6 +196,7 @@ public class BoardService {
         if (likesRepository.findByBoardAndMember(board, member) == null) {
             board.setLikeCnt(board.getLikeCnt() + 1);
             likesService.like(member, board);
+            board.setLikeStatusTrue();
         } else {
             board.setLikeCnt(board.getLikeCnt() - 1);
             likesService.unlike(member, board);
