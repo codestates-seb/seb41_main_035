@@ -5,10 +5,9 @@ import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { token } from '../constants/index';
 import userStore from '../store/userStore';
 const BREAK_POINT_PC = 1300;
-
+const token = localStorage.getItem('accessToken');
 const Comment = ({ boardId, profile }) => {
   const params = useParams();
   const url = 'http://13.125.30.88/comment';

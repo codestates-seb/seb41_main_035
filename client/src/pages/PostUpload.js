@@ -4,7 +4,7 @@ import ImageInput from '../components/ImageInput';
 import PlusButton from '../components/Plusbutton';
 import { useState } from 'react';
 import axios from 'axios';
-import { token, BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
+import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostUpload = () => {
   const [contentList, setContentList] = useState([
@@ -49,6 +49,7 @@ const PostUpload = () => {
     });
   };
   const onPost = () => {
+    const token = localStorage.getItem('accessToken');
     let formData = new FormData();
     formData.append('userImage', imgFile[0]); //메인 사진
     formData.append('content', JSON.stringify(inputContent)); //게시글
