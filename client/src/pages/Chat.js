@@ -265,6 +265,7 @@ const SWrapper = styled.div`
       justify-content: flex-start; //추가
       padding-left: 15px;
       border-bottom: 1px solid lightgray;
+      margin-top: -22px;
       .user-name {
         padding-left: 20px;
       }
