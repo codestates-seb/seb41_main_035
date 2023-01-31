@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { CloseOutlined, LeftSquareFilled } from '@ant-design/icons';
 import { useState } from 'react';
+import Logo from '../../svg/Logo.svg';
 
 const backendUrl = 'http://13.125.30.88/';
 
@@ -12,6 +13,32 @@ function Signup(props) {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
 
+  const validationCheck = (e, value) => {
+    if (value === 'nickname') {
+      if (!e.length) {
+        window.alert('닉네임을 입력해주세요');
+        return false;
+      }
+    }
+
+    if (value === 'email') {
+      const emailRegex =
+        /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      if (!emailRegex.test(e)) {
+        window.alert('올바른 이메일 형식이 아닙니다');
+        return false;
+      }
+    }
+    if (value === 'password') {
+      const passwordRegex =
+        /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+      if (!passwordRegex.test(e)) {
+        window.alert('숫자,영문,특수문자를 포함해 8자리 이상이어야 합니다');
+        return false;
+      }
+    }
+    return true;
+  };
   const closeButton = () => {
     // eslint-disable-next-line react/prop-types
     props.onClose();
@@ -38,21 +65,26 @@ function Signup(props) {
   };
 
   const SignUpUser = async () => {
-    const res = await axios.post(
-      `${backendUrl}members/signup`,
-      {
-        nickname: nickname,
-        email: id,
-        password: password,
-        height: height,
-        weight: weight,
-      },
-      { withCredentials: true }
-    );
-    console.log(res.data);
-    if (res) {
-      // eslint-disable-next-line react/prop-types
-      props.onClose();
+    if (
+      validationCheck(nickname, 'nickname') &&
+      validationCheck(id, 'email') &&
+      validationCheck(password, 'password')
+    ) {
+      const res = await axios.post(
+        `${backendUrl}members/signup`,
+        {
+          nickname: nickname,
+          email: id,
+          password: password,
+          height: height,
+          weight: weight,
+        },
+        { withCredentials: true }
+      );
+      if (res) {
+        // eslint-disable-next-line react/prop-types
+        props.onClose();
+      }
     }
   };
 
@@ -73,7 +105,7 @@ function Signup(props) {
               position: 'relative',
             }}
           >
-            Look at me
+            <img src={Logo} alt="logo" className="title" role="presentation" />
           </h1>
           <h2 style={{ fontSize: '20px', position: 'relative' }}>회원가입</h2>
           <SInput
@@ -141,7 +173,7 @@ const Contents = styled.div`
     margin-bottom: 60px;
   }
   img {
-    margin-top: 60px;
+    margin-top: -60px;
     width: 300px;
   }
 `;
@@ -149,23 +181,24 @@ const Contents = styled.div`
 const SigninButton = styled.button`
   font-size: 14px;
   padding: 12px 120px;
-  background-color: #ababab;
-  border-radius: 0px;
+  background-color: #4083b1;
+  border-radius: 8px;
   color: white;
   font-style: italic;
   font-weight: 200;
   cursor: pointer;
   &:hover {
-    background-color: #898989;
+    background-color: #67b8f0;
   }
   text-align: center;
   margin-top: 20px;
 `;
 const SInput = styled.input`
+  border: 1.5px solid #a1a1a1;
   font-size: 14px;
   padding: 12px 12px;
   background-color: gary;
-  border-radius: 0px;
+  border-radius: 8px;
   width: 250px;
   color: black;
   font-weight: 200;
@@ -173,6 +206,9 @@ const SInput = styled.input`
   position: relative;
   height: 5px;
   margin-bottom: 10px;
+  .title {
+    width: 260px;
+  }
 `;
 
 export default Signup;

@@ -10,9 +10,18 @@ const userStore = create(
           userId: e,
         });
       },
+      //닉네임추가
+      nickname: '',
+      setNickname: (e) => {
+        set({
+          nickname: e,
+        });
+      },
     }),
     {
       userId: 'userid',
+      //닉네임 추가
+      nickname: 'nickname',
     }
   )
 );

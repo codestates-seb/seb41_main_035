@@ -5,9 +5,9 @@ import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { token } from '../constants/index';
+import userStore from '../store/userStore';
 const BREAK_POINT_PC = 1300;
-
+const token = localStorage.getItem('accessToken');
 const Comment = ({ boardId, profile }) => {
   const params = useParams();
   const url = 'http://13.125.30.88/comment';
@@ -15,9 +15,13 @@ const Comment = ({ boardId, profile }) => {
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
 
+  //추가부분
+  const { nickname } = userStore((state) => state);
+
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
+  console.log(contentValue);
   const onPostComment = () => {
     axios(url, {
       method: 'POST',
@@ -72,18 +76,14 @@ const Comment = ({ boardId, profile }) => {
     }
   };
 
-  //추가 : 댓글 수정부분
-  const [revise, setRevise] = useState(''); //댓글수정창에 입력한 값이 저장되는 State
-  // const [isFixing, setIsFixing] = useState(false);
-  const [editCommentId, setEditCommentId] = useState(''); // 현재 수정중인 Comment의 Id. '' 값이면 댓글 수정중이 아닌 것을 의미
+  //댓글 수정부분
+  const [revise, setRevise] = useState(''); //댓글 수정창에 입력한 값이 저장
+  const [editCommentId, setEditCommentId] = useState(''); // 현재수정중인 CommentId '' 값이면 댓글 수정중 아님
   const onChangeInput = (e) => {
     setRevise(e.target.value);
   };
-  // const fixMode = () => {
-  //   setIsFixing(true);
-  // };
 
-  // 댓글 수정한거 저장
+  // 댓글수정 저장
   const onSave = async (id) => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -100,7 +100,6 @@ const Comment = ({ boardId, profile }) => {
     } catch (err) {
       window.alert(err);
     }
-    // setIsFixing(false);
     setEditCommentId('');
     // 저장시 현재 수정중인 Comment의 Id를 ''으로 변경하여 초기화
     setCommentData((prev) => {
@@ -173,16 +172,24 @@ const Comment = ({ boardId, profile }) => {
                   <>
                     <span
                       role="presentation"
+                      //추가부분
                       onClick={() => {
-                        setRevise(comment.content);
-                        setEditCommentId(comment.commentId);
+                        if (comment.nickname === nickname) {
+                          setRevise(comment.content);
+                          setEditCommentId(comment.commentId);
+                        }
                       }}
                     >
                       수정
                     </span>
                     <span
                       role="presentation"
-                      onClick={() => onDelteComment(comment.commentId)}
+                      //추가부분
+                      onClick={() => {
+                        if (comment.nickname === nickname) {
+                          onDelteComment(comment.commentId);
+                        }
+                      }}
                     >
                       삭제
                     </span>
@@ -204,7 +211,7 @@ const SWrapper = styled.div`
   .line {
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid gray;
     line-height: 0.1em;
     margin: 10px 0;
   }
@@ -234,9 +241,9 @@ const SWrapper = styled.div`
       display: flex;
       width: 100%;
       justify-content: center;
-      /* border-bottom: 1px solid gray; */
+      border: 1px solid lightgray;
       /* background-color: white; */
-      background-color: #f7f5ec;
+      /* background-color: #f7f5ec; */
       margin-left: 2px;
       border-radius: 5px;
 
@@ -245,7 +252,7 @@ const SWrapper = styled.div`
         height: 4vh;
         border: none;
         /* border-bottom: 1px solid gray; */
-        background-color: #f7f5ec;
+        /* background-color: #f7f5ec; */
         &:focus {
           outline: none;
         }
@@ -257,7 +264,7 @@ const SWrapper = styled.div`
       }
     }
     button {
-      background-color: #f7f5ec;
+      background-color: white;
       border: none;
       cursor: pointer;
     }
@@ -288,6 +295,10 @@ const SWrapper = styled.div`
         display: flex;
         span {
           margin: 0px 5px;
+          cursor: pointer;
+          :hover {
+            color: black;
+          }
         }
       }
     }

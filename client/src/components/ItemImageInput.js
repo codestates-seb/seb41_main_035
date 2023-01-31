@@ -73,7 +73,7 @@ ItemImageInput.propTypes = {
 };
 
 const SWrapper = styled.div`
-  background-color: #eee6ca;
+  background-color: #faf6e9;
 
   .image-upload > input {
     display: none;
@@ -95,13 +95,13 @@ const SWrapper = styled.div`
   }
 `;
 const SImagefiles = styled.div`
-  background-color: #eee6ca;
+  background-color: #faf6e9;
   .image-info {
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   .image-add {
     display: flex;
-    background-color: #eee6ca;
+    background-color: #faf6e9;
   }
   img {
     width: 85px;

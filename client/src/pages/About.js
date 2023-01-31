@@ -46,8 +46,16 @@ const Swrapper = styled.div`
   color: #565656;
   margin-left: 200px;
   min-width: 500px;
+
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    margin-left: 10px;
+  }
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    margin-left: 0px;
+  }
   .container {
-    height: 800px;
+    height: 870px;
+    width: 55%;
   }
   .title {
     margin-top: 70px;

@@ -7,11 +7,14 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import memberstore from '../../store/memberstore';
 import { persist } from 'zustand';
+import Logo from '../../svg/Logo.svg';
 
 const backendUrl = 'http://13.125.30.88/';
 
 function LoginModal(props) {
   const setUserId = userStore((state) => state.setUserId);
+  // 추가부분
+  const setNickname = userStore((state) => state.setNickname);
 
   const [signUp, setSignUp] = useState(false);
   const [id, setId] = useState('');
@@ -22,6 +25,25 @@ function LoginModal(props) {
     const GoogleAuthLogin =
       'http://ec2-13-125-30-88.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google';
     window.location.href = GoogleAuthLogin;
+  };
+
+  const validationCheck = (e, value) => {
+    if (value === 'email') {
+      const emailRegex =
+        /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      if (!emailRegex.test(e)) {
+        window.alert('올바른 이메일 형식이 아닙니다');
+        return false;
+      }
+    }
+    if (value === 'password') {
+      const passwordRegex =
+        /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+      if (!passwordRegex.test(e)) {
+        window.alert('숫자,영문을 포함해 8자리 이상이어야 합니다');
+        return false;
+      }
+    }
   };
 
   const closeButton = () => {
@@ -38,6 +60,8 @@ function LoginModal(props) {
   };
 
   const SignIn = async () => {
+    if (validationCheck(id, 'email') && validationCheck(password, 'password'))
+      return true;
     const res = await axios.post(`${backendUrl}auth/login`, {
       email: id,
       password: password,
@@ -47,6 +71,11 @@ function LoginModal(props) {
       localStorage.setItem('refreshToken', res.headers.refresh);
       const user_id = res.data.memberId;
       setUserId(user_id);
+
+      // 추가부분
+      const user_nickname = res.data.nickname;
+      setNickname(user_nickname);
+
       // eslint-disable-next-line react/prop-types
       props.onClose();
     }
@@ -79,7 +108,7 @@ function LoginModal(props) {
             Look at me
           </h1>
           <h2 style={{ fontSize: '20px', position: 'relative', top: '-30px' }}>
-            로그인
+            <img src={Logo} alt="logo" className="title" role="presentation" />
           </h2>
           <input
             className="id"
@@ -88,12 +117,13 @@ function LoginModal(props) {
               'font-size': '14px',
               padding: '12px 12px',
               'background-color': 'gary',
-              'border-radius': '0px',
+              'border-radius': '8px',
               width: '250px',
               color: 'black',
               'font-weight': '200',
               'margin-top': '-30px',
               position: 'relative',
+              border: '1.5px solid #C1C1C1',
               top: '-20px',
             }}
             onChange={onChangeId}
@@ -106,12 +136,13 @@ function LoginModal(props) {
               padding: '12px 12px',
               width: '250px',
               'background-color': 'gary',
-              'border-radius': '0px',
+              'border-radius': '8px',
               color: 'black',
               'font-weight': '200',
               'margin-top': '-30px',
               position: 'relative',
               top: '0px',
+              border: '1.5px solid #C1C1C1',
             }}
             onChange={onChangePassword}
           ></input>
@@ -127,7 +158,7 @@ function LoginModal(props) {
             }}
           >
             <div>아직 회원이 아니신가요?</div>
-            <SignupButton onClick={goSignUp}>회원 가입</SignupButton>
+            <SignupButton onClick={goSignUp}> 회원가입</SignupButton>
           </div>
           <div> --------------------- OR ---------------------</div>
           <GoogleButton onClick={googleLogin}>구글 로그인</GoogleButton>
@@ -177,7 +208,7 @@ const Contents = styled.div`
     margin-bottom: 60px;
   }
   img {
-    margin-top: 60px;
+    margin-top: -60px;
     width: 300px;
   }
 `;
@@ -185,8 +216,8 @@ const Contents = styled.div`
 const SigninButton = styled.button`
   font-size: 14px;
   padding: 12px 10px;
-  background-color: #ababab;
-  border-radius: 0px;
+  background-color: #4083b1;
+  border-radius: 8px;
   color: white;
   font-style: italic;
   font-weight: 200;
@@ -194,7 +225,7 @@ const SigninButton = styled.button`
   width: 277px;
   cursor: pointer;
   &:hover {
-    background-color: #898989;
+    background-color: #67b8f0;
   }
 `;
 
@@ -205,20 +236,26 @@ const SignupButton = styled.button`
   font-style: italic;
   font-weight: 200;
   cursor: pointer;
+  all: unset;
+  cursor: pointer;
 `;
 
 const GoogleButton = styled.button`
   font-size: 14px;
   padding: 12px 120px;
   background-color: #ababab;
-  border-radius: 0px;
+  border-radius: 8px;
   color: white;
   font-style: italic;
   font-weight: 200;
   margin-top: 10px;
+  background-color: #4083b1;
   cursor: pointer;
   &:hover {
-    background-color: #898989;
+    background-color: #67b8f0;
+  }
+  .title {
+    width: 260px;
   }
 `;
 

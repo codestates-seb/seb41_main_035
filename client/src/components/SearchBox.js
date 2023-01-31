@@ -2,10 +2,12 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
+import axios from 'axios';
 
 const SearchBox = () => {
   const [hasText, setHasText] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [data, setData] = useState([]);
   // const [cursor, setCursor] = useState(0);
   // //입력단어
   const onInputChange = (event) => {
@@ -21,6 +23,20 @@ const SearchBox = () => {
       setHasText(false);
     }
   }, [inputValue]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://13.125.30.88/boards`);
+        setData(response.data.data);
+        console.log(response.data.data);
+      } catch {
+        window.alert('오류가 발생했습니다.');
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="autocomplete-wrapper">
       <SInputContainer>
@@ -28,7 +44,7 @@ const SearchBox = () => {
         <input
           className="header-bottom-search"
           type="text"
-          placeholder="브랜드명, 상품명으로 검색"
+          placeholder=" 상품명으로 검색"
           list="autocomplete_options"
           value={inputValue}
           onChange={onInputChange}
@@ -43,7 +59,7 @@ const SearchBox = () => {
         ) : null}
         {hasText ? (
           <datalist id="autocomplete_options">
-            {deselectedOptions.map((option, idx) => (
+            {data.products?.map((option, idx) => (
               <option key={idx} value={option}></option>
             ))}
           </datalist>

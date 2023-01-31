@@ -67,7 +67,7 @@ public class BoardProduct extends BaseTimeEntity {
 
     public Rental getRental() {
         return product.getRentals().stream()
-                .filter(rental -> rental.getBoard().equals(board))
+                .filter(rental -> rental.getBoard().getBoardId() == board.getBoardId())
                 .findFirst()
                 .orElse(null);
     }

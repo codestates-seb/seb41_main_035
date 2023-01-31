@@ -7,6 +7,7 @@ import com.lookatme.server.board.dto.BoardResponseDto;
 import com.lookatme.server.board.entity.Board;
 import com.lookatme.server.board.entity.BoardProduct;
 import com.lookatme.server.board.mapper.BoardMapper;
+import com.lookatme.server.board.repository.BoardProductRepository;
 import com.lookatme.server.board.repository.BoardRepository;
 import com.lookatme.server.exception.ErrorCode;
 import com.lookatme.server.exception.ErrorLogicException;
@@ -20,11 +21,14 @@ import com.lookatme.server.member.repository.MemberRepository;
 import com.lookatme.server.member.service.FollowService;
 import com.lookatme.server.product.dto.ProductPatchDto;
 import com.lookatme.server.product.dto.ProductPostDto;
+import com.lookatme.server.product.entity.Category;
 import com.lookatme.server.product.entity.Product;
+import com.lookatme.server.product.repository.CategoryRepository;
 import com.lookatme.server.product.repository.ProductRepository;
 import com.lookatme.server.product.service.ProductService;
 import com.lookatme.server.rental.dto.RentalPatchDto;
 import com.lookatme.server.rental.entity.Rental;
+import com.lookatme.server.rental.repository.RentalRepository;
 import com.lookatme.server.rental.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +38,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +51,9 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final ProductRepository productRepository;
+    private final BoardProductRepository boardProductRepository;
+    private final CategoryRepository categoryRepository;
+    private final RentalRepository rentalRepository;
     private final FileService fileService;
     private final FollowService followService;
     private final RentalService rentalService;
@@ -188,6 +196,55 @@ public class BoardService {
         return new PageImpl<>(response, boardPage.getPageable(), boardPage.getTotalElements());
     }
 
+    public Page<BoardResponseDto> findBoardsByCategoryName(String name, int page, int size) {
+
+        Page<BoardProduct> productPage = boardProductRepository.findByProduct_Category(findCategory(name), PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        List<BoardProduct> boardProducts = productPage.getContent();
+        List<Board> boardList = new ArrayList<>();
+
+        for (BoardProduct boardProduct : boardProducts) {
+            Board board = boardProduct.getBoard();
+            boardList.add(board);
+        }
+
+        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
+        return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
+    }
+
+    public Page<BoardResponseDto> findBoardsByproductName(String name, int page, int size) {
+
+        Page<BoardProduct> productPage = boardProductRepository.findByProduct_ProductName(name, PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        List<BoardProduct> boardProducts = productPage.getContent();
+
+        List<Board> boardList = new ArrayList<>();
+
+        for (BoardProduct boardProduct : boardProducts) {
+            Board board = boardProduct.getBoard();
+            boardList.add(board);
+        }
+
+        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
+        return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
+    }
+
+
+    public Page<BoardResponseDto> findBoardsByRentalAvailable(int page, int size) {
+
+        Page<Rental> rentalPage = rentalRepository.findByAvailableTrue(PageRequest.of(page, size, Sort.by("createdDate").descending()));
+        List<Rental> boardRentals = rentalPage.getContent();
+
+        List<Board> boardList = new ArrayList<>();
+
+        for (Rental rental : boardRentals) {
+            Board board = rental.getBoard();
+            System.out.println(board);
+            boardList.add(board);
+        }
+
+        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
+        return new PageImpl<>(response, rentalPage.getPageable(), rentalPage.getTotalElements());
+    }
+
     @Transactional
     public BoardResponseDto likeBoard(final MemberPrincipal memberPrincipal, final long boardId) {
         Member member = findMember(memberPrincipal.getMemberId());
@@ -214,6 +271,12 @@ public class BoardService {
     private Product findProduct(long productId) {
         return productRepository.findByProductId(productId)
                 .orElseThrow(() -> new ErrorLogicException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    private Category findCategory(String categoryName) {
+
+        return categoryRepository.findByName(categoryName)
+                .orElseThrow(() ->  new ErrorLogicException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     private Board findBoardEntity(long boardId) {

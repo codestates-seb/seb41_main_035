@@ -5,6 +5,7 @@ import {
   BsPersonPlus,
   BsPersonCheck,
   BsBookmarkHeart,
+  BsBookmarkHeartFill,
 } from 'react-icons/bs';
 import Comment from '../components/Comment';
 import Avatar from '../components/Avatar';
@@ -19,6 +20,7 @@ const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+
   const url = 'http://13.125.30.88';
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
@@ -27,7 +29,22 @@ const PostView = () => {
   localStorage.setItem('sentId', JSON.stringify(sentId));
   localStorage.setItem('name', JSON.stringify(name));
   localStorage.setItem('boardId', JSON.stringify(boardId));
-
+  //좋아요부분
+  const onClickGood = async (id) => {
+    const token = localStorage.getItem('accessToken');
+    const res = await axios.post(
+      `${url}/boards/${id}/like`, // 좋아요 API
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (res && res?.data) {
+      setDetailData((prev) => {
+        return { ...prev, like: !prev.like };
+      });
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('accessToken');
@@ -35,17 +52,16 @@ const PostView = () => {
         const response = await axios.get(url + `/boards/` + [params.boardId], {
           headers: { Authorization: token },
         });
-        console.log(token);
         setDetailData(response.data);
-        console.log(response.data);
         setIsFollowing(response.data.member.follow);
-        console.log(isFollowing);
       } catch (err) {
         return err;
       }
     };
     fetchData();
   }, []);
+  console.log(isFollowing);
+  console.log(detailData);
   const onPostDelete = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
       axios(url + `/boards/${params.boardId}`, {
@@ -69,7 +85,6 @@ const PostView = () => {
     const res = await axios.post(
       `/members/follow?op=${detailData.member.memberId}&type=down`,
       {},
-
       {
         headers: { Authorization: token },
       }
@@ -145,7 +160,18 @@ const PostView = () => {
                     ) : (
                       <BsPersonPlus size="20" onClick={follow} />
                     )}
-                    <BsBookmarkHeart size="20" />
+                    {/* 좋아요기능 */}
+                    <div
+                      className="container add"
+                      role="presentation"
+                      onClick={() => onClickGood(detailData.boardId)}
+                    >
+                      {detailData.like ? (
+                        <BsBookmarkHeartFill size="20" />
+                      ) : (
+                        <BsBookmarkHeart size="20" />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -157,6 +183,7 @@ const PostView = () => {
               </div>
             </SMiddle>
           </div>
+          <span className="products">착용 제품</span>
           <SBottom>
             <Item />
             <Comment name={name} boardId={boardId} profile={profile} />
@@ -186,9 +213,10 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
+  font-family: 'Gothic A1', sans-serif;
   width: 45vw;
   height: 750px;
-  border: 1px solid #b3b3b3;
+  border: 1px solid lightgray;
   border-radius: 8px;
   margin: 60px 30px;
   max-width: 820px;
@@ -202,15 +230,19 @@ const SContainer = styled.div`
       width: 550px;
     }
   }
-
+  .products {
+    margin-left: 40px;
+    color: black;
+    font-size: 14px;
+  }
   .top_container {
     display: flex;
-    margin: 30px 30px 0px 30px;
+    margin: 30px 30px 10px 30px;
   }
 `;
 
 const SPost = styled.div`
-  width: 20vw;
+  width: 25vw;
   height: 335px;
   object-fit: cover;
   position: relative;
@@ -218,7 +250,7 @@ const SPost = styled.div`
   /* margin-top: 10px; */
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
-      width: 235px;
+      width: 270px;
       height: 330px;
     }
   }
@@ -233,12 +265,12 @@ const SPost = styled.div`
 `;
 
 const SMiddle = styled.div`
-  width: 27vw;
+  width: 24vw;
   /* width: 70%; */
   margin-left: 10px;
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     & {
-      width: 270px;
+      width: 235px;
     }
   }
   .user_info {
@@ -291,7 +323,7 @@ const SMiddle = styled.div`
     display: flex;
   }
   .post {
-    height: 280px;
+    height: 260px;
     margin-left: 10px;
     font-size: 20px;
   }

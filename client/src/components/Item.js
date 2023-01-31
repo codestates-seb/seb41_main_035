@@ -16,33 +16,18 @@ const Item = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('accessToken');
       try {
-        const response = await axios.get(url + `/boards/` + [params.boardId], {
-          headers: { Authorization: token },
-        });
-        console.log(token);
+        const response = await axios.get(url + `/boards/` + [params.boardId]);
         setItemData(response.data);
-        console.log(response.data);
       } catch (err) {
         return err;
       }
     };
     fetchData();
   }, []);
-  console.log(itemData);
   const onMoveLink = (link) => {
     window.open(link, '', '');
   };
-
-  function openPop() {
-    let popup = window.open(
-      'http://www.naver.com',
-      '네이버팝업',
-      'width=700px,height=800px,scrollbars=yes'
-    );
-  }
-  console.log(itemData);
   return (
     <SItemContainer>
       {itemData.products?.map((item) => (
@@ -51,7 +36,7 @@ const Item = () => {
           key={item.productId}
           role="presentation"
           onClick={() => {
-            // onMoveLink(item.link);
+            onMoveLink(item.link);
           }}
         >
           <div className="item_picture">
@@ -60,21 +45,21 @@ const Item = () => {
           <div className="item_info">
             <div className="item_sale">
               <div className="item_info_name">
-                <span>브랜드</span>
-                <span>제품명</span>
-                <span>가격</span>
+                <span>브랜드 :</span>
+                <span>제품명 :</span>
+                <span className="products-price">₩ {item.price}</span>
               </div>
               <div className="item_info_content">
                 <span> {item.brand}</span>
                 <span> {item.productName}</span>
-                <span> {item.price}</span>
+                <span className="products-size"> {item.rental.size}</span>
               </div>
             </div>
             {item.rental.available === true ? (
               <div className="item_rent">
                 <Rent />
                 <div className="rent_price">
-                  <p>대여가격: </p>
+                  <p> rental price : </p>
                   <p>{item.rental?.rentalPrice}</p>
                 </div>
               </div>
@@ -89,36 +74,42 @@ const SItemContainer = styled.div`
   overflow: auto;
   height: 110px;
   margin-bottom: 10px;
+  margin-top: -10px;
   .item_box {
-    height: 85px;
+    height: 65px;
     margin-bottom: 13px;
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #eee6ca;
+    border: 1px solid gray;
     border-radius: 5px;
     cursor: pointer;
+
     .item_info {
       width: 90%;
       display: flex;
       justify-content: space-between;
       margin-left: 10px;
-      background-color: #eee6ca;
+
       .item_sale {
         display: flex;
         justify-content: center;
-        background-color: #eee6ca;
         margin-left: 5px;
         .item_info_name {
           display: flex;
           flex-direction: column;
           justify-content: center;
+          /* align-items: center; */
           font-weight: bold;
           /* text-align: center; */
           margin-right: 10px;
-          background-color: #eee6ca;
           span {
-            background-color: #eee6ca;
+            margin: 1px 0px 1px 0px;
+          }
+          .products-price {
+            font-weight: normal;
+            /* color: gray; */
+            font-size: 13px;
           }
         }
         .item_info_content {
@@ -127,10 +118,12 @@ const SItemContainer = styled.div`
           justify-content: center;
           font-size: 15px;
           /* margin-top: 2px; */
-          background-color: #eee6ca;
           span {
-            background-color: #eee6ca;
-            margin: 1px 0px 3px 0px;
+            margin: 1px 0px 2px 0px;
+          }
+          .products-size {
+            /* color: gray; */
+            font-size: 13px;
           }
         }
       }
@@ -139,19 +132,14 @@ const SItemContainer = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: #eee6ca;
         svg {
-          background-color: #eee6ca;
           margin-top: 10px;
         }
       }
       .rent_price {
         display: flex;
-        background-color: #eee6ca;
-        margin-right: 20px;
-        p {
-          background-color: #eee6ca;
-        }
+        margin-right: 15px;
+        font-size: 15px;
       }
     }
   }
