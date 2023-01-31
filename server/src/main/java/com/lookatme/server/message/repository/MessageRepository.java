@@ -22,7 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Message findTopByOrderByMessageRoomDesc();
 
-    @Query("select m from Message m group by message_room, message_id order by created_at desc")
+    @Query("select m from Message m group by message_room, message_id order by created_date desc")
     List<Message> findMessageRoomList();
     //"select distinct(message_room) * from (select * from message where sender_id = :member_id or receiver_id = :member_id order by created_at desc) as m"
 }
