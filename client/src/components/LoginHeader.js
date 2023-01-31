@@ -123,8 +123,9 @@ const SHeader = styled.div`
   left: 0;
   right: 0;
   top: 0;
-  border-bottom: 3px solid #196ba5;
+  /* border-bottom: 3px solid #196ba5; */
   background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   //수정
   @media only screen and (max-width: ${BREAK_POINT_PC}px) {
     margin: 0 -50px;

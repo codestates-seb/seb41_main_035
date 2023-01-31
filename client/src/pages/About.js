@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BsPencilSquare, BsBookmarkHeart } from 'react-icons/bs';
+import {
+  BsPersonCircle,
+  BsPencilSquare,
+  BsBookmarkHeart,
+  BsPersonPlus,
+} from 'react-icons/bs';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
@@ -19,6 +24,12 @@ const About = () => {
         </div>
         <Service>
           <div className="service">
+            <BsPersonCircle />
+            마이프로필에서 내가 게시한 글과 좋아요한 게시글을 확인해보세요
+            <br />
+            나를 나타낼 수 있는 프로필로 변경해보세요.
+          </div>
+          <div className="service">
             <BsPencilSquare />
             내가 바로 패셔니스타! <br /> 게시글을 작성하여 나만의 옷 스타일을
             뽐내주세요.
@@ -32,6 +43,11 @@ const About = () => {
             <BsBookmarkHeart />
             이 옷 스타일은 너무 마음에 드는데? 다음에 나도 이렇게 입어야지!
             <br /> 마음에 드는 코디를 저장해보세요.
+          </div>
+          <div className="service">
+            <BsPersonPlus />
+            다른 사용자를 팔로우 해서 정보를 받아보세요!
+            <br />
           </div>
         </Service>
       </div>
