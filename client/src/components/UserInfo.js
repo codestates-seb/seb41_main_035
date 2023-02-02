@@ -55,7 +55,7 @@ const UserInfo = () => {
       // axios 내정보받아오기
     };
     getUser();
-  }, []);
+  }, [userId]);
 
   const fixMode = () => {
     setIsFixing(true);

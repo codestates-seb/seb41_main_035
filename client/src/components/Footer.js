@@ -34,11 +34,6 @@ const Writer = [
     role: 'Backend',
     github: `${GITHUB_URL}/codestates-seb/seb41_main_035`,
   },
-  // {
-  //   name: '뽐내조',
-  //   role: 'MainProject-035',
-  //   github: `${GITHUB_URL}/hyejuc`,
-  // },
 ];
 
 const Footer = () => {

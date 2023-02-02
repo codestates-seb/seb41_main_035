@@ -24,7 +24,6 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      {/* <SLeftBoard /> */}
     </SWrapper>
   );
 };
@@ -44,7 +43,6 @@ const SWrapper = styled.div`
 
 //전체부분
 const SidebarBox = styled.div`
-  /* position: fixed; */
   .title {
     font-size: 20px;
     font-weight: 700;

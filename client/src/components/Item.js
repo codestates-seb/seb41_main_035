@@ -10,9 +10,6 @@ const Item = () => {
   const params = useParams();
   const url = 'http://13.125.30.88';
   const [itemData, setItemData] = useState([]);
-  const [isRent, setIsRent] = useState(true);
-
-  // console.log(itemData.products[1].rental);
 
   useEffect(() => {
     const fetchData = async () => {
