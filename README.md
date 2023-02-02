@@ -8,11 +8,11 @@
 </div>
 
 ## :mag: 프로젝트 소개
-> 사용자가 직접 자신의 패션 스타일을 공유할 수 있고, 렌탈을 통해 다른 사람들과 쉐어도 가능!
-
-> 평소 입지 않는 옷을 빌려주고 돈을 벌고, 다른 사람들의 옷을 마음껏 빌려 입을 수 있어요 :)
-
+### 사용자가 직접 자신의 패션 스타일을 공유할 수 있고 렌탈을 통해 다른 사람들과 쉐어도 가능!
+### 평소 입지 않는 옷을 빌려주고 돈을 벌고, 다른 사람들의 옷을 마음껏 빌려 입을 수 있어요 :)
 Loot At Me에서는 다른 사용자들이 올린 다양한 코디를 둘러보며 코디에 대한 고민을 해결하고 새로운 옷을 발견할 수 있습니다.
+
+<br>
 
 ### :pushpin: 타겟층
 1. 평소 어떤 옷을 입을지 막막한 사람들
@@ -21,8 +21,6 @@ Loot At Me에서는 다른 사용자들이 올린 다양한 코디를 둘러보�
 4. 다양한 코디를 둘러보며 새로운 옷을 발견하고 싶은 사람들
 
 ### :bulb: 구상 배경
-
-
 사람들이 옷을 공유하며 활용 가치작 있는 의류가 버려지거나 방치되는 것을 막기 위해 이러한 서비스를 기획하게 되었습니다.
 
 ### :link: 배포 주소
@@ -36,6 +34,15 @@ http://mainproject-035.s3-website.ap-northeast-2.amazonaws.com/
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |**김나율**|**박영선**|**이승준**|**오성범**|**이도형**|**조혜주**|
 | [@nayul34](https://github.com/nayul34)  | [@yspark14](https://github.com/yspark14) | [@01055986186](https://github.com/01055986186) | [@Seongbaem](https://github.com/Seongbaem) | [@eheh12321](https://github.com/eheh12321) | [@hyejuc](https://github.com/hyejuc) |
+
+<br>
+
+## :wrench: 기술 스택
+
+> API 문서, ERD 다이어그램, 피그마 등 문서는 [Github Wiki](https://github.com/codestates-seb/seb41_main_035/wiki)를 참고해주세요 :smiley:
+
+![2023-02-02 11;03;18](https://user-images.githubusercontent.com/74748851/216216126-290f3a7b-82e6-4575-abfb-e930a67debbc.PNG)
+
 
 <br>
 
@@ -99,10 +106,4 @@ http://mainproject-035.s3-website.ap-northeast-2.amazonaws.com/
 - 해당 사용자가 작성한 게시물을 볼 수 있습니다.
 ### 사이트 소개, 서비스 사용법 페이지
 - 배너 슬라이더 주 사이트 소개르 누르면 사이트 소개와 서비스 사용법을 볼 수 있습니다.
-
-<br>
-
-## :wrench: 기술 스택
-
-![2023-02-02 11;03;18](https://user-images.githubusercontent.com/74748851/216216126-290f3a7b-82e6-4575-abfb-e930a67debbc.PNG)
 
