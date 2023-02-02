@@ -12,15 +12,14 @@ const Chat = () => {
   const [listData, setListData] = useState([]); //list get
   const [idData, setIdData] = useState('');
   const [sentName, setSentName] = useState('');
+  const [sentPicture, setSentPicture] = useState('');
   const url = 'http://13.125.30.88';
   const sentId = JSON.parse(localStorage.getItem('sentId'));
   const name = JSON.parse(localStorage.getItem('name'));
   const myId = JSON.parse(localStorage.getItem('myId'));
-  console.log(myId);
   const token = localStorage.getItem('accessToken');
-  console.log(sentId);
-  console.log(listData);
-  console.log(chatData);
+  const profile = JSON.parse(localStorage.getItem('profile'));
+
   const onChatChange = (e) => {
     setSentData(e.currentTarget.value);
   };
@@ -32,10 +31,13 @@ const Chat = () => {
   useEffect(() => {
     if (chatData?.length === 0) {
       setSentName(name);
+      setSentPicture(profile);
     } else if (chatData?.length !== 0 && myId === chatData[0]?.senderId) {
       setSentName(chatData[0]?.receiverNickname);
+      setSentPicture(chatData[0]?.receiverProfileImageUrl);
     } else if (chatData?.length !== 0 && myId !== chatData[0]?.senderId) {
       setSentName(chatData[0]?.senderNickname);
+      setSentPicture(chatData[0]?.senderProfileImageUrl);
     }
   }, [chatData]);
   console.log(sentName);
@@ -156,20 +158,9 @@ const Chat = () => {
           </div>
           <div className="chat-container">
             <div className="top">
-              {myId === chatData[0]?.senderId ? (
-                <Avatar
-                  size="40px"
-                  image={chatData[0]?.receiverProfileImageUrl}
-                />
-              ) : (
-                <Avatar
-                  size="40px"
-                  image={chatData[0]?.senderProfileImageUrl}
-                />
-              )}
+              <Avatar size="40px" image={sentPicture} />
               <span className="user-name">{sentName}</span>
             </div>
-
             <SContent>
               {chatData.map((chat) => (
                 <div className="chat-content" key={chat.messageId}>
@@ -265,6 +256,7 @@ const SWrapper = styled.div`
       justify-content: flex-start; //추가
       padding-left: 15px;
       border-bottom: 1px solid lightgray;
+      margin-top: -22px;
       .user-name {
         padding-left: 20px;
       }

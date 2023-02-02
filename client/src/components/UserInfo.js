@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import FollowModal from './followlist';
 const backendUrl = 'http://13.125.30.88/';
-import { BREAK_POINT_TABLET } from '../constants/index';
+import { BREAK_POINT_TABLET, BREAK_POINT_PC } from '../constants/index';
 
 const UserInfo = () => {
   const params = useParams();
@@ -233,6 +233,7 @@ const SProfileWrapper = styled.div`
     display: flex;
     flex-grow: 6;
     justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -260,6 +261,9 @@ const SDetail = styled.div`
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     width: 44%;
   }
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    width: 50%;
+  }
 `;
 
 const SButton = styled.div`
@@ -276,10 +280,12 @@ const SButton = styled.div`
 
 const SFollow = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const SBody = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const SName = styled.div`
@@ -290,8 +296,8 @@ const SName = styled.div`
 const SNickIn = styled.input`
   margin: 5px;
   width: 100px;
-  height: 30px;
-  font-size: 25px;
+  height: 22px;
+  font-size: 20px;
 `;
 
 const SHeight = styled.div`
@@ -301,6 +307,7 @@ const SHeight = styled.div`
 const SHeightIn = styled.input`
   margin: 5px;
   height: 20px;
+  width: 50px;
   /* margin-left: 52px; */
 `;
 
@@ -346,7 +353,7 @@ const SFollowz = styled.button`
 
 const SFollower = styled.div`
   margin: 5px;
-  font-size: 20px;
+  font-size: 18px;
 `;
 
 const SFollowers = styled.button`

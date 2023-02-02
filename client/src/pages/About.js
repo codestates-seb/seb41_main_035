@@ -17,7 +17,6 @@ const About = () => {
         <div className="title">
           <img src={Img} alt="banner" className="titleimg" />
         </div>
-
         <Service>
           <div className="service">
             <BsPersonCircle />
