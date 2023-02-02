@@ -180,12 +180,13 @@ const SWrapper = styled.div`
 `;
 
 const SContainer = styled.div`
-  height: 130px;
+  height: 150px;
   background-color: #faf6e9;
   display: flex;
   justify-content: space-around;
   align-items: baseline;
   margin: 10px 0px;
+  /* align-items: center; */
 
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 6px;
@@ -218,7 +219,7 @@ const SMidle = styled.div`
 
   .item-mid {
     display: flex;
-    margin: 10px 10px 15px 10px;
+    margin: 20px 10px;
     background-color: #faf6e9;
     .item-size {
       background-color: #faf6e9;
@@ -251,7 +252,7 @@ const SRentalcheck = styled.div`
   margin: 10px;
   background-color: #faf6e9;
   .check {
-    margin: 10px 0px;
+    margin: 10px 0px 20px 0px;
     display: flex;
     align-items: center;
     background-color: #faf6e9;

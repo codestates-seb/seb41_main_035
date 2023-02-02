@@ -11,10 +11,7 @@ const Avatar = ({ size, image }) => {
   return (
     <SAvatar>
       <img
-        src={
-          image ||
-          'https://cdn.imweb.me/upload/S20211026228188315d8e6/590e88b6bb53b.jpg'
-        } //기본이미지 설정
+        src={image || null} //기본이미지 설정
         width={size}
         height={size}
         alt="profile"

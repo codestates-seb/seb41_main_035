@@ -9,7 +9,7 @@ const Sidebar = () => {
     <SWrapper>
       <SidebarBox>
         <div>
-          <p className="title">카테고리</p>
+          <p className="title">Category</p>
         </div>
         <ItemList>
           <div>
@@ -25,7 +25,7 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      <SLeftBoard />
+      {/* <SLeftBoard /> */}
     </SWrapper>
   );
 };
@@ -70,10 +70,10 @@ const ItemList = styled.div`
 const SList = styled.div``;
 
 //선 부분
-const SLeftBoard = styled.div`
-  position: fixed;
-  border-left: 2px solid gray;
-  margin: 50px 0px 0px 110px;
-  height: 340px;
-`;
+// const SLeftBoard = styled.div`
+//   position: fixed;
+//   border-left: 2px solid gray;
+//   margin: 50px 0px 0px 110px;
+//   height: 340px;
+// `;
 export default Sidebar;
