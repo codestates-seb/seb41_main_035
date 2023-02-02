@@ -12,13 +12,14 @@ import Sidebar from './components/Sidebar';
 import Category from './pages/Category';
 import About from './pages/About';
 import Chat from './pages/Chat';
-import EditPost from './pages/EditPost';
+// import EditPost from './pages/EditPost';
 function App() {
   return (
     <div>
       <BrowserRouter>
         <LoginHeader />
         <Sidebar />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile/:userId" element={<Profile />} />
@@ -28,7 +29,7 @@ function App() {
           <Route path="/category/:categoryId" element={<Category />} />
           <Route path="/about" element={<About />} />
           <Route path="/chatting" element={<Chat />} />
-          <Route path="/edit" element={<EditPost />} />
+          {/* <Route path="/edit" element={<EditPost />} /> */}
         </Routes>
         <Footer />
       </BrowserRouter>

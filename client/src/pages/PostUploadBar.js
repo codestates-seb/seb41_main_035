@@ -185,14 +185,8 @@ const SContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: baseline;
-  margin: 10px 0px;
-  /* align-items: center; */
-
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 6px;
-  /* @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
-    height: 200px;
-  } */
 `;
 
 const SMidle = styled.div`

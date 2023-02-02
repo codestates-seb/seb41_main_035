@@ -46,17 +46,6 @@ const ImageInput = ({ imgFile, setImgFile }) => {
           {fileImage && <img src={fileImage} alt="preview-img" />}
         </div>
       </div>
-
-      {/* <SImagefiles>
-        <div className="imageadd"> */}
-      {/* input에 파일을 넣어줄때마다 state로 값을 배열로 저장해서, 배열의 길이만큼 이미지를 생성 */}
-      {/* {imgFile?.map((img, idx) => (
-            <div key={idx}>
-              <img src={img} alt="img" />
-            </div>
-          ))}
-        </div>
-      </SImagefiles> */}
     </SWrapper>
   );
 };

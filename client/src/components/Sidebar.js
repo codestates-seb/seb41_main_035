@@ -16,7 +16,6 @@ const Sidebar = () => {
             {Items.map((item, index) => (
               <SList
                 key={index}
-                className="items"
                 onClick={() => usenavigate(`/category/${links[index]}`)}
               >
                 {item}
@@ -25,7 +24,6 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      {/* <SLeftBoard /> */}
     </SWrapper>
   );
 };
@@ -45,7 +43,6 @@ const SWrapper = styled.div`
 
 //전체부분
 const SidebarBox = styled.div`
-  /* position: fixed; */
   .title {
     font-size: 20px;
     font-weight: 700;
@@ -56,24 +53,19 @@ const SidebarBox = styled.div`
 `;
 const ItemList = styled.div`
   border-right: 2px solid gray;
-
-  .items {
-    font-size: 15px;
-    cursor: pointer;
-    padding: 10px 3px;
-    :hover {
-      color: #196ba5;
-      background-color: #f4f1e0;
-    }
+`;
+const SList = styled.button`
+  font-size: 15px;
+  display: flex;
+  border: none;
+  cursor: pointer;
+  padding: 10px 3px;
+  background-color: #ffff;
+  :focus {
+    color: #196ba5;
+    background-color: #faf6e9;
+    width: 108.062px;
   }
 `;
-const SList = styled.div``;
 
-//선 부분
-// const SLeftBoard = styled.div`
-//   position: fixed;
-//   border-left: 2px solid gray;
-//   margin: 50px 0px 0px 110px;
-//   height: 340px;
-// `;
 export default Sidebar;

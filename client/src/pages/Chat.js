@@ -29,6 +29,7 @@ const Chat = () => {
     fetchListData();
   }, [sentId, idData]);
   useEffect(() => {
+    //데이터가 없을때 받는사람
     if (chatData?.length === 0) {
       setSentName(name);
       setSentPicture(profile);
@@ -40,7 +41,7 @@ const Chat = () => {
       setSentPicture(chatData[0]?.senderProfileImageUrl);
     }
   }, [chatData]);
-  console.log(sentName);
+  //게시물에서 채틸누르면 데이터 받는거
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -52,10 +53,12 @@ const Chat = () => {
         }
       );
       setChatData(response.data.data);
+      console.log(response.data.data);
     } catch (err) {
       return err;
     }
   };
+  //채팅목록에서 누르면 데이터 받는거
   const fetchListClickData = async () => {
     try {
       const response = await axios.get(
@@ -72,7 +75,7 @@ const Chat = () => {
     }
   };
 
-  //목록조회
+  //목록전체를 받는거
   const fetchListData = async () => {
     try {
       const response = await axios.get(url + `/message/room`, {
@@ -197,15 +200,14 @@ const SWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
+    width: 350px;
+    margin-left: 70px;
+  }
 
   .chat {
     display: flex;
     margin-left: 200px;
-    @media only screen and (max-width: ${BREAK_POINT_PC}px) {
-      & {
-        margin-left: 0px;
-      }
-    }
   }
   p {
     margin-left: 40px;

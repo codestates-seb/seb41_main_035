@@ -41,14 +41,14 @@ const Profile = () => {
     return codi.filter((codi) => {
       return codi.member?.memberId === Number(userId);
     });
-  }, [codi]);
+  }, [codi, userId]);
 
   //추가부분
   const likeCodi = useMemo(() => {
     return codi.filter((codi) => {
       return codi.like === true;
     });
-  }, [codi]);
+  }, [codi, userId]);
   console.log('likeCodi', likeCodi);
 
   return (
