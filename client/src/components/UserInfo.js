@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import FollowModal from './followlist';
 const backendUrl = 'http://13.125.30.88/';
-import { BREAK_POINT_TABLET } from '../constants/index';
+import { BREAK_POINT_TABLET, BREAK_POINT_PC } from '../constants/index';
 
 const UserInfo = () => {
   const params = useParams();
@@ -260,6 +260,9 @@ const SDetail = styled.div`
   margin-left: 20px;
   @media only screen and (max-width: ${BREAK_POINT_TABLET}px) {
     width: 44%;
+  }
+  @media only screen and (max-width: ${BREAK_POINT_PC}px) {
+    width: 50%;
   }
 `;
 

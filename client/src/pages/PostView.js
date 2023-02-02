@@ -29,6 +29,8 @@ const PostView = () => {
   localStorage.setItem('sentId', JSON.stringify(sentId));
   localStorage.setItem('name', JSON.stringify(name));
   localStorage.setItem('boardId', JSON.stringify(boardId));
+  localStorage.setItem('profile', JSON.stringify(profile));
+
   //좋아요부분
   const onClickGood = async (id) => {
     const token = localStorage.getItem('accessToken');
@@ -83,7 +85,7 @@ const PostView = () => {
   const unfollow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      `/members/follow?op=${detailData.member.memberId}&type=down`,
+      url + `/members/follow?op=${detailData.member.memberId}&type=down`,
       {},
       {
         headers: { Authorization: token },
@@ -97,7 +99,7 @@ const PostView = () => {
   const follow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      `/members/follow?op=${detailData.member.memberId}&type=up`,
+      url + `/members/follow?op=${detailData.member.memberId}&type=up`,
       {},
       {
         headers: { Authorization: token },
@@ -326,6 +328,7 @@ const SMiddle = styled.div`
     height: 260px;
     margin-left: 10px;
     font-size: 20px;
+    white-space: pre-wrap;
   }
   .edit-delete {
     margin: 5px;
