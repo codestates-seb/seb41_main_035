@@ -197,29 +197,57 @@ public class BoardService {
         return new PageImpl<>(response, productPage.getPageable(), productPage.getTotalElements());
     }
 
-
     public Page<BoardResponseDto> findBoardsByRentalAvailable(int page, int size) {
 
         Page<Rental> rentalPage = rentalRepository.findByAvailableTrue(PageRequest.of(page, size, Sort.by("createdDate").descending()));
-        System.out.println("#############");
-        System.out.println(rentalPage);
-//
         List<Rental> boardRentals = rentalPage.getContent();
-        System.out.println("#############");
-        System.out.println(boardRentals);
-
 
         List<Board> boardList = new ArrayList<>();
+        List<Long> idList = new ArrayList<>();
+
+//        for (Rental rental : boardRentals) {
+//            Board board = rental.getBoard();
+//            idList.add(board.getBoardId());
+//        }
 
         for (Rental rental : boardRentals) {
             Board board = rental.getBoard();
             System.out.println(board);
-            boardList.add(board);
+            if (idList.contains(board.getBoardId())) {
+                continue;
+            }
+
+            else {
+                idList.add(board.getBoardId());
+                boardList.add(board);
+            }
+//            for (int i = 0; i < idList.size(); i++) {
+//                if (idList.get(i) != board.getBoardId()){
+//                    boardList.add(board);
+//                }
+//            }
         }
 
         List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
         return new PageImpl<>(response, rentalPage.getPageable(), rentalPage.getTotalElements());
     }
+
+//    public Page<BoardResponseDto> findBoardsByRentalAvailable(int page, int size) {
+//
+//        Page<Rental> rentalPage = rentalRepository.findByAvailableTrue(PageRequest.of(page, size, Sort.by("createdDate").descending()));
+//        List<Rental> boardRentals = rentalPage.getContent();
+//
+//        List<Board> boardList = new ArrayList<>();
+//
+//        for (Rental rental : boardRentals) {
+//            Board board = rental.getBoard();
+//            System.out.println(board);
+//            boardList.add(board);
+//        }
+//
+//        List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
+//        return new PageImpl<>(response, rentalPage.getPageable(), rentalPage.getTotalElements());
+//    }
 
     @Transactional(readOnly = true)
     public Page<BoardResponseDto> findBoards(int page, int size, long memberId) {
