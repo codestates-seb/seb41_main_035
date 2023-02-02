@@ -234,11 +234,20 @@ public class BoardService {
         List<Rental> boardRentals = rentalPage.getContent();
 
         List<Board> boardList = new ArrayList<>();
+        List<Long> idList = new ArrayList<>();
 
         for (Rental rental : boardRentals) {
             Board board = rental.getBoard();
             System.out.println(board);
-            boardList.add(board);
+            if (idList.contains(board.getBoardId())) {
+                continue;
+            }
+
+            else {
+                idList.add(board.getBoardId());
+                boardList.add(board);
+            }
+
         }
 
         List<BoardResponseDto> response = mapper.boardsToBoardResponseDtos(boardList);
