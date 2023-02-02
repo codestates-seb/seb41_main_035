@@ -1,4 +1,4 @@
-# Look At Me
+# :womans_hat: Look At Me
 
 <div align="center">
 <br><br>
@@ -7,30 +7,30 @@
 <br><br>
 </div>
 
-## 프로젝트 소개
+## :mag: 프로젝트 소개
 > 사용자가 직접 자신의 패션 스타일을 공유할 수 있고, 렌탈을 통해 다른 사람들과 쉐어도 가능!
 
 > 평소 입지 않는 옷을 빌려주고 돈을 벌고, 다른 사람들의 옷을 마음껏 빌려 입을 수 있어요 :)
 
 Loot At Me에서는 다른 사용자들이 올린 다양한 코디를 둘러보며 코디에 대한 고민을 해결하고 새로운 옷을 발견할 수 있습니다.
 
-### 타겟층
+### :pushpin: 타겟층
 1. 평소 어떤 옷을 입을지 막막한 사람들
 2. 특별한 날 특별한 옷을 입고싶지만 한번 입으려 구입하기에는 너무 비싸 고민인 사람들
 3. 평소 입지 않는 옷들을 어떻게 해야 할 지 고민인 사람들
 4. 다양한 코디를 둘러보며 새로운 옷을 발견하고 싶은 사람들
 
-### 구상 배경
+### :bulb: 구상 배경
 
 
 사람들이 옷을 공유하며 활용 가치작 있는 의류가 버려지거나 방치되는 것을 막기 위해 이러한 서비스를 기획하게 되었습니다.
 
-### 배포 주소
+### :link: 배포 주소
 http://mainproject-035.s3-website.ap-northeast-2.amazonaws.com/
 
 <br>
 
-## 팀원 소개
+## :family: 팀원 소개
 
 | FE | FE | FE | BE | BE | BE |
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -39,7 +39,7 @@ http://mainproject-035.s3-website.ap-northeast-2.amazonaws.com/
 
 <br>
 
-## 서비스 주요 기능 소개
+## :open_file_folder: 서비스 주요 기능 소개
 ### 회원 가입
 - 아래 내용 입력 후 회원 가입이 가능합니다.
   - 닉네임
@@ -102,7 +102,7 @@ http://mainproject-035.s3-website.ap-northeast-2.amazonaws.com/
 
 <br>
 
-## 기술 스택
+## :wrench: 기술 스택
 
 ![2023-02-02 11;03;18](https://user-images.githubusercontent.com/74748851/216216126-290f3a7b-82e6-4575-abfb-e930a67debbc.PNG)
 
