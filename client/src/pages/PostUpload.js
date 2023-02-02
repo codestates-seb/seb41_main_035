@@ -181,7 +181,7 @@ const SHeader = styled.div`
     } */
   }
   button {
-    width: 50px;
+    width: 60px;
     height: 30px;
     margin: 15px;
     background-color: #d9d4a6;
@@ -189,7 +189,9 @@ const SHeader = styled.div`
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+    :hover {
+      box-shadow: 1px 1px 6px gray;
+    }
   }
 `;
 
