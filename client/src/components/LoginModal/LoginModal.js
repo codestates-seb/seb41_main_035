@@ -131,6 +131,7 @@ function LoginModal(props) {
           <input
             className="pw"
             placeholder="비밀번호"
+            type="password"
             style={{
               'font-size': '14px',
               padding: '12px 12px',

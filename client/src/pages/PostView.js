@@ -85,7 +85,8 @@ const PostView = () => {
   const unfollow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      url + `/members/follow?op=${detailData.member.memberId}&type=down`,
+      'http://13.125.30.88' +
+        `/members/follow?op=${detailData.member.memberId}&type=down`,
       {},
       {
         headers: { Authorization: token },
@@ -99,7 +100,8 @@ const PostView = () => {
   const follow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      url + `/members/follow?op=${detailData.member.memberId}&type=up`,
+      'http://13.125.30.88' +
+        `/members/follow?op=${detailData.member.memberId}&type=up`,
       {},
       {
         headers: { Authorization: token },
