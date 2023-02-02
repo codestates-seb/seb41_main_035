@@ -153,7 +153,8 @@ function LoginModal(props) {
             style={{
               display: 'flex',
               'align-items': 'center',
-              'margin-top': '15px',
+              'margin-top': '17px',
+              'margin-bottom': '10px',
               'justify-content': 'center',
             }}
           >
@@ -224,6 +225,7 @@ const SigninButton = styled.button`
   margin-top: 10px;
   width: 277px;
   cursor: pointer;
+  border: none;
   &:hover {
     background-color: #67b8f0;
   }
@@ -232,25 +234,27 @@ const SigninButton = styled.button`
 const SignupButton = styled.button`
   font-size: 14px;
   border: none;
-  color: black;
   font-style: italic;
   font-weight: 200;
-  cursor: pointer;
   all: unset;
   cursor: pointer;
+  margin-left: 10px;
+  color: gray;
+  font-size: 15px;
 `;
 
 const GoogleButton = styled.button`
   font-size: 14px;
-  padding: 12px 120px;
-  background-color: #ababab;
   border-radius: 8px;
   color: white;
   font-style: italic;
   font-weight: 200;
-  margin-top: 10px;
+  margin-top: 12px;
   background-color: #4083b1;
+  border: none;
   cursor: pointer;
+  width: 277px;
+  height: 40.5px;
   &:hover {
     background-color: #67b8f0;
   }

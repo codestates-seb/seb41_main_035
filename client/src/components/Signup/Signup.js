@@ -180,7 +180,6 @@ const Contents = styled.div`
 
 const SigninButton = styled.button`
   font-size: 14px;
-  padding: 12px 120px;
   background-color: #4083b1;
   border-radius: 8px;
   color: white;
@@ -192,6 +191,9 @@ const SigninButton = styled.button`
   }
   text-align: center;
   margin-top: 20px;
+  border: none;
+  width: 280px;
+  height: 44px;
 `;
 const SInput = styled.input`
   border: 1.5px solid #a1a1a1;
