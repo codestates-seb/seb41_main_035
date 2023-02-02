@@ -25,7 +25,6 @@ const Sidebar = () => {
           </div>
         </ItemList>
       </SidebarBox>
-      {/* <SLeftBoard /> */}
     </SWrapper>
   );
 };
@@ -45,7 +44,6 @@ const SWrapper = styled.div`
 
 //전체부분
 const SidebarBox = styled.div`
-  /* position: fixed; */
   .title {
     font-size: 20px;
     font-weight: 700;
@@ -69,11 +67,4 @@ const ItemList = styled.div`
 `;
 const SList = styled.div``;
 
-//선 부분
-// const SLeftBoard = styled.div`
-//   position: fixed;
-//   border-left: 2px solid gray;
-//   margin: 50px 0px 0px 110px;
-//   height: 340px;
-// `;
 export default Sidebar;

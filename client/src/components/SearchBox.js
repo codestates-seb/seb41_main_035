@@ -92,26 +92,6 @@ const SInputContainer = styled.div`
     margin-right: 10px;
     cursor: pointer;
   }
-  /* datalist {
-    position: absolute;
-    width: 32vw;
-    border-radius: 0 0 1rem 1rem;
-    background-color: #ffffff;
-    border: 1px solid rgb(223, 225, 229);
-    border-radius: 0 0 1rem 1rem;
-  }
-  option {
-    background-color: white;
-    padding: 4px;
-    color: black;
-    margin-bottom: 1px;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  option:hover,
-  .active {
-    background-color: lightblue;
-  } */
 `;
 
 const deselectedOptions = ['adidas', 'nike', 'newbalance', '데상트', 'ami'];
