@@ -23,7 +23,7 @@ jobs: # Groups together all the jobs
       run:
         shell: bash
         working-directory: ./server # 작업 디렉토리 지정
-      
+
     # 수행할 작업 단계의 목록
     steps:
       # 작업 단계의 일부로 실행할 작업
@@ -37,7 +37,7 @@ jobs: # Groups together all the jobs
           distribution: 'temurin'
 
       - name: Add permission to gradlew & Build
-        run: | 
+        run: |
           chmod +x ./gradlew
           ./gradlew clean build
 
