@@ -31,4 +31,4 @@ jobs:
       - name: Add permission to gradlew & Build
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew clean build --stacktrace
