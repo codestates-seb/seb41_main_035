@@ -6,6 +6,7 @@ on: # 트리거 발생 조건 (1. dev/main 브랜치에 push / 2. server 디렉�
       - main
       - dev
       - feat/be/cloud
+      - feat/be/actions
     paths:
       - server/**
 
