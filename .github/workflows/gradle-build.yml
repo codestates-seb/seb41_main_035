@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  reusable_workflow_job:
+  Gradle-build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
