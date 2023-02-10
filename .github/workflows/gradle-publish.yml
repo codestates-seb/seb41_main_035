@@ -73,5 +73,12 @@ jobs:
         working-directory: ./server
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        name: Build File Download
+        with:
+          name: lookatme-jar-file
+          path: server/build/libs
+
       - name: Docker Image Build
         run: docker build -t eheh12321/look-at-me .
