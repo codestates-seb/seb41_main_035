@@ -20,6 +20,13 @@ jobs:
   Deploy:
     needs: Gradle-build
     name: AWS Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - name: Make build file to zip file
         run: |
