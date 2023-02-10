@@ -31,4 +31,5 @@ jobs:
         name: Build File Upload
         with:
           name: build-jar-file
-          path: build/libs/*.jar
+          path: server/build/libs/*.jar
+          if-no-files-found: error

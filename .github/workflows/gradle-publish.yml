@@ -34,7 +34,7 @@ jobs:
         name: Build File Download
         with:
           name: build-jar-file
-          path: build/libs/*.jar
+          path: server/build/libs/*.jar
 
       - name: Make build file to zip file
         run: |
