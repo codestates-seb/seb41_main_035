@@ -66,6 +66,13 @@ jobs:
   Docker:
     needs: Gradle-build
     name: Docker Build & Push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./server
     steps:
       - name: test
         run: echo Hello Docker!
