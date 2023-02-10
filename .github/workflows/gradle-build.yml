@@ -30,6 +30,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Build File Upload
         with:
-          name: build-jar-file
+          name: lookatme-jar-file
           path: server/build/libs
           if-no-files-found: error
