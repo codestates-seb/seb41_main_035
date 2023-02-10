@@ -26,3 +26,9 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew clean build --stacktrace
+
+      - uses: actions/upload-artifact@v3
+        name: Build File Upload
+        with:
+          name: build-jar-file
+          path: path/to/artifact/*.jar
