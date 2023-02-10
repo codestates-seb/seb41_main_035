@@ -14,11 +14,12 @@ env:
   S3_BUCKET_NAME: my-springboot-build
 
 jobs:
-  call-gradle-build-workflow:
+  Gradle-build:
     uses: ./.github/workflows/gradle-build.yml
 
-  backend:
-    name: Spring Boot CI/CD
+  Deploy:
+    needs: Gradle-build
+    name: AWS Deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
