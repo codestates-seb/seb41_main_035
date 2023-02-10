@@ -28,6 +28,8 @@ jobs:
         shell: bash
 
     steps:
+      - uses: actions/checkout@v3
+
       - name: Make build file to zip file
         run: |
           mkdir -p before-deploy
