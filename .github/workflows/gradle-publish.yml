@@ -1,21 +1,24 @@
 name: Look At Me Application CI
 
-on: # 트리거 발생 조건 (1. dev/main 브랜치에 push / 2. server 디렉토리 내에서 발생한 변경일 것)
+on:
   push:
     branches:
       - main
       - dev
       - feat/be/cloud
+      - feat/be/actions
     paths:
       - server/**
 
 env:
   S3_BUCKET_NAME: my-springboot-build
 
-jobs: # Groups together all the jobs
-  backend: # <job_id>
-    # 작업 기초 설정
-    name: Spring Boot CI With Gradle
+jobs:
+  call-gradle-build-workflow:
+    uses: ./.github/workflows/gradle-build.yml
+
+  backend:
+    name: Spring Boot CI/CD
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,23 +27,7 @@ jobs: # Groups together all the jobs
         shell: bash
         working-directory: ./server # 작업 디렉토리 지정
 
-    # 수행할 작업 단계의 목록
     steps:
-      # 작업 단계의 일부로 실행할 작업
-      - uses: actions/checkout@v3
-
-      # 단계의 이름
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Add permission to gradlew & Build
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build
-
       - name: Make build file to zip file
         run: |
           mkdir -p before-deploy
