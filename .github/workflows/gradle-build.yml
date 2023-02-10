@@ -31,4 +31,4 @@ jobs:
         name: Build File Upload
         with:
           name: build-jar-file
-          path: path/to/artifact/*.jar
+          path: build/libs/*.jar
