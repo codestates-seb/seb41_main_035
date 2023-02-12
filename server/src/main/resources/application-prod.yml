@@ -1,0 +1,56 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PWD}
+  jpa:
+    hibernate:
+      ddl-auto: update # 운영 서버에서는 create 하면 X
+    properties:
+      hibernate:
+        show_sql: false
+  h2:
+    console:
+      enabled: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${OAUTH_GOOGLE_ID}
+            clientSecret: ${OAUTH_GOOGLE_SECRET}
+            scope:
+              - email
+              - profile
+  redis:
+    host: localhost
+    port: 6379
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: warn
+    root: info
+jwt:
+  secret-key: ${JWT_SECRET}
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 360
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+      instanceProfile: true
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucketName: ${AWS_S3_BUCKET}
+    cloudfront:
+      domain: ${AWS_CLOUDFRONT_DOMAIN}

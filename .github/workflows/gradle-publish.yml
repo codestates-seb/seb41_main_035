@@ -1,4 +1,4 @@
-name: Look At Me Application CI
+name: Look At Me Application CI/CD
 
 on:
   push:
@@ -102,3 +102,6 @@ jobs:
           push: true
           tags: eheh12321/look-at-me:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+      # 이후 SSH 방식으로 EC2에 접근하여 deploy.sh를 실행하면 무중단 배포(blue, green 방식)를 할 수 있다
+      # 다만 이미 CodeDeploy를 이용해 무중단 배포를 하고있기 때문에 더이상 진행하지 않음
