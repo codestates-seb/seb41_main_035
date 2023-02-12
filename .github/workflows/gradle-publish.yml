@@ -100,5 +100,5 @@ jobs:
         with:
           context: server/
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: eheh12321/look-at-me:latest
           labels: ${{ steps.meta.outputs.labels }}
