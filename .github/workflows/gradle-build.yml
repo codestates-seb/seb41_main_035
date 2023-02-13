@@ -1,15 +1,10 @@
-name: Look At Me Pull Request Build Test
+name: Gradle Build
 
 on:
-  pull_request:
-    branches:
-      - main
-      - dev
-    paths:
-      - server/**
-      
+  workflow_call:
+
 jobs:
-  Gradle-build:
+  reusable_workflow_job:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,5 +25,4 @@ jobs:
       - name: Add permission to gradlew & Build
         run: |
           chmod +x ./gradlew
-          ./gradlew build --stacktrace
-
+          ./gradlew clean build --stacktrace
