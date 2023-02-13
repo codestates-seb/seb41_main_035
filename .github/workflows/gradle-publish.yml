@@ -1,21 +1,20 @@
-name: Look At Me Application CI
+name: Look At Me Application CI/CD
 
-on: # 트리거 발생 조건 (1. dev/main 브랜치에 push / 2. server 디렉토리 내에서 발생한 변경일 것)
+on:
   push:
     branches:
       - main
       - dev
       - feat/be/cloud
+      - feat/be/actions
     paths:
       - server/**
 
 env:
   S3_BUCKET_NAME: my-springboot-build
 
-jobs: # Groups together all the jobs
-  backend: # <job_id>
-    # 작업 기초 설정
-    name: Spring Boot CI With Gradle
+jobs:
+  Gradle-build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,12 +23,9 @@ jobs: # Groups together all the jobs
         shell: bash
         working-directory: ./server # 작업 디렉토리 지정
 
-    # 수행할 작업 단계의 목록
     steps:
-      # 작업 단계의 일부로 실행할 작업
       - uses: actions/checkout@v3
 
-      # 단계의 이름
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -39,7 +35,33 @@ jobs: # Groups together all the jobs
       - name: Add permission to gradlew & Build
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew build
+
+      - uses: actions/upload-artifact@v3
+        name: Build File Upload
+        with:
+          name: lookatme-jar-file
+          path: server/build/libs
+          if-no-files-found: error
+
+  Deploy:
+    needs: Gradle-build
+    name: AWS Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        name: Build File Download
+        with:
+          name: lookatme-jar-file
+          path: server/build/libs
 
       - name: Make build file to zip file
         run: |
@@ -52,9 +74,9 @@ jobs: # Groups together all the jobs
           mv ./lookatme-server.zip ../
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }} # Github에 별도로 등록
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
@@ -67,4 +89,46 @@ jobs: # Groups together all the jobs
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name lookatme-group
           --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=lookatme-server.zip
-          
+
+  Docker:
+    needs: Gradle-build
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        name: Build File Download
+        with:
+          name: lookatme-jar-file
+          path: server/build/libs
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: eheh12321/look-at-me
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: server/
+          push: true
+          tags: eheh12321/look-at-me:latest
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # 이후 SSH 방식으로 EC2에 접근하여 deploy.sh를 실행하면 무중단 배포(blue, green 방식)를 할 수 있다
+      # 다만 이미 CodeDeploy를 이용해 무중단 배포를 하고있기 때문에 더이상 진행하지 않음

@@ -9,8 +9,7 @@ on:
       - server/**
 
 jobs:
-  backend:
-    name: Look At Me Pull Request Build Test
+  Gradle-build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,4 +30,4 @@ jobs:
       - name: Add permission to gradlew & Build
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build --stacktrace
+          ./gradlew build --stacktrace
