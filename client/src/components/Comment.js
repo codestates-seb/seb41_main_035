@@ -8,12 +8,14 @@ import axios from 'axios';
 import userStore from '../store/userStore';
 const BREAK_POINT_PC = 1300;
 const token = localStorage.getItem('accessToken');
-const Comment = ({ boardId, profile }) => {
+const Comment = ({ profile }) => {
   const params = useParams();
   const API_URL = process.env.REACT_APP_API_URL;
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
   const Id = params.boardId;
+  const myprofile = JSON.parse(localStorage.getItem('myprofile'));
+
   //추가부분
   const { nickname } = userStore((state) => state);
 
@@ -124,7 +126,7 @@ const Comment = ({ boardId, profile }) => {
       <div className="line"></div>
       <form className="commentWrap">
         <div className="my_avatar">
-          <Avatar image={profile} />
+          <Avatar image={myprofile} />
         </div>
         <div className="user-name"></div>
         <div className="comment-input">
