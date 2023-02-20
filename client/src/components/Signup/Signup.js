@@ -4,8 +4,7 @@ import { CloseOutlined, LeftSquareFilled } from '@ant-design/icons';
 import { useState } from 'react';
 import Logo from '../../svg/Logo.svg';
 
-const backendUrl = 'http://13.125.30.88/';
-
+const API_URL = process.env.REACT_APP_API_URL;
 function Signup(props) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -71,7 +70,7 @@ function Signup(props) {
       validationCheck(password, 'password')
     ) {
       const res = await axios.post(
-        `${backendUrl}members/signup`,
+        `${API_URL}members/signup`,
         {
           nickname: nickname,
           email: id,

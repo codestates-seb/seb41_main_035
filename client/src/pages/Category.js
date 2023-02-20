@@ -15,6 +15,7 @@ const PRODUCT = {
 };
 
 const Category = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const params = useParams();
   const category = params.categoryId;
   const [data, setData] = useState([]);
@@ -31,7 +32,7 @@ const Category = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://13.125.30.88/boards`);
+      const response = await axios.get(API_URL + `boards`);
       setData(response.data.data);
     } catch {
       window.alert('오류가 발생했습니다.');
@@ -39,9 +40,7 @@ const Category = () => {
   };
   const fetchRentData = async () => {
     try {
-      const response = await axios.get(
-        `http://13.125.30.88/boards/search/available`
-      );
+      const response = await axios.get(API_URL + `boards/search/available`);
       setData(response.data.data);
       console.log(response.data.data);
     } catch {

@@ -20,8 +20,7 @@ const PostView = () => {
   const params = useParams();
   const [detailData, setDetailData] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-
-  const url = 'http://13.125.30.88';
+  const API_URL = process.env.REACT_APP_API_URL;
   const name = detailData.member?.nickname;
   const sentId = detailData.member?.memberId;
   const boardId = detailData.boardId;
@@ -35,7 +34,7 @@ const PostView = () => {
   const onClickGood = async (id) => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      `${url}/boards/${id}/like`, // 좋아요 API
+      `${API_URL}boards/${id}/like`, // 좋아요 API
       {},
       {
         headers: { Authorization: token },
@@ -51,9 +50,12 @@ const PostView = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('accessToken');
       try {
-        const response = await axios.get(url + `/boards/` + [params.boardId], {
-          headers: { Authorization: token },
-        });
+        const response = await axios.get(
+          API_URL + `boards/` + [params.boardId],
+          {
+            headers: { Authorization: token },
+          }
+        );
         setDetailData(response.data);
         setIsFollowing(response.data.member.follow);
       } catch (err) {
@@ -66,7 +68,7 @@ const PostView = () => {
   console.log(detailData);
   const onPostDelete = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      axios(url + `/boards/${params.boardId}`, {
+      axios(API_URL + `boards/${params.boardId}`, {
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -85,8 +87,7 @@ const PostView = () => {
   const unfollow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      'http://13.125.30.88' +
-        `/members/follow?op=${detailData.member.memberId}&type=down`,
+      API_URL + `members/follow?op=${detailData.member.memberId}&type=down`,
       {},
       {
         headers: { Authorization: token },
@@ -100,8 +101,7 @@ const PostView = () => {
   const follow = async () => {
     const token = localStorage.getItem('accessToken');
     const res = await axios.post(
-      'http://13.125.30.88' +
-        `/members/follow?op=${detailData.member.memberId}&type=up`,
+      API_URL + `members/follow?op=${detailData.member.memberId}&type=up`,
       {},
       {
         headers: { Authorization: token },

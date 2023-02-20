@@ -14,6 +14,7 @@ const Chat = () => {
   const [sentName, setSentName] = useState('');
   const [sentPicture, setSentPicture] = useState('');
   const url = 'http://13.125.30.88';
+  const API_URL = process.env.REACT_APP_API_URL;
   const sentId = JSON.parse(localStorage.getItem('sentId'));
   const name = JSON.parse(localStorage.getItem('name'));
   const myId = JSON.parse(localStorage.getItem('myId'));
@@ -45,7 +46,7 @@ const Chat = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        url + `/message/received/${idData}?page=1&size=100`,
+        API_URL + `message/received/${idData}?page=1&size=100`,
         {
           headers: {
             Authorization: token,
@@ -62,7 +63,7 @@ const Chat = () => {
   const fetchListClickData = async () => {
     try {
       const response = await axios.get(
-        url + `/message/received/${sentId}?page=1&size=100`,
+        API_URL + `message/received/${sentId}?page=1&size=100`,
         {
           headers: {
             Authorization: token,
@@ -78,7 +79,7 @@ const Chat = () => {
   //목록전체를 받는거
   const fetchListData = async () => {
     try {
-      const response = await axios.get(url + `/message/room`, {
+      const response = await axios.get(API_URL + `message/room`, {
         headers: {
           Authorization: token,
         },
@@ -90,7 +91,7 @@ const Chat = () => {
   };
 
   const onPostChat = () => {
-    axios(url + '/message', {
+    axios(API_URL + 'message', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

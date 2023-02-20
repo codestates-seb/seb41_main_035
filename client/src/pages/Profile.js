@@ -13,7 +13,7 @@ const Profile = () => {
   const userStoreId = userStore((state) => state.userId);
   const [codi, setCodi] = useState([]);
   const [followData, setFollowData] = useState([]);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   //추가부분
   const [codiType, setCodiType] = useState('my');
 
@@ -24,7 +24,7 @@ const Profile = () => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://13.125.30.88/boards`, {
+        const response = await axios.get(API_URL + `boards`, {
           // 토큰 추가
           headers: { Authorization: token },
         });

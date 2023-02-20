@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import Avatar from '../components/Avatar';
 import axios from 'axios';
 
-const backendUrl = 'http://13.125.30.88/';
-
+const API_URL = process.env.REACT_APP_API_URL;
 function FollowModal(props) {
   const [followData, setFollowData] = useState([]);
 
@@ -23,8 +22,8 @@ function FollowModal(props) {
         const token = localStorage.getItem('accessToken');
         // eslint-disable-next-line react/prop-types
         const follwurl = props.isFollow
-          ? `${backendUrl}members/follow?memberId=${user}&tab=followee`
-          : `${backendUrl}members/follow?memberId=${user}&tab=follower`;
+          ? `${API_URL}members/follow?memberId=${user}&tab=followee`
+          : `${API_URL}members/follow?memberId=${user}&tab=follower`;
         const res = await axios.get(
           follwurl,
           {

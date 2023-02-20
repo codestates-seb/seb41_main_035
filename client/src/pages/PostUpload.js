@@ -7,6 +7,7 @@ import axios from 'axios';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostUpload = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [contentList, setContentList] = useState([
     {
       productImage: [],
@@ -76,7 +77,7 @@ const PostUpload = () => {
     }
 
     axios
-      .post('http://13.125.30.88/boards', formData, {
+      .post(API_URL + 'boards', formData, {
         headers: {
           Authorization: token,
           'Content-Type': 'multipart/form-data',
