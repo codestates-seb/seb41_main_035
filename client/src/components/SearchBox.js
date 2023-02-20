@@ -30,7 +30,6 @@ const SearchBox = () => {
       try {
         const response = await axios.get(API_URL + `boards`);
         setData(response.data.data);
-        console.log(response.data.data);
       } catch {
         window.alert('오류가 발생했습니다.');
       }

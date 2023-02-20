@@ -21,7 +21,6 @@ const LoginHeader = () => {
   const [isBarOpen, setIsBarOpen] = useState(false);
   const myId = JSON.parse(localStorage.getItem('myId'));
   const API_URL = process.env.REACT_APP_API_URL;
-  console.log(myId);
   const onClickButton = () => {
     setIsOpen(true);
   };

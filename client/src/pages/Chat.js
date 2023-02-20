@@ -13,7 +13,6 @@ const Chat = () => {
   const [idData, setIdData] = useState('');
   const [sentName, setSentName] = useState('');
   const [sentPicture, setSentPicture] = useState('');
-  const url = 'http://13.125.30.88';
   const API_URL = process.env.REACT_APP_API_URL;
   const sentId = JSON.parse(localStorage.getItem('sentId'));
   const name = JSON.parse(localStorage.getItem('name'));
@@ -54,7 +53,6 @@ const Chat = () => {
         }
       );
       setChatData(response.data.data);
-      console.log(response.data.data);
     } catch (err) {
       return err;
     }

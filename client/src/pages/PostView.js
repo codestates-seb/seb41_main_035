@@ -64,8 +64,6 @@ const PostView = () => {
     };
     fetchData();
   }, []);
-  console.log(isFollowing);
-  console.log(detailData);
   const onPostDelete = () => {
     if (window.confirm('삭제 하시겠습니까?')) {
       axios(API_URL + `boards/${params.boardId}`, {

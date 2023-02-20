@@ -20,7 +20,6 @@ const Category = () => {
   const category = params.categoryId;
   const [data, setData] = useState([]);
   const [check, setCheck] = useState(false);
-  console.log(data);
   const onDpMenu = () => {
     let click = document.getElementById('drop-content');
     if (click.style.display === 'none') {
@@ -42,7 +41,6 @@ const Category = () => {
     try {
       const response = await axios.get(API_URL + `boards/search/available`);
       setData(response.data.data);
-      console.log(response.data.data);
     } catch {
       window.alert('오류가 발생했습니다.');
     }
@@ -63,7 +61,6 @@ const Category = () => {
       );
     });
   }, [data, category]); // 종속성으로 category 를 넣고,category가 변경되면 이 변수값이 업데이트
-  console.log(currentCategoryProducts);
 
   //렌탈가능
   const onCheck = () => {
