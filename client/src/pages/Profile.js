@@ -13,18 +13,17 @@ const Profile = () => {
   const userStoreId = userStore((state) => state.userId);
   const [codi, setCodi] = useState([]);
   const [followData, setFollowData] = useState([]);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   //추가부분
   const [codiType, setCodiType] = useState('my');
 
   localStorage.setItem('myId', JSON.stringify(userStoreId));
-  console.log(userStoreId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://13.125.30.88/boards`, {
+        const response = await axios.get(API_URL + `boards`, {
           // 토큰 추가
           headers: { Authorization: token },
         });
@@ -37,7 +36,6 @@ const Profile = () => {
   }, []);
 
   const myCodi = useMemo(() => {
-    console.log(userId);
     return codi.filter((codi) => {
       return codi.member?.memberId === Number(userId);
     });
@@ -49,7 +47,6 @@ const Profile = () => {
       return codi.like === true;
     });
   }, [codi, userId]);
-  console.log('likeCodi', likeCodi);
 
   return (
     <>

@@ -8,29 +8,29 @@ import axios from 'axios';
 import userStore from '../store/userStore';
 const BREAK_POINT_PC = 1300;
 const token = localStorage.getItem('accessToken');
-const Comment = ({ boardId, profile }) => {
+const Comment = () => {
   const params = useParams();
-  const url = 'http://13.125.30.88/comment';
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const [commentData, setCommentData] = useState([]);
   const [contentValue, setContentValue] = useState('');
-
+  const Id = params.boardId;
+  const myprofile = JSON.parse(localStorage.getItem('myprofile'));
   //추가부분
   const { nickname } = userStore((state) => state);
 
   const onContentChange = (e) => {
     setContentValue(e.currentTarget.value);
   };
-  console.log(contentValue);
-  const onPostComment = () => {
-    axios(url, {
+  const onPostComment = (e) => {
+    e.preventDefault();
+    axios(API_URL + `comment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
       },
       data: JSON.stringify({
-        boardId: boardId,
+        boardId: Id,
         content: contentValue,
       }),
     })
@@ -46,10 +46,9 @@ const Comment = ({ boardId, profile }) => {
   const fetchCommentData = async () => {
     try {
       const response = await axios.get(
-        url + `/board/${params.boardId}?page=1&size=10`
+        API_URL + `comment/board/${params.boardId}?page=1&size=10`
       );
       setCommentData(response.data);
-      console.log(response.data);
     } catch (err) {
       return err;
     }
@@ -61,7 +60,7 @@ const Comment = ({ boardId, profile }) => {
 
   const onDelteComment = (id) => {
     if (window.confirm('삭제 하시겠습니까?')) {
-      axios(url + `/${id}`, {
+      axios(API_URL + `comment/${id}`, {
         method: 'delete',
         headers: {
           Authorization: token,
@@ -88,7 +87,7 @@ const Comment = ({ boardId, profile }) => {
     try {
       const token = localStorage.getItem('accessToken');
       await axios.patch(
-        `${url}/${id}`,
+        `${API_URL}comment/${id}`,
         {
           content: revise,
         },
@@ -124,7 +123,7 @@ const Comment = ({ boardId, profile }) => {
       <div className="line"></div>
       <form className="commentWrap">
         <div className="my_avatar">
-          <Avatar image={profile} />
+          <Avatar image={myprofile} />
         </div>
         <div className="user-name"></div>
         <div className="comment-input">
@@ -135,12 +134,7 @@ const Comment = ({ boardId, profile }) => {
             onChange={onContentChange}
           />
 
-          <button
-            disabled={!contentValue}
-            onClick={() => {
-              onPostComment(contentValue);
-            }}
-          >
+          <button disabled={!contentValue} onClick={onPostComment}>
             <HiOutlinePaperAirplane />
           </button>
         </div>

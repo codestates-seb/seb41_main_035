@@ -7,6 +7,7 @@ import axios from 'axios';
 import { BREAK_POINT_PC, BREAK_POINT_TABLET } from '../constants/index';
 
 const PostUpload = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [contentList, setContentList] = useState([
     {
       productImage: [],
@@ -33,7 +34,6 @@ const PostUpload = () => {
   ]); // PostUploadBar에 전달 , defaultContent기본값 1개뜨게끔
   const [inputContent, setInputContent] = useState(); // textarea 입력값저장
   const [imgFile, setImgFile] = useState([]); // 업로드한 이미지 배열저장
-  console.log('contentList', contentList);
 
   const onChangeItem = (index, key, value) => {
     setContentList((preContentList) => {
@@ -58,7 +58,6 @@ const PostUpload = () => {
         'products[' + i + '].productImage',
         contentList[i].productImage[0]
       );
-      console.log(contentList[i].productImage);
       formData.append('products[' + i + '].brand', contentList[i].brand);
       formData.append(
         'products[' + i + '].productName',
@@ -76,7 +75,7 @@ const PostUpload = () => {
     }
 
     axios
-      .post('http://13.125.30.88/boards', formData, {
+      .post(API_URL + 'boards', formData, {
         headers: {
           Authorization: token,
           'Content-Type': 'multipart/form-data',
@@ -91,10 +90,6 @@ const PostUpload = () => {
       .catch((err) => {
         return err;
       });
-
-    for (let [key, value] of formData.entries()) {
-      console.log(key + ':' + value);
-    }
   };
 
   //plusButton클릭시 호출
