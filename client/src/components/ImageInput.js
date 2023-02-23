@@ -26,7 +26,6 @@ const ImageInput = ({ imgFile, setImgFile }) => {
       imageUrlLists = imageUrlLists.slice(0, 1);
     }
     setImgFile(imageUrlLists);
-    console.log(imageUrlLists);
   };
 
   return (

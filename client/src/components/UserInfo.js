@@ -4,14 +4,13 @@ import userStore from '../store/userStore';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import FollowModal from './followlist';
-const backendUrl = 'http://13.125.30.88/';
 import { BREAK_POINT_TABLET, BREAK_POINT_PC } from '../constants/index';
 
 const UserInfo = () => {
   const params = useParams();
   const userId = params.userId;
   const userStoreId = userStore((state) => state.userId);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const [isFixing, setIsFixing] = useState(false);
   const [nickname, setNickname] = useState('');
   const [follow, setFollow] = useState(0);
@@ -21,6 +20,7 @@ const UserInfo = () => {
   const [profileImg, setProfileImg] = useState('');
   const [isFollowOpen, setIsFollowOpen] = useState(false);
   const [isFollowerOpen, setIsFollowerOpen] = useState(false);
+  localStorage.setItem('myprofile', JSON.stringify(profileImg));
 
   const onFollowClickButton = () => {
     setIsFollowOpen(true);
@@ -35,7 +35,7 @@ const UserInfo = () => {
       try {
         const token = localStorage.getItem('accessToken');
         const res = await axios.get(
-          `${backendUrl}members/${userId}`,
+          `${API_URL}members/${userId}`,
           {
             headers: { Authorization: token },
           },
@@ -65,7 +65,7 @@ const UserInfo = () => {
     try {
       const token = localStorage.getItem('accessToken');
       await axios.patch(
-        `${backendUrl}members/${userId}`,
+        `${API_URL}members/${userId}`,
         {
           nickname: nickname,
           profileImageUrl: profileImg,
@@ -97,7 +97,7 @@ const UserInfo = () => {
     const token = localStorage.getItem('accessToken');
     const formData = new FormData();
     formData.append('image', image);
-    const res = await axios.post(`${backendUrl}members/profile`, formData, {
+    const res = await axios.post(`${API_URL}members/profile`, formData, {
       headers: { Authorization: token },
     });
 

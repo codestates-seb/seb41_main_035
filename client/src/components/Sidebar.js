@@ -66,6 +66,11 @@ const SList = styled.button`
     background-color: #faf6e9;
     width: 108.062px;
   }
+  :hover {
+    color: #196ba5;
+    background-color: #faf6e9;
+    width: 108.062px;
+  }
 `;
 
 export default Sidebar;

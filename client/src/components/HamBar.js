@@ -115,7 +115,7 @@ const SWrapper = styled.div`
   z-index: 999;
   .bar-container {
     width: 200px;
-    height: 100%auto;
+    height: 100%;
     background-color: white;
     padding: 10px 10px 0px 10px;
   }

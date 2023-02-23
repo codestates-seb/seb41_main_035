@@ -26,7 +26,6 @@ const ItemImageInput = ({
       const resultImage = reader.result;
       imagePreLists.push(resultImage);
       setFileImage(imagePreLists);
-      console.log(resultImage);
     };
     //1개만 업로드 가능
     if (imageUrlLists.length > 1) {
